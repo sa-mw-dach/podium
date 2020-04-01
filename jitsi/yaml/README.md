@@ -25,4 +25,4 @@ OpenShift templates allow you to parameterize and automate deployment of all app
 The template will create a default https route (passthrough). Likely you may want to change or add your own route with a certificate.
 Using http will also work but since Jitsi Meet is browser based you need to enable your browser to allow that which is not recommended.
 
-```$ oc get route
+```$ oc get route```
