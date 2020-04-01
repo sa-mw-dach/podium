@@ -3,14 +3,17 @@ A lightweight opensource video conferencing tool. Jitsi Meet has 4 service compo
 
 ## Deploy Jitsi Meet on OpenShift
 ### Create a new project
+
 ```$ oc create new-project jitsi```
 
 ### Allow root permissions to jitsi project
 Currently Jitsi container image runs as root, this is something we need to improve.
+
 ```$ oc adm policy add-scc-to-user anyuid -z default```
 
 ### Template Default Parameters
 OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
+
 ```$ oc process --parameters -f jitis_meet_template.yaml
 NAME                       DESCRIPTION                                        GENERATOR           VALUE
 APPLICATION_NAME           the name and label for all components                                  jitsi
