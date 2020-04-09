@@ -1,7 +1,7 @@
 # Jitsi Meet
 A lightweight opensource video conferencing tool. Jitsi Meet has 4 service components: jicofo prosody web jvb. Currently we are using an all-in-one image that runs a single pod and these four services as containers within the pod. 
 
-Jitsi has two modes of communication peer-to-peer and video bridge. For meetings with more than two people the video bridge is required. When using the video bridge TCP/UDP connections will be made from the client (browser/app) to the JVB service. In this configuration we are using a node port on the jvb service. The following ports must be open to the node running the jvb service:
+Jitsi has two modes of communication peer-to-peer and video bridge. For meetings with more than two people the video bridge is required. When using the video bridge TCP/UDP connections will be made from the client (browser/app) to the JVB service. The node running the JVB service must have an public IP. In this configuration we are using a node port on the jvb service. The following ports must be open to the node running the jvb service:
 * 30000 (TCP/UDP) JVB Service
 * 3478 (TCP/UDP) Stun Server 
 
@@ -11,6 +11,11 @@ If you are having issues with video bridge, likely it is a firewall issue.
 Jitsi meet requires a TLS certificate. TLS can be terminated inside the web pod or terminated on the edge. I would recommend edge termination and in this case we can use a lets encrypt k8s admission controller to setup our certificates within the created OpenShift route.
 
 [Setup Lets Encrypt on OpenShift](https://keithtenzer.com/2020/04/03/openshift-application-certificate-management-with-lets-encrypt/)
+
+## Label Node
+For now all the jitsi components are deployed on the same OpenShift node. The template uses a node selector, so you need to label the node where you want to run the services.
+
+```$ oc label nodes ocp4-n4krq-worker-wr668 app=jitsi```
 
 ## Deploy Jitsi Meet on OpenShift
 ### Create a new project
