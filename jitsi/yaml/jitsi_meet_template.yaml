@@ -2,18 +2,90 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   annotations:
-    description: "Jitsi All-in-One Deployment"
+    description: "Jitsi Meet Deployment on OpenShift"
   creationTimestamp: null
   name: jitsi
 objects:
 - apiVersion: v1
   kind: Secret
   metadata:
-    name: jitsi-config
+    name: jitsi-secret
   stringData:
     JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET}
+    JICOFO_AUTH_USER: ${JICOFO_AUTH_USER}
     JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
+    JVB_AUTH_USER: ${JVB_AUTH_USER}
     JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: jitsi-config
+  data:
+    LDAP_VERSION: ''
+    XMPP_INTERNAL_MUC_DOMAIN: internal-muc.conf-jitsi.apps.ocp4.keithtenzer.com
+    LDAP_AUTH_METHOD: ''
+    JIBRI_BREWERY_MUC: jibribrewery
+    JIBRI_LOGS_DIR: /config/logs
+    JIGASI_PORT_MIN: '20000'
+    ENABLE_AUTH: ''
+    JWT_TOKEN_AUTH_MODULE: ''
+    JIGASI_TRANSCRIBER_ADVERTISE_URL: ''
+    LDAP_START_TLS: ''
+    TZ: ${TIMEZONE}
+    LDAP_BASE: ''
+    GLOABL_MODULES: ''
+    LOG_LEVEL: ''
+    LETSENCRYPT_EMAIL: ''
+    LDAP_USE_TLS: ''
+    JIGASI_TRANSCRIBER_SEND_TXT: ''
+    XMPP_INTERNAL_MUC_MODULES: ''
+    JVB_ENABLE_APIS: ${JVB_ENABLE_APIS}
+    JVB_TCP_HARVESTER_DISABLED: ${JVB_TCP_HARVESTER_DISABLED}
+    LDAP_TLS_CACERT_DIR: ''
+    LDAP_TLS_CIPHERS: ''
+    XMPP_DOMAIN: ${APPLICATION_DOMAIN}
+    JICOFO_RESERVATION_REST_BASE_URL: ''
+    JIGASI_HEALTH_CHECK_INTERVAL: ''
+    JIBRI_FINALIZE_RECORDING_SCRIPT_PATH: /config/finalize.sh
+    JIGASI_ENABLE_SDES_SRTP: ''
+    JWT_ACCEPTED_AUDIENCES: ''
+    LDAP_FILTER: ''
+    ENABLE_LETSENCRYPT: ''
+    XMPP_AUTH_DOMAIN: auth.${APPLICATION_DOMAIN}
+    JWT_APP_ID: ''
+    XMPP_MUC_DOMAIN: muc.${APPLICATION_DOMAIN}
+    JVB_STUN_SERVERS: ${JVB_STUN_SERVERS}
+    JIBRI_PENDING_TIMEOUT: '90'
+    DISABLE_HTTPS: ''
+    JIGASI_SIP_TRANSPORT: ''
+    XMPP_GUEST_DOMAIN: guest.${APPLICATION_DOMAIN}
+    ENABLE_RECORDING: ''
+    LDAP_TLS_CHECK_PEER: ''
+    JIGASI_PORT_MAX: '20050'
+    JIGASI_SIP_PORT: ''
+    JIGASI_BREWERY_MUC: jigasibrewery
+    JIBRI_STRIP_DOMAIN_JID: muc
+    LETSENCRYPT_DOMAIN: ${APPLICATION_DOMAIN}
+    LDAP_URL: ''
+    JIGASI_SIP_URI: '${JIGASI_SIP_URI}'
+    ENABLE_GUESTS: ''
+    ENABLE_HTTP_REDIRECT: ''
+    JIGASI_SIP_KEEP_ALIVE_METHOD: ''
+    JIGASI_SIP_SERVER: ''
+    XMPP_MUC_MODULES: ''
+    JWT_AUTH_TYPE: ''
+    PUBLIC_URL: https://${APPLICATION_DOMAIN}
+    JWT_ACCEPTED_ISSUERS: ''
+    JIBRI_RECORDING_DIR: /config/recordings
+    JIGASI_TRANSCRIBER_RECORD_AUDIO: ''
+    XMPP_RECORDER_DOMAIN: recorder.${APPLICATION_DOMAIN}
+    JWT_ASAP_KEYSERVER: ''
+    ENABLE_TRANSCRIPTIONS: ''
+    JVB_BREWERY_MUC: ${JVB_BREWERY_MUC}
+    XMPP_MODULES: ''
+    LDAP_TLS_CACERT_FILE: ''
+    JIGASI_HEALTH_CHECK_SIP_URI: ''
+    JWT_ALLOW_EMPTY: ''
 - apiVersion: v1
   kind: Service
   metadata:
@@ -21,60 +93,105 @@ objects:
       description: JVB Service
     labels:
       app: ${APPLICATION_NAME}
-    name: jvb-udp
+    name: jvb
   spec:
+    type: NodePort
     ports:
-    - port: 30300
+    - name: udp
+      nodePort: 30001
+      port: 30001
       protocol: UDP
-      targetPort: 30300
+      targetPort: 30001
+    - name: tcp
+      nodePort: 30001
+      port: 30001
+      protocol: TCP
+      targetPort: 30001
     selector:
       app: ${APPLICATION_NAME}
+      name: jvb
 - apiVersion: v1
   kind: Service
   metadata:
-    annotations:
-      description: Web Service
     labels:
       app: ${APPLICATION_NAME}
     name: web
   spec:
     ports:
     - name: "http"
-      port: 80
-      targetPort: 80
+      port: 8080
+      targetPort: 8080
     - name: "https"
-      port: 443
-      targetPort: 443
+      port: 4443
+      targetPort: 4443
     selector:
       app: ${APPLICATION_NAME}
+      name: web
 - apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: prosody
+  spec:
+    ports:
+    - name: "5222"
+      port: 5222
+      targetPort: 5222
+    - name: "5280"
+      port: 5280
+      targetPort: 5280
+    - name: "5347"
+      port: 5347
+      targetPort: 5347
+    selector:
+      app: ${APPLICATION_NAME}
+      name: prosody
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: jitsi
+    name: etherpad
+  spec:
+    ports:
+    - port: 9001
+      targetPort: 9001
+    selector:
+      app: jitsi
+      name: etherpad
+  status:
+    loadBalancer: {}
+- apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     annotations:
-      template.openshift.io/expose-uri: http://{.spec.host}{.spec.path}
-    name: meet
+      openshift.io/host.generated: "true"
+      kubernetes.io/tls-acme: "true"
+    name: jitsi
   spec:
     host: ${APPLICATION_DOMAIN}
+    port:
+      targetPort: http
+    tls:
+      termination: edge
     to:
       kind: Service
       name: web
       weight: 100
-    port:
-      targetPort: https
-    tls:
-      termination: passthrough
-      insecureEdgeTerminationPolicy: None
     wildcardPolicy: None
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
     labels:
       app: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}
+    name: prosody
   spec:
     replicas: 1
     strategy:
-      type: Recreate
+      type: RollingUpdate
     selector:
       matchLabels:
         app: ${APPLICATION_NAME}
@@ -82,131 +199,195 @@ objects:
       metadata:
         labels:
           app: ${APPLICATION_NAME}
+          name: prosody
       spec:
+        nodeSelector:
+          app: ${APPLICATION_NAME}
         containers:
-          - name: jicofo
-            image: jitsi/jicofo
-            imagePullPolicy: Always
-            env:
-              - name: XMPP_SERVER
-                value: ${XMPP_SERVER}
-              - name: XMPP_DOMAIN
-                value: ${XMPP_DOMAIN}
-              - name: XMPP_AUTH_DOMAIN
-                value: ${XMPP_AUTH_DOMAIN}
-              - name: XMPP_INTERNAL_MUC_DOMAIN
-                value: ${XMPP_INTERNAL_MUC_DOMAIN}
-              - name: JICOFO_COMPONENT_SECRET
-                valueFrom:
-                  secretKeyRef:
-                    name: jitsi-config
-                    key: JICOFO_COMPONENT_SECRET
-              - name: JICOFO_AUTH_USER
-                value: focus
-              - name: JICOFO_AUTH_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: jitsi-config
-                    key: JICOFO_AUTH_PASSWORD
-              - name: TZ
-                value: ${TIMEZONE}
-              - name: JVB_BREWERY_MUC
-                value: jvbbrewery
-          - name: prosody
-            image: jitsi/prosody
-            imagePullPolicy: Always
-            env:
-              - name: XMPP_DOMAIN
-                value: ${XMPP_DOMAIN}
-              - name: XMPP_AUTH_DOMAIN
-                value: ${XMPP_AUTH_DOMAIN}
-              - name: XMPP_MUC_DOMAIN
-                value: muc.meet.jitsi
-              - name: XMPP_INTERNAL_MUC_DOMAIN
-                value: ${XMPP_INTERNAL_MUC_DOMAIN}
-              - name: JICOFO_COMPONENT_SECRET
-                valueFrom:
-                  secretKeyRef:
-                    name: jitsi-config
-                    key: JICOFO_COMPONENT_SECRET
-              - name: JVB_AUTH_USER
-                value: jvb
-              - name: JVB_AUTH_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: jitsi-config
-                    key: JVB_AUTH_PASSWORD
-              - name: JICOFO_AUTH_USER
-                value: focus
-              - name: JICOFO_AUTH_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: jitsi-config
-                    key: JICOFO_AUTH_PASSWORD
-              - name: TZ
-                value: America/Los_Angeles
-              - name: JVB_TCP_HARVESTER_DISABLED
-                value: "true"
-          - name: web
-            image: jitsi/web
-            imagePullPolicy: Always
-            env:
-              - name: XMPP_SERVER
-                value: ${XMPP_SERVER}
-              - name: JICOFO_AUTH_USER
-                value: focus
-              - name: XMPP_DOMAIN
-                value: ${XMPP_DOMAIN}
-              - name: XMPP_AUTH_DOMAIN
-                value: ${XMPP_AUTH_DOMAIN}
-              - name: XMPP_INTERNAL_MUC_DOMAIN
-                value: ${XMPP_INTERNAL_MUC_DOMAIN}
-              - name: XMPP_BOSH_URL_BASE
-                value: http://127.0.0.1:5280
-              - name: XMPP_MUC_DOMAIN
-                value: muc.meet.jitsi
-              - name: TZ
-                value: ${TIMEZONE}
-              - name: JVB_TCP_HARVESTER_DISABLED
-                value: "true"
-          - name: jvb
-            image: jitsi/jvb
-            imagePullPolicy: Always
-            env:
-              - name: XMPP_SERVER
-                value: ${XMPP_SERVER}
-              - name: DOCKER_HOST_ADDRESS
-                value: ${DOCKER_HOST_ADDRESS}
-              - name: XMPP_DOMAIN
-                value: ${XMPP_DOMAIN}
-              - name: XMPP_AUTH_DOMAIN
-                value: ${XMPP_AUTH_DOMAIN}
-              - name: XMPP_INTERNAL_MUC_DOMAIN
-                value: ${XMPP_INTERNAL_MUC_DOMAIN}
-              - name: JVB_STUN_SERVERS
-                value: ${JVB_STUN_SERVERS}
-              - name: JICOFO_AUTH_USER
-                value: focus
-              - name: JVB_TCP_HARVESTER_DISABLED
-                value: "true"
-              - name: JVB_AUTH_USER
-                value: jvb
-              - name: JVB_PORT
-                value: "30300"
-              - name: JVB_AUTH_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: jitsi-config
-                    key: JVB_AUTH_PASSWORD
-              - name: JICOFO_AUTH_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: jitsi-config
-                    key: JICOFO_AUTH_PASSWORD
-              - name: JVB_BREWERY_MUC
-                value: jvbbrewery
-              - name: TZ
-                value: ${TIMEZONE}
+        - envFrom:
+          - configMapRef:
+              name: jitsi-config
+          - secretRef:
+              name: jitsi-secret
+          image: ktenzer/jitsi-prosody:build_4392
+          imagePullPolicy: Always
+          name: prosody
+          readinessProbe:
+            httpGet:
+              path: /http-bind
+              port: 5280
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /http-bind
+              port: 5280
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          ports:
+          - containerPort: 5222
+          - containerPort: 5280
+          - containerPort: 5347
+          resources: {}
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: jicofo
+  spec:
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+    selector:
+      matchLabels:
+        app: ${APPLICATION_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          name: jicofo
+      spec:
+        nodeSelector:
+          app: ${APPLICATION_NAME}
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: jitsi-config
+          - secretRef:
+              name: jitsi-secret
+          env:
+          - name: XMPP_SERVER
+            value: $(PROSODY_SERVICE_HOST)
+          readinessProbe:
+            httpGet:
+              path: /about/health
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /about/health
+              port: 8888
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          ports:
+          - containerPort: 8888
+          image: ktenzer/jitsi-jicofo:build_4392
+          imagePullPolicy: Always
+          name: jicofo
+          resources: {}
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: jvb
+  spec:
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+    selector:
+      matchLabels:
+        app: ${APPLICATION_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          name: jvb
+      spec:
+        nodeSelector:
+          app: ${APPLICATION_NAME}
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: jitsi-config
+          - secretRef:
+              name: jitsi-secret
+          env:
+          - name: DOCKER_HOST_ADDRESS
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: XMPP_SERVER
+            value: $(PROSODY_SERVICE_HOST)
+          - name: JVB_PORT
+            value: $(JVB_SERVICE_PORT_UDP)
+          - name: JVB_TCP_PORT
+            value: $(JVB_SERVICE_PORT_TCP)
+          readinessProbe:
+            httpGet:
+              path: /about/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /about/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          image: ktenzer/jitsi-jvb:build_4392
+          imagePullPolicy: Always
+          name: jvb
+          resources: {}
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: web
+  spec:
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+    selector:
+      matchLabels:
+        app: ${APPLICATION_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          name: web
+      spec:
+        nodeSelector:
+          app: ${APPLICATION_NAME}
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: jitsi-config
+          - secretRef:
+              name: jitsi-secret
+          env:
+          - name: XMPP_BOSH_URL_BASE
+            value: http://$(PROSODY_SERVICE_HOST):$(PROSODY_SERVICE_PORT_5280)
+          - name: ETHERPAD_URL_BASE
+            value: http://$(ETHERPAD_SERVICE_HOST):$(ETHERPAD_SERVICE_PORT)
+          image: ktenzer/jitsi-web:build_4392
+          imagePullPolicy: Always
+          name: web
+          ports:
+          - containerPort: 8080
+          - containerPort: 4443
+          resources: {}
+    triggers:
+    - type: ConfigChange
+  status: {}
 parameters:
   - name: APPLICATION_NAME
     displayName: Application Name
@@ -216,37 +397,54 @@ parameters:
   - name: APPLICATION_DOMAIN
     displayName: Application Domain
     description: Application domain name used in route to service
+    value: meet-jitsi-dev.apps.ocp4.keithtenzer.com
+    required: true
   - name: TIMEZONE
     displayName: Timezone
     description: The default timezone
-    value: America/Los_Angeles
+    value: Europe/Berlin
     required: true
+  - name: JVB_AUTH_USER
+    displayName: JVB Auth User
+    description: JVB Auth User
+    value: jvb
+    required: true 
+  - name: JVB_AUTH_PASSWORD
+    displayName: JVB Auth Password
+    description: JVB Auth Password
+    value: redhat123
+    required: true 
+  - name: JICOFO_AUTH_USER
+    displayName: JICOFO Auth User
+    description: JICOFO Auth User
+    value: focus
+    required: true 
+  - name: JICOFO_AUTH_PASSWORD
+    displayName: JICOFO Auth Password
+    description: JICOFO Auth Password
+    value: redhat123
+    required: true 
+  - name: JICOFO_COMPONENT_SECRET
+    displayName: JICOFO Component Secret
+    description: JICOFO Component Secret
+    value: s3cr3t
+    required: true 
   - name: JVB_STUN_SERVERS
     displayName: JVB Stun Servers
     description: Comma separated list of STUN servers (optional)
-    value: 
-  - name: DOCKER_HOST_ADDRESS
-    displayName: Docker Host IP
-    description: IP or Hostname where Pod is running
-    value: localhost
+    value: meet-jit-si-turnrelay.jitsi.net:443
+  - name: JVB_BREWERY_MUC
+    displayName: JVB Breweery MUC
+    description: JVB Brewery MUC
+    value: jvbbrewery
     required: true 
-  - name: XMPP_SERVER
-    displayName: XMPP Server
-    description: XMPP Server
-    value: localhost
+  - name: JVB_ENABLE_APIS
+    displayName: JVB Enabled APIs
+    description: JVB Enabled APIs
+    value: rest
     required: true 
-  - name: XMPP_DOMAIN
-    displayName: XMPP Domain
-    description: XMPP Domain
-    value: meet.jitsi
-    required: true 
-  - name: XMPP_AUTH_DOMAIN
-    displayName: XMPP Auth Domain
-    description: XMPP Auth Domain
-    value: auth.meet.jitsi
-    required: true 
-  - name: XMPP_INTERNAL_MUC_DOMAIN
-    displayName: XMPP Internal Muc Domain
-    description: XMPP Internal Muc Domain
-    value: internal-muc.meet.jitsi
+  - name: JVB_TCP_HARVESTER_DISABLED
+    displayName: JVB TCP HARVESTER DISABLED
+    description: JVB TCP HARVESTER DISABLED
+    value: "true"
     required: true 
