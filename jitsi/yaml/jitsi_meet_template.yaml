@@ -22,7 +22,7 @@ objects:
     name: jitsi-config
   data:
     LDAP_VERSION: ''
-    XMPP_INTERNAL_MUC_DOMAIN: internal-muc.conf-jitsi.apps.ocp4.keithtenzer.com
+    XMPP_INTERNAL_MUC_DOMAIN: internal-muc.${APPLICATION_DOMAIN}
     LDAP_AUTH_METHOD: ''
     JIBRI_BREWERY_MUC: jibribrewery
     JIBRI_LOGS_DIR: /config/logs
@@ -98,15 +98,15 @@ objects:
     type: NodePort
     ports:
     - name: udp
-      nodePort: 30001
-      port: 30001
+      nodePort: 30000
+      port: 30000
       protocol: UDP
-      targetPort: 30001
+      targetPort: 30000
     - name: tcp
-      nodePort: 30001
-      port: 30001
+      nodePort: 30000
+      port: 30000
       protocol: TCP
-      targetPort: 30001
+      targetPort: 30000
     selector:
       app: ${APPLICATION_NAME}
       name: jvb
@@ -147,21 +147,6 @@ objects:
     selector:
       app: ${APPLICATION_NAME}
       name: prosody
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: jitsi
-    name: etherpad
-  spec:
-    ports:
-    - port: 9001
-      targetPort: 9001
-    selector:
-      app: jitsi
-      name: etherpad
   status:
     loadBalancer: {}
 - apiVersion: route.openshift.io/v1
@@ -397,7 +382,7 @@ parameters:
   - name: APPLICATION_DOMAIN
     displayName: Application Domain
     description: Application domain name used in route to service
-    value: meet-jitsi-dev.apps.ocp4.keithtenzer.com
+    value: jitsi-podium.apps.ocp4.keithtenzer.com
     required: true
   - name: TIMEZONE
     displayName: Timezone

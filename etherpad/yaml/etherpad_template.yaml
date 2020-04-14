@@ -1,0 +1,109 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: "Etherpad Deployment on OpenShift"
+  creationTimestamp: null
+  name: jitsi
+objects:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: etherpad
+  spec:
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+    selector:
+      matchLabels:
+        app: ${APPLICATION_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          name: etherpad
+      spec:
+        containers:
+        - env:
+          - name: TITLE
+            value: ${ETHERPAD_DEFAULT_TITLE}
+          - name: DEFAULT_PAD_TEXT
+            value: ${ETHERPAD_DEFAULT_TEXT}
+          image: etherpad/etherpad
+          imagePullPolicy: Always
+          name: etherpad
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9001
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9001
+            initialDelaySeconds: 120
+            periodSeconds: 10
+          ports:
+          - containerPort: 9001
+          resources: {}
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: etherpad
+  spec:
+    ports:
+    - port: 9001
+      targetPort: 9001
+    selector:
+      app: ${APPLICATION_NAME} 
+      name: etherpad
+  status:
+    loadBalancer: {}
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+      kubernetes.io/tls-acme: "true"
+    name: etherpad
+  spec:
+    host: ${APPLICATION_DOMAIN}
+    port:
+      targetPort: 9001
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: etherpad
+      weight: 100
+    wildcardPolicy: None
+parameters:
+  - name: APPLICATION_NAME
+    displayName: Application Name
+    description: the name and label for all components
+    value: etherpad
+    required: true 
+  - name: APPLICATION_DOMAIN
+    displayName: Application Domain
+    description: Application domain name used in route to service
+    required: false
+  - name: ETHERPAD_DEFAULT_TITLE
+    displayName: Etherpad Default Title
+    description: Etherpad Default Title
+    value: NewDocument
+    required: true
+  - name: ETHERPAD_DEFAULT_TEXT
+    displayName: Etherpad Default Text
+    description: Etherpad Default Text
+    value: Welcome to etherpad! Assign yourself a user and share your ideas.
+    required: true
