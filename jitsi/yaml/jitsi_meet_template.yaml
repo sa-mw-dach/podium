@@ -186,8 +186,6 @@ objects:
           app: ${APPLICATION_NAME}
           name: prosody
       spec:
-        nodeSelector:
-          app: ${APPLICATION_NAME}
         containers:
         - envFrom:
           - configMapRef:
@@ -238,8 +236,6 @@ objects:
           app: ${APPLICATION_NAME}
           name: jicofo
       spec:
-        nodeSelector:
-          app: ${APPLICATION_NAME}
         containers:
         - envFrom:
           - configMapRef:
@@ -350,8 +346,6 @@ objects:
           app: ${APPLICATION_NAME}
           name: web
       spec:
-        nodeSelector:
-          app: ${APPLICATION_NAME}
         containers:
         - envFrom:
           - configMapRef:
