@@ -4,6 +4,10 @@ A lightweight, opensource, real-time editor for collaboration. Etherpad allows m
 ## Deploy Etherpad on OpenShift
 For now the deployment is using the built-in dirty db, this is not recommend for production and should be replaced with mariadb or postgresql. Etherpad must be deployed prior to Jitsi meet, since the etherpad service is consumed and used in the Jitsi meet deployment.
 
+### Create a new project
+
+```$ oc new-project etherpad```
+
 ### Template Default Parameters
 OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
 

@@ -1,0 +1,328 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: "Etherpad Deployment on OpenShift"
+  creationTimestamp: null
+  name: mattermost-team-edition
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: mattermost-team-edition-config-json
+  stringData:
+    config.json: '{"AnalyticsSettings":{"MaxUsersForStatistics":2500},"AnnouncementSettings":{"AllowBannerDismissal":true,"BannerColor":"#f2a93b","BannerText":"","BannerTextColor":"#333333","EnableBanner":false},"DisplaySettings":{"CustomUrlSchemes":[],"ExperimentalTimezone":true},"EmailSettings":{"ConnectionSecurity":"","EmailBatchingBufferSize":256,"EmailBatchingInterval":30,"EnableEmailBatching":false,"EnableSMTPAuth":"","EnableSignInWithEmail":true,"EnableSignInWithUsername":true,"EnableSignUpWithEmail":true,"FeedbackEmail":"","FeedbackName":"","FeedbackOrganization":"","InviteSalt":"u2wanvmsYMxAI7Ox0fJOkoQi4dopa5rT","PushNotificationContents":"generic","PushNotificationServer":"https://push-test.mattermost.com","RequireEmailVerification":false,"SMTPPassword":"","SMTPPort":"","SMTPServer":"","SMTPUsername":"","SendEmailNotifications":false,"SendPushNotifications":true,"SkipServerCertificateVerification":false},"FileSettings":{"AmazonS3AccessKeyId":"","AmazonS3Bucket":"","AmazonS3Endpoint":"s3.amazonaws.com","AmazonS3Region":"","AmazonS3SSL":false,"AmazonS3SecretAccessKey":"","AmazonS3SignV2":false,"Directory":"./data/","DriverName":"local","EnableFileAttachments":true,"EnablePublicLink":false,"InitialFont":"luximbi.ttf","MaxFileSize":52428800,"PreviewHeight":0,"PreviewWidth":1024,"ProfileHeight":128,"ProfileWidth":128,"PublicLinkSalt":"jPcpFrmVZXsZPO3V9beWXIm18ijXMpVN","ThumbnailHeight":100,"ThumbnailWidth":120},"GitLabSettings":{"AuthEndpoint":"","Enable":false,"Id":"","Scope":"","Secret":"","TokenEndpoint":"","UserApiEndpoint":""},"LocalizationSettings":{"AvailableLocales":"","DefaultClientLocale":"en","DefaultServerLocale":"en"},"LogSettings":{"ConsoleLevel":"INFO","EnableConsole":true,"EnableDiagnostics":true,"EnableFile":true,"EnableWebhookDebugging":true,"FileFormat":"","FileLevel":"INFO","FileLocation":""},"NativeAppSettings":{"AndroidAppDownloadLink":"https://about.mattermost.com/mattermost-android-app/","AppDownloadLink":"https://about.mattermost.com/downloads/","IosAppDownloadLink":"https://about.mattermost.com/mattermost-ios-app/"},"PasswordSettings":{"Lowercase":false,"MinimumLength":5,"Number":false,"Symbol":false,"Uppercase":false},"PluginSettings":{"ClientDirectory":"./client/plugins","Directory":"./plugins","Enable":true,"EnableUploads":true,"PluginStates":{},"Plugins":{}},"PrivacySettings":{"ShowEmailAddress":true,"ShowFullName":true},"RateLimitSettings":{"Enable":false,"MaxBurst":100,"MemoryStoreSize":10000,"PerSec":10,"VaryByHeader":"","VaryByRemoteAddr":true},"ServiceSettings":{"AllowCorsFrom":"","AllowEditPost":"always","ClusterLogTimeoutMilliseconds":2000,"ConnectionSecurity":"","EnableBotAccountCreation":false,"EnableCommands":true,"EnableCustomEmoji":false,"EnableDeveloper":false,"EnableIncomingWebhooks":true,"EnableInsecureOutgoingConnections":false,"EnableLinkPreviews":false,"EnableMultifactorAuthentication":false,"EnableOAuthServiceProvider":false,"EnableOnlyAdminIntegrations":false,"EnableOutgoingWebhooks":true,"EnablePostIconOverride":false,"EnablePostSearch":true,"EnablePostUsernameOverride":false,"EnableSecurityFixAlert":true,"EnableTesting":false,"EnableUserAccessTokens":false,"EnableUserStatuses":true,"EnableUserTypingMessages":true,"EnforceMultifactorAuthentication":false,"Forward80To443":false,"GoogleDeveloperKey":"","GoroutineHealthThreshold":-1,"LetsEncryptCertificateCacheFile":"./config/letsencrypt.cache","LicenseFileLocation":"","ListenAddress":":8065","MaximumLoginAttempts":10,"PostEditTimeLimit":300,"ReadTimeout":300,"RestrictCustomEmojiCreation":"all","RestrictPostDelete":"all","SessionCacheInMinutes":10,"SessionLengthMobileInDays":30,"SessionLengthSSOInDays":30,"SessionLengthWebInDays":30,"SiteURL":"","TLSCertFile":"","TLSKeyFile":"","TimeBetweenUserTypingUpdatesMilliseconds":5000,"UseLetsEncrypt":false,"WebserverMode":"gzip","WebsocketPort":80,"WebsocketSecurePort":443,"WriteTimeout":300},"SqlSettings":{"AtRestEncryptKey":"wYfdV7osbgZ8ACkrEdSowdYlFl6sWTHX","DataSource":"mmuser:redhat123@tcp(mattermost-mysql:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s","DataSourceReplicas":[],"DataSourceSearchReplicas":[],"DriverName":"mysql","MaxIdleConns":20,"MaxOpenConns":35,"QueryTimeout":30,"Trace":false},"SupportSettings":{"AboutLink":"https://about.mattermost.com/default-about/","HelpLink":"https://about.mattermost.com/default-help/","PrivacyPolicyLink":"https://about.mattermost.com/default-privacy-policy/","ReportAProblemLink":"https://about.mattermost.com/default-report-a-problem/","SupportEmail":"feedback@mattermost.com","TermsOfServiceLink":"https://about.mattermost.com/default-terms/"},"TeamSettings":{"CustomBrandText":"","CustomDescriptionText":"","EnableCustomBrand":false,"EnableOpenServer":true,"EnableTeamCreation":true,"EnableUserCreation":true,"MaxChannelsPerTeam":50000,"MaxNotificationsPerChannel":1000,"MaxUsersPerTeam":50000,"RestrictCreationToDomains":"","RestrictDirectMessage":"any","RestrictPrivateChannelCreation":"all","RestrictPrivateChannelDeletion":"all","RestrictPrivateChannelManageMembers":"all","RestrictPrivateChannelManagement":"all","RestrictPublicChannelCreation":"all","RestrictPublicChannelDeletion":"all","RestrictPublicChannelManagement":"all","RestrictTeamInvite":"all","SiteName":"Mattermost","UserStatusAwayTimeout":300},"TimezoneSettings":{"SupportedTimezonesPath":"timezones.json"},"WebrtcSettings":{"Enable":false,"GatewayAdminSecret":"","GatewayAdminUrl":"","GatewayWebsocketUrl":"","StunURI":"","TurnSharedKey":"","TurnURI":"","TurnUsername":""}}'
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: mattermost-mysql
+  stringData:
+    mysql-password: ${MYSQL_USER_PASSWORD}
+    mysql-root-password: ${MYSQL_ROOT_PASSWORD}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: mattermost-mattermost-team-edition-tests
+  data:
+    run.sh: |-
+      @test "Testing Mattermost is accessible" {
+        curl --retry 48 --retry-delay 10 mattermost-team-edition.mattermost.svc.cluster.local:8065
+      }
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: mattermost-mysql
+  data:
+    run.sh: ""
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: mattermost-team-edition
+  spec:
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+    selector:
+      matchLabels:
+        app: ${APPLICATION_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          name: mattermost-team-edition
+      spec:
+        containers:
+        - image: mattermost/mattermost-team-edition:5.11.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/v4/system/ping
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: mattermost-team-edition
+          ports:
+          - containerPort: 8065
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/v4/system/ping
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /mattermost/config/config.json
+            name: config-json
+            subPath: config.json
+          - mountPath: /mattermost/data
+            name: mattermost-data
+          - mountPath: /mattermost/plugins
+            name: mattermost-plugins
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until curl --max-time 5 http://mattermost-mysql:3306; do echo waiting for
+            mattermost-mysql; sleep 5; done;
+          image: appropriate/curl:latest
+          imagePullPolicy: IfNotPresent
+          name: init-mysql
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config-json
+          secret:
+            defaultMode: 420
+            secretName: mattermost-team-edition-config-json
+        - name: mattermost-data
+          persistentVolumeClaim:
+            claimName: mattermost-team-edition
+        - name: mattermost-plugins
+          persistentVolumeClaim:
+            claimName: mattermost-team-edition-plugins
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: mattermost-mysql
+  spec:
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+    selector:
+      matchLabels:
+        app: ${APPLICATION_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APPLICATION_NAME}
+          name: mattermost-mysql
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: mysql-root-password
+                name: mattermost-mysql
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: mysql-password
+                name: mattermost-mysql
+          - name: MYSQL_USER
+            value: mmuser
+          - name: MYSQL_DATABASE
+            value: mattermost
+          image: mysql:5.7.14
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: mattermost-mysql
+          ports:
+          - containerPort: 3306
+            name: mysql
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: data
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - rm
+          - -fr
+          - /var/lib/mysql/lost+found
+          image: busybox:1.29.3
+          imagePullPolicy: IfNotPresent
+          name: remove-lost-found
+          resources:
+            requests:
+              cpu: 10m
+              memory: 10Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: data
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mattermost-mysql
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: mattermost-team-edition
+  spec:
+    ports:
+    - port: 8065
+      targetPort: http
+    selector:
+      app: ${APPLICATION_NAME} 
+      name: mattermost-team-edition
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: mattermost-mysql
+  spec:
+    ports:
+    - name: mysql
+      port: 3306
+      protocol: TCP
+      targetPort: mysql
+    selector:
+      app: ${APPLICATION_NAME} 
+      name: mattermost-mysql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+      kubernetes.io/tls-acme: "true"
+    name: chat
+  spec:
+    host: ${APPLICATION_DOMAIN}
+    port:
+      targetPort: 8065
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: mattermost-team-edition
+      weight: 100
+  wildcardPolicy: None
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: mattermost-team-edition
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: mattermost-team-edition-plugins
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: mattermost-mysql
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+parameters:
+  - name: APPLICATION_NAME
+    displayName: Application Name
+    description: the name and label for all components
+    value: mattermost-team-edition
+    required: true 
+  - name: APPLICATION_DOMAIN
+    displayName: Application Domain
+    description: Application domain name used in route to service
+    required: false
+  - name: MYSQL_USER_PASSWORD
+    displayName: Password for Mysql User
+    description: Password for Mysql User
+    value: redhat123
+    required: true
+  - name: MYSQL_ROOT_PASSWORD
+    displayName: Password for Mysql Root User
+    description: Password for Mysql Root User
+    value: a7Y792EdCE
+    required: true

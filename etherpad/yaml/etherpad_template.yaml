@@ -4,7 +4,7 @@ metadata:
   annotations:
     description: "Etherpad Deployment on OpenShift"
   creationTimestamp: null
-  name: jitsi
+  name: etherpad
 objects:
 - apiVersion: apps/v1
   kind: Deployment
