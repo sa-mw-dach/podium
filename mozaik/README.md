@@ -1,0 +1,41 @@
+# Mozaik Dashboard
+The [Mozaik Dashboard](http://mozaik.rocks/) provides an adaptive and extendable dashboard as central starting point for the Podium Collaboration Space.
+
+The OpenShift deployment is straightforward, using the S2I nodejs deployment image.
+
+One central configuration file determines the arrangement and content of the Mozaik widgets.
+The configuration file is managed by OpenShift as a ConfigMap and can be modified and adapted as needed. After such modifications, the currently running Podium Pod needs to be deleted in order to be replaced with a new one reflecting the configuration changee.
+
+In our configuration, we mainly use the [mozaik-ext-embed](https://github.com/juhamust/mozaik-ext-embed) extension for Mozaik, that allows to embed arbitrary HTML markup into the widget.
+
+For demo purpose, we also use the [mozaik-ext-githug](https://github.com/plouc/mozaik-ext-github) extension to show how such an extension can be used to integrate the dashboard much deeper into the associated applications using the specific APIs. As ToDo for the Podium project, we want to create such Mozaik extensions to register new EtherPad Sketch Boards and provide automatic integration into the Mattermost Chat application.
+
+## Lets Encrypt Certificate
+The Podium Dashboard has not yet been configured to use HTTPS encryption.
+
+ToDo:
+[Setup Lets Encrypt on OpenShift](https://keithtenzer.com/2020/04/03/openshift-application-certificate-management-with-lets-encrypt/)
+
+## Label Node
+The Podium Dashboard is not dependent on specific node features.
+
+### Create a new project
+
+We expect all applications of the Podium Collaboration Space to be grouped into one OpenShift project. The name of the project is arbitrary and may reflect the theme or purpose of collaboration. If more than one Podium Space needs to be deployed in the same OpenShift cluster, the project name should be augmentd by a random identifier (GID).
+
+```$ oc create new-project podium-DE4A```
+
+### Template Default Parameters
+OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
+
+```$ oc process --parameters -f mozaik_template.yaml```
+
+### Process Template
+OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
+
+```$ oc process -f mozaik_template.yaml -p TIMEZONE=Europe/Berlin |oc create -f -```
+
+### Access Jitsi Meet
+The template will create a default http route.
+
+```$ oc get route```
