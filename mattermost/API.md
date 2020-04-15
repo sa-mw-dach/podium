@@ -27,7 +27,7 @@ Set-Cookie: 01d4e3cb1348223ce020865ff538417e=4b8cf1a7977d968f8985ee434f02211a; p
 {"id":"oxi5ygkcytn1dxexd3bcgf5ibr","create_at":1586952144114,"update_at":1586952144114,"delete_at":0,"username":"ktenzer","auth_data":"","auth_service":"","email":"ktenzer@redhat.com","nickname":"","first_name":"","last_name":"","position":"","roles":"system_admin system_user","notify_props":{"channel":"true","comments":"never","desktop":"mention","desktop_sound":"true","email":"true","first_name":"false","mention_keys":"ktenzer,@ktenzer","push":"mention","push_status":"away"},"last_password_update":1586952144114,"locale":"en","timezone":{"automaticTimezone":"","manualTimezone":"","useAutomaticTimezone":"true"}}
 ```
 
-***token: pwkydmww9jyz3qrzw8etuuj7bw ***
+**token: pwkydmww9jyz3qrzw8etuuj7bw**
 
 ## Authenticate with user to API
 This is a simple API to test access using our token.
@@ -43,8 +43,8 @@ We will now create a team called myteam. Each team also has an invite link, used
 {"id":"t4t94zah3fy1bdrz38niwkj69h","create_at":1586953746034,"update_at":1586953746034,"delete_at":0,"display_name":"myteam","name":"myteam","description":"","email":"ktenzer@redhat.com","type":"O","company_name":"","allowed_domains":"","invite_id":"3bd6ey3y6tyw98oksg3cnb6rdw","allow_open_invite":false,"scheme_id":null,"group_constrained":null}
 ```
 
-*** team id: t4t94zah3fy1bdrz38niwkj69h ***
-*** invite id: 3bd6ey3y6tyw98oksg3cnb6rdw ***
+**team id: t4t94zah3fy1bdrz38niwkj69h**
+**invite id: 3bd6ey3y6tyw98oksg3cnb6rdw**
 
 The teamId is used to create a channel and the inviteId is used in the signup URL to allow new users to join team.
 
