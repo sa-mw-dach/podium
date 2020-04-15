@@ -2,12 +2,12 @@
 
 ## Create User
 
-```$ curl --location --request POST https://chat-podium.apps.ocp4.keithtenzer.com/api/v4/users --header 'Content-Type: application/json' --data-raw '{"email":"ktenzer@redhat.com","username":"ktenzer","password":"redhat123"}'```
+```$ curl --location --request POST https://chat-podium.apps.ocp4.keithtenzer.com/api/v4/users --header 'Content-Type: application/json' --data-raw '{"email":"ktenzer@redhat.com","username":"ktenzer","password":"<password>"}'```
 
 ## Get API Token
 Now we get the Token. The token is returned in the http header.
 
-```$ curl -i -d '{"login_id":"ktenzer@redhat.com","password":"redhat123"}' https://chat-podium.apps.ocp4.keithtenzer.com/api/v4/users/login```
+```$ curl -i -d '{"login_id":"ktenzer@redhat.com","password":"<password>"}' https://chat-podium.apps.ocp4.keithtenzer.com/api/v4/users/login```
 
 ```
 HTTP/1.1 200 OK
