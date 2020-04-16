@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podium-operator
+  namespace: podium-operator
 spec:
   replicas: 1
   selector:
@@ -24,10 +25,11 @@ spec:
             name: runner
           env:
             - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
+              value: ""
+#              valueFrom:
+#                fieldRef:
 #                  fieldPath: metadata.namespace
-                  fieldPath:
+#                  fieldPath: ""
             - name: POD_NAME
               valueFrom:
                 fieldRef:

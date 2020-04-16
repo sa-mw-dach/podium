@@ -1,11 +1,14 @@
-kind: RoleBinding
+#kind: RoleBinding
+kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: podium-operator
 subjects:
 - kind: ServiceAccount
   name: podium-operator
+  namespace: podium-operator
 roleRef:
-  kind: Role
+#  kind: Role
+  kind: ClusterRole
   name: podium-operator
   apiGroup: rbac.authorization.k8s.io
