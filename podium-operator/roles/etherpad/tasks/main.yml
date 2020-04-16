@@ -8,26 +8,26 @@
         name: etherpad
         namespace: '{{ meta.namespace }}'
         labels:
-          app: "{{APPLICATION_NAME}}"
+          app: "{{application_name}}"
       spec:
-        replicas: "{{size}}"
+        replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{APPLICATION_NAME}}"
+            app: "{{application_name}}"
         template:
           metadata:
             labels:
-              app: "{{APPLICATION_NAME}}"
+              app: "{{application_name}}"
               name: etherpad
           spec:
             containers:
             - env:
               - name: TITLE
-                value: "{{ETHERPAD_DEFAULT_TITLE}}"
+                value: "{{etherpad_default_text}}"
               - name: DEFAULT_PAD_TEXT
-                value: "{{ETHERPAD_DEFAULT_TEXT}}"
+                value: "{{etherpad_default_text}}"
               image: etherpad/etherpad
               imagePullPolicy: Always
               name: etherpad
@@ -57,14 +57,14 @@
       metadata:
         namespace: '{{ meta.namespace }}'
         labels:
-          app: "{{APPLICATION_NAME}}"
+          app: "{{application_name}}"
         name: etherpad
       spec:
         ports:
         - port: 9001
           targetPort: 9001
         selector:
-          app: "{{APPLICATION_NAME}}"
+          app: "{{application_name}}"
           name: etherpad
       status:
         loadBalancer: {}
@@ -80,7 +80,7 @@
           kubernetes.io/tls-acme: "true"
         name: etherpad
       spec:
-        host: "{{APPLICATION_DOMAIN}}"
+        host: "etherpad-{{namespace}}.{{application_domain}}"
         port:
           targetPort: 9001
         tls:
