@@ -5,7 +5,7 @@
       kind: Deployment
       apiVersion: apps/v1
       metadata:
-        name: '{{ meta.name }}-etherpad'
+        name: etherpad
         namespace: '{{ meta.namespace }}'
         labels:
           app: "{{APPLICATION_NAME}}"
@@ -15,7 +15,7 @@
           type: RollingUpdate
         selector:
           matchLabels:
-            app: '{{APPLICATION_NAME}}"
+            app: "{{APPLICATION_NAME}}"
         template:
           metadata:
             labels:
@@ -46,12 +46,9 @@
                 periodSeconds: 10
               ports:
               - containerPort: 9001
-              resources: {}
             restartPolicy: Always
         triggers:
         - type: ConfigChange
-      status: {}
-
 - name: Deploy etherpad service
   k8s:
     definition:
@@ -71,7 +68,6 @@
           name: etherpad
       status:
         loadBalancer: {}
-
 - name: Deploy etherpad route
   k8s:
     definition:
