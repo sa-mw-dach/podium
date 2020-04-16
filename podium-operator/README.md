@@ -26,7 +26,13 @@ The podium operator will mange the deployment of podium environments accross the
 ```$ oc create -f podium-operator/deploy/operator.yaml```
 
 ## Deploy Instance of Podium using Operator
+
+### Create Namespace for Podium Instance
+
+```$ oc new-project podium```
  
+### Instantiate Podium Instance using Operator
+
 ```
 $ vi podium.yaml
 apiVersion: podium.com/v1alpha1
