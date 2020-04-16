@@ -25,17 +25,19 @@ We expect all applications of the Podium Collaboration Space to be grouped into 
 
 ```$ oc create new-project podium-DE4A```
 
-### Template Default Parameters
-OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
+### Create Mozaik Dashboard App
+The Mozaik application is created using the S2I feature of OpenShift. We simply point OpenShift to the /mozaik/dashboard source directory and leave the rest to OpenShift.
 
-```$ oc process --parameters -f mozaik_template.yaml```
+```$ oc new-app https://github.com/sa-mw-dach/podium.git --context-dir=/mozaik/dashboard/ --strategy=source```
 
-### Process Template
-OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
+### Customize the Dashboard
+The Dashboard with all widgets are configured in one single configuration file [config.js](dashboard/config.js)
 
-```$ oc process -f mozaik_template.yaml -p TIMEZONE=Europe/Berlin |oc create -f -```
+In order to make the Dashboard universally usable for many different use cases, we replace this configuration file with a ConfigMap in OpenShift.
 
-### Access Jitsi Meet
-The template will create a default http route.
 
+### Access Mozaik Dashboard
+The deployment does not expose the service automatically, so we finish our installation with these steps.
+
+```$ oc expose svc/podium```
 ```$ oc get route```
