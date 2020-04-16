@@ -266,7 +266,7 @@ objects:
       kubernetes.io/tls-acme: "true"
     name: chat
   spec:
-    host: ${APPLICATION_DOMAIN}
+    host: chat-${NAMESPACE}.${APPLICATION_DOMAIN}
     port:
       targetPort: 8065
     tls:
@@ -314,8 +314,14 @@ parameters:
     required: true 
   - name: APPLICATION_DOMAIN
     displayName: Application Domain
+    description: Application domain is the wildcard domain for application routes
+    value: apps.ocp4.keithtenzer.com
+    required: true
+  - name: NAMESPACE
+    displayName: Application Domain
     description: Application domain name used in route to service
-    required: false
+    value: podium
+    required: true
   - name: MYSQL_USER_PASSWORD
     displayName: Password for Mysql User
     description: Password for Mysql User

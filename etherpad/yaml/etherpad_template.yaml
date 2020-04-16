@@ -77,7 +77,7 @@ objects:
       kubernetes.io/tls-acme: "true"
     name: etherpad
   spec:
-    host: ${APPLICATION_DOMAIN}
+    host: etherpad-${NAMESPACE}.${APPLICATION_DOMAIN}
     port:
       targetPort: 9001
     tls:
@@ -95,8 +95,14 @@ parameters:
     required: true 
   - name: APPLICATION_DOMAIN
     displayName: Application Domain
+    description: Application domain is the wildcard domain for application routes
+    value: apps.ocp4.keithtenzer.com
+    required: true
+  - name: NAMESPACE
+    displayName: Application Domain
     description: Application domain name used in route to service
-    required: false
+    value: podium
+    required: true
   - name: ETHERPAD_DEFAULT_TITLE
     displayName: Etherpad Default Title
     description: Etherpad Default Title

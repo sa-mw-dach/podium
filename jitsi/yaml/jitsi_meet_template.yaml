@@ -22,7 +22,7 @@ objects:
     name: jitsi-config
   data:
     LDAP_VERSION: ''
-    XMPP_INTERNAL_MUC_DOMAIN: internal-muc.${APPLICATION_DOMAIN}
+    XMPP_INTERNAL_MUC_DOMAIN: internal-muc.meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     LDAP_AUTH_METHOD: ''
     JIBRI_BREWERY_MUC: jibribrewery
     JIBRI_LOGS_DIR: /config/logs
@@ -43,7 +43,7 @@ objects:
     JVB_TCP_HARVESTER_DISABLED: ${JVB_TCP_HARVESTER_DISABLED}
     LDAP_TLS_CACERT_DIR: ''
     LDAP_TLS_CIPHERS: ''
-    XMPP_DOMAIN: ${APPLICATION_DOMAIN}
+    XMPP_DOMAIN: meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     JICOFO_RESERVATION_REST_BASE_URL: ''
     JIGASI_HEALTH_CHECK_INTERVAL: ''
     JIBRI_FINALIZE_RECORDING_SCRIPT_PATH: /config/finalize.sh
@@ -51,21 +51,21 @@ objects:
     JWT_ACCEPTED_AUDIENCES: ''
     LDAP_FILTER: ''
     ENABLE_LETSENCRYPT: ''
-    XMPP_AUTH_DOMAIN: auth.${APPLICATION_DOMAIN}
+    XMPP_AUTH_DOMAIN: auth.meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     JWT_APP_ID: ''
-    XMPP_MUC_DOMAIN: muc.${APPLICATION_DOMAIN}
+    XMPP_MUC_DOMAIN: muc.meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     JVB_STUN_SERVERS: ${JVB_STUN_SERVERS}
     JIBRI_PENDING_TIMEOUT: '90'
     DISABLE_HTTPS: ''
     JIGASI_SIP_TRANSPORT: ''
-    XMPP_GUEST_DOMAIN: guest.${APPLICATION_DOMAIN}
+    XMPP_GUEST_DOMAIN: guest.meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     ENABLE_RECORDING: ''
     LDAP_TLS_CHECK_PEER: ''
     JIGASI_PORT_MAX: '20050'
     JIGASI_SIP_PORT: ''
     JIGASI_BREWERY_MUC: jigasibrewery
     JIBRI_STRIP_DOMAIN_JID: muc
-    LETSENCRYPT_DOMAIN: ${APPLICATION_DOMAIN}
+    LETSENCRYPT_DOMAIN: meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     LDAP_URL: ''
     JIGASI_SIP_URI: '${JIGASI_SIP_URI}'
     ENABLE_GUESTS: ''
@@ -74,11 +74,11 @@ objects:
     JIGASI_SIP_SERVER: ''
     XMPP_MUC_MODULES: ''
     JWT_AUTH_TYPE: ''
-    PUBLIC_URL: https://${APPLICATION_DOMAIN}
+    PUBLIC_URL: https://meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     JWT_ACCEPTED_ISSUERS: ''
     JIBRI_RECORDING_DIR: /config/recordings
     JIGASI_TRANSCRIBER_RECORD_AUDIO: ''
-    XMPP_RECORDER_DOMAIN: recorder.${APPLICATION_DOMAIN}
+    XMPP_RECORDER_DOMAIN: recorder.meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     JWT_ASAP_KEYSERVER: ''
     ENABLE_TRANSCRIPTIONS: ''
     JVB_BREWERY_MUC: ${JVB_BREWERY_MUC}
@@ -155,9 +155,9 @@ objects:
     annotations:
       openshift.io/host.generated: "true"
       kubernetes.io/tls-acme: "true"
-    name: jitsi
+    name: meet
   spec:
-    host: ${APPLICATION_DOMAIN}
+    host: meet-${NAMESPACE}.${APPLICATION_DOMAIN}
     port:
       targetPort: http
     tls:
@@ -375,8 +375,13 @@ parameters:
     required: true 
   - name: APPLICATION_DOMAIN
     displayName: Application Domain
+    description: Application domain is the wildcard domain for application routes
+    value: apps.ocp4.keithtenzer.com
+    required: true
+  - name: NAMESPACE
+    displayName: Application Domain
     description: Application domain name used in route to service
-    value: jitsi-podium.apps.ocp4.keithtenzer.com
+    value: podium
     required: true
   - name: TIMEZONE
     displayName: Timezone

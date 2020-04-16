@@ -29,14 +29,14 @@ This is something we will be improving but for now, mattermost requires init con
 
 ### Deploy Mattermost
 
-```$ oc process -f mattermost/yaml/mattermost_template.yaml |oc create -f -```
+```$ oc process -f mattermost/yaml/mattermost_template.yaml -p APPLICATION_DOMAIN=apps.ocp4.keithtenzer.com -p NAMESPACE=podium |oc create -f -```
 
 ### Deploy Etherpad
 
-```$ oc process -f etherpad/yaml/etherpad_template.yaml |oc create -f -```
+```$ oc process -f etherpad/yaml/etherpad_template.yaml -p APPLICATION_DOMAIN=apps.ocp4.keithtenzer.com -p NAMESPACE=podium |oc create -f -```
 
 ### Deploy Jitsi Meet
-```$ oc process -f jitsi/yaml/jitsi_meet_template.yaml -p APPLICATION_DOMAIN=jitsi-<namespace>.<wildcard domain> -p TIMEZONE=Europe/Berlin |oc create -f -```
+```$ oc process -f jitsi/yaml/jitsi_meet_template.yaml -p TIMEZONE=Europe/Berlin -p APPLICATION_DOMAIN=apps.ocp4.keithtenzer.com -p NAMESPACE=podium |oc create -f -```
 
 ### Access environment
 The template will create a default https route (edge termination) for jitsi and etherpad. Assuming you configured the lets encrypt admission controller, the certificate will automatically be added to your routes. It can take several minutes for the lets encrypt certificate to be issues so be patient.
@@ -46,7 +46,7 @@ $ oc get routes
 NAME       HOST/PORT                                   PATH   SERVICES                  PORT   TERMINATION   WILDCARD
 chat       chat-podium.apps.ocp4.keithtenzer.com              mattermost-team-edition   8065   edge          None
 etherpad   etherpad-podium.apps.ocp4.keithtenzer.com          etherpad                  9001   edge          None
-jitsi      jitsi-podium.apps.ocp4.keithtenzer.com             web                       http   edge          None
+meet       meet-podium.apps.ocp4.keithtenzer.com              web                       http   edge          None
 ```
 
-You can access jitsi meet using https://jitsi-podium.apps.ocp4.keithtenzer.com for example.
+You can access jitsi meet using https://meet-podium.apps.ocp4.keithtenzer.com for example.

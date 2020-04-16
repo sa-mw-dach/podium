@@ -20,4 +20,4 @@ OpenShift templates allow you to parameterize and automate deployment of all app
 
 ### Deploy Etherpad template
 
-```$ oc process -f mattermost_template.yaml |oc create -f -```
+```$ oc process -f mattermost_template.yaml -p APPLICATION_DOMAIN=apps.ocp4.keithtenzer.com -p NAMESPACE=podium |oc create -f -```

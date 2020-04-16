@@ -1,0 +1,6 @@
+---
+size: 1
+APPLICATION_NAME: etherpad
+APPLICATION_DOMAIN:
+ETHERPAD_DEFAULT_TITLE: "Welcome to Etherpad"
+ETHERPAD_DEFAULT_TEXT: "Etherpad is a real-time text editor"

@@ -1,0 +1,10 @@
+---
+- version: v1alpha1
+  group: podium.com
+  kind: Podium
+  role: podium
+
+#- version: v1alpha1
+#  group: etherpad.podium.com
+#  kind: Etherpad
+#  role: etherpad

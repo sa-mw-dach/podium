@@ -30,7 +30,7 @@ OpenShift templates allow you to parameterize and automate deployment of all app
 ### Process Template
 OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
 
-```$ oc process -f jitsi_meet_template.yaml -p TIMEZONE=Europe/Berlin |oc create -f -```
+```$ oc process -f jitsi_meet_template.yaml -p TIMEZONE=Europe/Berlin -p APPLICATION_DOMAIN=apps.ocp4.keithtenzer.com -p NAMESPACE=podium |oc create -f -```
 
 ### Access Jitsi Meet
 The template will create a default https route (edge termination). Assuming you configured the lets encrypt admission controller, the certificate will automatically be added to your route. It can take several minutes for the lets encrypt certificate to be issues so be patient.

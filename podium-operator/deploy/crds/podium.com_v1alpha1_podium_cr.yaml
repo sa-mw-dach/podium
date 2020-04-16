@@ -1,0 +1,7 @@
+apiVersion: podium.com/v1alpha1
+kind: Podium
+metadata:
+  name: example-podium
+spec:
+  # Add fields here
+  size: 3
