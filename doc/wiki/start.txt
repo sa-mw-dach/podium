@@ -1,0 +1,14 @@
+=====Podium Collaboration Workspace=====
+----
+Welcome to the new Podium Callaboration Workspace!
+
+
+To enable a fast and easy start for your project, Podium provides you with a predefined set of tools that make sure your team members are all on the same page.
+
+  * The front door to the Podium Workspace is the Podium Dashboard you have probably already seen and from which you have reached this Wiki page. The Dashboard consists of widgets that are grouped in a simple grid in your browser. Each widget gives you access to one application that fosters you and your team for whatever project your are upon. You will find brief descriptions on how to use these applications in the following paragraphs and you will find links to comprehensive documentation for the upstream projects to dive deeper into the use.
+  * As the central application for collaboration, we provide an independed and decentralized video conferencing system. The **Podium Conference Center** comes with three predefined conference rooms: the Plenum, the Roundtable and the Lobby. You find these rooms in the center widget of the dashboard. The Podium Conference Center does not depend on any central provider, it is a dedicated system just for your project. The use of the Podium Conference Center is pretty much self explanatory. Just klick on one of the pictures in the central Conference Center widget and the associated video chat window opens in your browser. You will be asked for permission to access your video camera and microphone like in any other video conferencing tool you may have used before. Once you are set, just wait for your team mates to join and start your meeting.
+  * The **Podium Scratch Pad** is used for colaborative writing of nodes and single page documents. You find a list of predefined documents in the Scratch Pad widget on your Poduim Dashboard. The New Pad link allows the creation of arbitrary new documents. Multiple members of your team can open the same Scratch Pad document (following the link in the Sratch Pad widget) and start typing. Each author gets his or her individual colour assigned, each team member can see who is working on which part of the document. In the top row of each Scratch Pad document, you find a menu bar with all the formatting options and settings.
+  * The **Podium Knowledge Base** widget gives access to the Wiki application that holds and organizes all sorts of documents for your project. Like any other Wiki, all team members can freely edit and add all documents in order to contribute to the Knowledge Base. Other than the Scratch Pad, the Wiki allows only one editor at a time. 
+  * The **Podium Chat** ...
+
+Podium is an Open Source project. If you are interested in details or you even want to participate and contribute, you can find more information in the [[Projects:Podium Project:start]] section of this wiki or you can go to our [[https://github.com/sa-mw-dach/podium|Github Repository]]

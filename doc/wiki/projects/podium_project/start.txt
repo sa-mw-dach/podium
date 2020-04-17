@@ -1,0 +1,9 @@
+=====Podium Technical Section=====
+
+Your Podium consists of Best of Breed Open Source applications:
+
+  * [[https://jitsi.org/|Jitsi]] is the central video conferencing application. The Podium Conference Center comes with three predefined conference rooms: the Plenum, the Roundtable and the Lobby. You find these rooms in the center widget of the dashboard.
+  * [[http://mozaik.rules|Mozaik]] is the Podium Dashboard that glues all applications together. Some of the widgets of this dashboard simply provide links to these other applications, some widgets have more sophisticated features.
+  * [[http://etherpad.org|Etherpad]] is a versatile scratch pad for colaborative writing. You find a list of predefined documents in the Scratch Pad widget on your Poduim Dashboard. The New Pad link allows the creation of arbitrary new documents.
+  * [[http://www.dokuwiki.org|DokuWiki]] is the backbone of the Podium Knowledge Base, the application you are currently looking at.
+  * [[https://github.com/mattermost/mattermost-server|MatterMost]] is the professional chat application
