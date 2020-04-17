@@ -4,11 +4,6 @@
 
 ```$ oc create new-project podium-operator```
 
-## Allow anyuid in namespace
-This is something we will be improving but for now, mattermost requires init containers that require elevated permissions
-
-```$ oc adm policy add-scc-to-user anyuid -z default```
-
 ## Create Podium Operator CRD
 
 ```$ oc create -f podium-operator/deploy/crds/podium.com_podia_crd.yaml```
@@ -31,7 +26,12 @@ This is something we will be improving but for now, mattermost requires init con
 
 ```$ oc create new-project podium```
 
-## Install Instance of Podium using CR
+## Allow anyuid in namespace
+This is something we will be improving but for now, mattermost requires init containers that require elevated permissions
+
+```$ oc adm policy add-scc-to-user anyuid -z default```
+
+## Create Podium CR
 
 ```
 $ vi podium.yaml
@@ -62,6 +62,11 @@ spec:
   jvb_node_selector: jvb
 ```
 
+## Label Node you want to run jvb service (video bridge)
+
+```$ oc label node ocp4-n4krq-worker-v996z app=jvb```
+
+## Apply Podium CR
 ```$ oc apply -f podium.yaml```
 
 # Access environment
