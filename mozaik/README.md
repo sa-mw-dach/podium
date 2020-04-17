@@ -23,7 +23,7 @@ The Podium Dashboard is not dependent on specific node features.
 
 We expect all applications of the Podium Collaboration Space to be grouped into one OpenShift project. The name of the project is arbitrary and may reflect the theme or purpose of collaboration. If more than one Podium Space needs to be deployed in the same OpenShift cluster, the project name should be augmentd by a random identifier (GID).
 
-```$ oc create new-project podium-DE4A```
+```$ oc new-project podium-de4a```
 
 ### Create Mozaik Dashboard App
 The Mozaik application is created using the S2I feature of OpenShift. We simply point OpenShift to the /mozaik/dashboard source directory and leave the rest to OpenShift.
@@ -34,6 +34,17 @@ The Mozaik application is created using the S2I feature of OpenShift. We simply 
 The Dashboard with all widgets are configured in one single configuration file [config.js](dashboard/config.js)
 
 In order to make the Dashboard universally usable for many different use cases, we replace this configuration file with a ConfigMap in OpenShift.
+
+The provided template gives an example. It is important that the generated URLs match the setup to connect the dashboard with the other application.
+
+```oc process --parameters -f configmap-template.yaml```
+```oc process  -f configmap.yaml -p NAMESPACE=jitsi |oc create -f -```
+
+In order to activate the ConfigMap we need to patch the Deployment Config created in the previous step and we need to start the rollout of that new configuration.
+
+```oc patch deploymentconfig podium -p '{"spec":{"template":{"spec":{"containers":[{"name":"podium","volumeMounts":[{"mountPath":"/opt/app-root/src/config.js","name":"dashboard-config","subPath":"config.js"}]}],"volumes":[{"configMap":{ "defaultMode":420,"items":[{"key":"hackathon-conf","path":"config.js"}],"name":"mozaik-config" },"name":"dashboard-config"}]}}}}'```
+
+```$ oc rollout latest dc/podium```
 
 
 ### Access Mozaik Dashboard
