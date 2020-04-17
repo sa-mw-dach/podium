@@ -98,15 +98,15 @@ objects:
     type: NodePort
     ports:
     - name: udp
-      nodePort: 30000
-      port: 30000
+      nodePort: 30002
+      port: 30002
       protocol: UDP
-      targetPort: 30000
+      targetPort: 30002
     - name: tcp
-      nodePort: 30000
-      port: 30000
+      nodePort: 30002
+      port: 30002
       protocol: TCP
-      targetPort: 30000
+      targetPort: 30002
     selector:
       app: ${APPLICATION_NAME}
       name: jvb

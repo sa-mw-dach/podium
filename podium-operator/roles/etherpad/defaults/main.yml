@@ -1,5 +1,6 @@
 ---
-application_name: etherpad
+etherpad_application_name: etherpad
 application_domain:
+namespace: podium
 etherpad_default_title: "Welcome to Etherpad"
 etherpad_default_text: "Etherpad is a real-time text editor"

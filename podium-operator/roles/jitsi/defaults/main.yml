@@ -1,0 +1,16 @@
+---
+jitsi_application_name: jitsi
+application_domain:
+namespace: podium
+jicofo_component_secret: s3cr3t
+jicofo_auth_user: focus
+jicofo_auth_password: redhat123
+jvb_auth_user: jvb
+jvb_auth_password: redhat123
+jvb_brewery_muc: jvbbrewery
+jvb_tcp_harvester_disabled: 'true'
+jvb_enable_apis: rest
+jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
+timezone: Europe/Berlin
+jvb_node_port: 30006
+jvb_node_selector: jvb

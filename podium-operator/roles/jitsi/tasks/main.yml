@@ -1,0 +1,394 @@
+---
+- name: Deploy Mattermost Mysql Secret
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: jitsi-secret
+        namespace: '{{ meta.namespace }}'
+      stringData:
+        JICOFO_COMPONENT_SECRET: "{{jicofo_component_secret}}"
+        JICOFO_AUTH_USER: "{{jicofo_auth_user}}"
+        JICOFO_AUTH_PASSWORD: "{{jicofo_auth_password}}"
+        JVB_AUTH_USER: "{{jvb_auth_user}}"
+        JVB_AUTH_PASSWORD: "{{jvb_auth_password}}"
+- name: Deploy Jitsi ConfigMap
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: jitsi-config
+        namespace: '{{ meta.namespace }}'
+      data:
+        LDAP_VERSION: ''
+        XMPP_INTERNAL_MUC_DOMAIN: internal-muc.meet-{{namespace}}.{{application_domain}}
+        LDAP_AUTH_METHOD: ''
+        JIBRI_BREWERY_MUC: jibribrewery
+        JIBRI_LOGS_DIR: /config/logs
+        JIGASI_PORT_MIN: '20000'
+        ENABLE_AUTH: ''
+        JWT_TOKEN_AUTH_MODULE: ''
+        JIGASI_TRANSCRIBER_ADVERTISE_URL: ''
+        LDAP_START_TLS: ''
+        TZ: "{{timezone}}"
+        LDAP_BASE: ''
+        GLOABL_MODULES: ''
+        LOG_LEVEL: ''
+        LETSENCRYPT_EMAIL: ''
+        LDAP_USE_TLS: ''
+        JIGASI_TRANSCRIBER_SEND_TXT: ''
+        XMPP_INTERNAL_MUC_MODULES: ''
+        JVB_ENABLE_APIS: "{{jvb_enable_apis}}"
+        JVB_TCP_HARVESTER_DISABLED: "{{jvb_tcp_harvester_disabled}}"
+        LDAP_TLS_CACERT_DIR: ''
+        LDAP_TLS_CIPHERS: ''
+        XMPP_DOMAIN: meet-{{namespace}}.{{application_domain}}
+        JICOFO_RESERVATION_REST_BASE_URL: ''
+        JIGASI_HEALTH_CHECK_INTERVAL: ''
+        JIBRI_FINALIZE_RECORDING_SCRIPT_PATH: /config/finalize.sh
+        JIGASI_ENABLE_SDES_SRTP: ''
+        JWT_ACCEPTED_AUDIENCES: ''
+        LDAP_FILTER: ''
+        ENABLE_LETSENCRYPT: ''
+        XMPP_AUTH_DOMAIN: auth.meet-{{namespace}}.{{application_domain}}
+        JWT_APP_ID: ''
+        XMPP_MUC_DOMAIN: muc.meet-{{namespace}}.{{application_domain}}
+        JVB_STUN_SERVERS: "{{jvb_stun_servers}}"
+        JIBRI_PENDING_TIMEOUT: '90'
+        DISABLE_HTTPS: ''
+        JIGASI_SIP_TRANSPORT: ''
+        XMPP_GUEST_DOMAIN: guest.meet-{{namespace}}.{{application_domain}}
+        ENABLE_RECORDING: ''
+        LDAP_TLS_CHECK_PEER: ''
+        JIGASI_PORT_MAX: '20050'
+        JIGASI_SIP_PORT: ''
+        JIGASI_BREWERY_MUC: jigasibrewery
+        JIBRI_STRIP_DOMAIN_JID: muc
+        LETSENCRYPT_DOMAIN: meet-{{namespace}}.{{application_domain}}
+        LDAP_URL: ''
+        JIGASI_SIP_URI: ''
+        ENABLE_GUESTS: ''
+        ENABLE_HTTP_REDIRECT: ''
+        JIGASI_SIP_KEEP_ALIVE_METHOD: ''
+        JIGASI_SIP_SERVER: ''
+        XMPP_MUC_MODULES: ''
+        JWT_AUTH_TYPE: ''
+        PUBLIC_URL: https://meet-{{namespace}}.{{application_domain}}
+        JWT_ACCEPTED_ISSUERS: ''
+        JIBRI_RECORDING_DIR: /config/recordings
+        JIGASI_TRANSCRIBER_RECORD_AUDIO: ''
+        XMPP_RECORDER_DOMAIN: recorder.meet-{{namespace}}.{{application_domain}}
+        JWT_ASAP_KEYSERVER: ''
+        ENABLE_TRANSCRIPTIONS: ''
+        JVB_BREWERY_MUC: "{{jvb_brewery_muc}}"
+        XMPP_MODULES: ''
+        LDAP_TLS_CACERT_FILE: ''
+        JIGASI_HEALTH_CHECK_SIP_URI: ''
+        JWT_ALLOW_EMPTY: ''
+- name: Deploy JVB service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{jitsi_application_name}}"
+        name: jvb
+      spec:
+        type: NodePort
+        ports:
+        - name: udp
+          nodePort: "{{jvb_node_port}}"
+          port: "{{jvb_node_port}}"
+          protocol: UDP
+          targetPort: "{{jvb_node_port}}"
+        - name: tcp
+          nodePort: "{{jvb_node_port}}"
+          port: "{{jvb_node_port}}"
+          protocol: TCP
+          targetPort: "{{jvb_node_port}}"
+        selector:
+          app: "{{jitsi_application_name}}"
+          name: jvb
+- name: Deploy Web service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{jitsi_application_name}}"
+        name: web
+      spec:
+        ports:
+        - name: "http"
+          port: 8080
+          targetPort: 8080
+        - name: "https"
+          port: 4443
+          targetPort: 4443
+        selector:
+          app: "{{jitsi_application_name}}"
+          name: web
+- name: Deploy Prosody service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{jitsi_application_name}}"
+        name: prosody
+      spec:
+        ports:
+        - name: "5222"
+          port: 5222
+          targetPort: 5222
+        - name: "5280"
+          port: 5280
+          targetPort: 5280
+        - name: "5347"
+          port: 5347
+          targetPort: 5347
+        selector:
+          app: "{{jitsi_application_name}}"
+          name: prosody
+      status:
+        loadBalancer: {}
+- name: Deploy Jitsi route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        annotations:
+          openshift.io/host.generated: "true"
+          kubernetes.io/tls-acme: "true"
+        name: meet
+      spec:
+        host: "meet-{{namespace}}.{{application_domain}}"
+        port:
+          targetPort: http
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: web
+          weight: 100
+        wildcardPolicy: None
+- name: Deploy Jitsi Prosody
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: prosody
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{jitsi_application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{jitsi_application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{jitsi_application_name}}"
+              name: prosody
+          spec:
+            containers:
+            - envFrom:
+              - configMapRef:
+                  name: jitsi-config
+              - secretRef:
+                  name: jitsi-secret
+              image: ktenzer/jitsi-prosody:build_4392
+              imagePullPolicy: Always
+              name: prosody
+              readinessProbe:
+                httpGet:
+                  path: /http-bind
+                  port: 5280
+                initialDelaySeconds: 5
+                periodSeconds: 3
+                timeoutSeconds: 60
+              livenessProbe:
+                httpGet:
+                  path: /http-bind
+                  port: 5280
+                initialDelaySeconds: 10
+                periodSeconds: 3
+              ports:
+              - containerPort: 5222
+              - containerPort: 5280
+              - containerPort: 5347
+            restartPolicy: Always
+        triggers:
+        - type: ConfigChange
+- name: Deploy Jitsi Jicofo
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: jicofo 
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{jitsi_application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{jitsi_application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{jitsi_application_name}}"
+              name: jicofo
+          spec:
+            containers:
+            - envFrom:
+              - configMapRef:
+                  name: jitsi-config
+              - secretRef:
+                  name: jitsi-secret
+              env:
+              - name: XMPP_SERVER
+                value: $(PROSODY_SERVICE_HOST)
+              readinessProbe:
+                httpGet:
+                  path: /about/health
+                  port: 8888
+                initialDelaySeconds: 5
+                periodSeconds: 3
+                timeoutSeconds: 60
+              livenessProbe:
+                httpGet:
+                  path: /about/health
+                  port: 8888
+                initialDelaySeconds: 10
+                periodSeconds: 3
+              ports:
+              - containerPort: 8888
+              image: ktenzer/jitsi-jicofo:build_4392
+              imagePullPolicy: Always
+              name: jicofo
+            restartPolicy: Always
+        triggers:
+        - type: ConfigChange
+- name: Deploy Jitsi Jvb
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: jvb
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{jitsi_application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{jitsi_application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{jitsi_application_name}}"
+              name: jvb
+          spec:
+            nodeSelector:
+              app: "{{jvb_node_selector}}"
+            containers:
+            - envFrom:
+              - configMapRef:
+                  name: jitsi-config
+              - secretRef:
+                  name: jitsi-secret
+              env:
+              - name: DOCKER_HOST_ADDRESS
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.hostIP
+              - name: XMPP_SERVER
+                value: $(PROSODY_SERVICE_HOST)
+              - name: JVB_PORT
+                value: $(JVB_SERVICE_PORT_UDP)
+              - name: JVB_TCP_PORT
+                value: $(JVB_SERVICE_PORT_TCP)
+              readinessProbe:
+                httpGet:
+                  path: /about/health
+                  port: 8080
+                initialDelaySeconds: 5
+                periodSeconds: 3
+                timeoutSeconds: 60
+              livenessProbe:
+                httpGet:
+                  path: /about/health
+                  port: 8080
+                initialDelaySeconds: 10
+                periodSeconds: 3
+              image: ktenzer/jitsi-jvb:build_4392
+              imagePullPolicy: Always
+              name: jvb
+              resources: {}
+            restartPolicy: Always
+        triggers:
+        - type: ConfigChange
+      status: {}
+- name: Deploy Jitsi Web
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: web
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{jitsi_application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{jitsi_application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{jitsi_application_name}}"
+              name: web
+          spec:
+            containers:
+            - envFrom:
+              - configMapRef:
+                  name: jitsi-config
+              - secretRef:
+                  name: jitsi-secret
+              env:
+              - name: XMPP_BOSH_URL_BASE
+                value: http://$(PROSODY_SERVICE_HOST):$(PROSODY_SERVICE_PORT_5280)
+              - name: ETHERPAD_URL_BASE
+                value: http://$(ETHERPAD_SERVICE_HOST):$(ETHERPAD_SERVICE_PORT)
+              image: ktenzer/jitsi-web:build_4392
+              imagePullPolicy: Always
+              name: web
+              ports:
+              - containerPort: 8080
+              - containerPort: 4443
+        triggers:
+        - type: ConfigChange

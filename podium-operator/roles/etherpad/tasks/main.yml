@@ -8,18 +8,18 @@
         name: etherpad
         namespace: '{{ meta.namespace }}'
         labels:
-          app: "{{application_name}}"
+          app: "{{etherpad_application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{application_name}}"
+            app: "{{etherpad_application_name}}"
         template:
           metadata:
             labels:
-              app: "{{application_name}}"
+              app: "{{etherpad_application_name}}"
               name: etherpad
           spec:
             containers:
@@ -57,14 +57,14 @@
       metadata:
         namespace: '{{ meta.namespace }}'
         labels:
-          app: "{{application_name}}"
+          app: "{{etherpad_application_name}}"
         name: etherpad
       spec:
         ports:
         - port: 9001
           targetPort: 9001
         selector:
-          app: "{{application_name}}"
+          app: "{{etherpad_application_name}}"
           name: etherpad
       status:
         loadBalancer: {}

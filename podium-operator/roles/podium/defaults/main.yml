@@ -1,5 +1,1 @@
 ---
-application_name: etherpad
-application_domain:
-etherpad_default_title: "Welcome to Etherpad"
-etherpad_default_text: "Etherpad is a real-time text editor"

@@ -1,7 +1,26 @@
 apiVersion: podium.com/v1alpha1
 kind: Podium
 metadata:
-  name: example-podium
+  name: mypodium
 spec:
-  # Add fields here
-  size: 3
+  jitsi_application_name: jitsi
+  etherpad_application_name: etherpad
+  mattermost_application_name: mattermost-team-edition
+  application_domain: <apps wildcard domain>
+  namespace: podium-bla
+  etherpad_default_title: "Welcome to Etherpad"
+  etherpad_default_text: "Welcome to Etherpad, a real-time editor"
+  mysql_user_password: <password>
+  mysql_root_password: <password>
+  jicofo_component_secret: s3cr3t
+  jicofo_auth_user: focus
+  jicofo_auth_password: <password>
+  jvb_auth_user: jvb
+  jvb_auth_password: <password>
+  jvb_brewery_muc: jvbbrewery
+  jvb_tcp_harvester_disabled: 'true'
+  jvb_enable_apis: rest
+  jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
+  timezone: Europe/Berlin
+  jvb_node_port: 30000
+  jvb_node_selector: jvb

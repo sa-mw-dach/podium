@@ -1,0 +1,356 @@
+---
+- name: Create temp Mattermost JSON config from template
+  template:
+    src: templates/mattermost-config.json.j2
+    dest: /tmp/config.json
+    mode: 0644
+- name: Read Mattermost JSON Config
+  shell: cat /tmp/config.json
+  register: json
+- name: Remove Mattermost JSON Config
+  file:
+    path: /tmp/config.json
+    state: absent
+- name: Deploy Mattermost Config Secret
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: mattermost-team-edition-config-json
+        namespace: '{{ meta.namespace }}'
+      data: 
+        config.json: "{{ json.stdout | string | b64encode }}"
+- name: Deploy Mattermost Mysql Secret
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: mattermost-mysql
+        namespace: '{{ meta.namespace }}'
+      stringData:
+        mysql-password: "{{mysql_user_password}}"
+        mysql-root-password: "{{mysql_root_password}}"
+- name: Deploy Mattermost ConfigMap
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: mattermost-mattermost-team-edition-tests
+        namespace: '{{ meta.namespace }}'
+      data:
+        run.sh: |-
+          @test "Testing Mattermost is accessible" {
+            curl --retry 48 --retry-delay 10 mattermost-team-edition.mattermost.svc.cluster.local:8065
+          }
+- name: Deploy Mattermost Mysql ConfigMap
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: mattermost-mysql
+        namespace: '{{ meta.namespace }}'
+      data:
+        run.sh: ""
+- name: Deploy Mattermost persistent volume
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        name: mattermost-team-edition
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+- name: Deploy Mattermost plugins persistent volume
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        name: mattermost-team-edition-plugins
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+- name: Deploy Mattermost Mysql persistent volume
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        name: mattermost-mysql
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+- name: Deploy Mattermost
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: mattermost-team-edition
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{mattermost_application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{mattermost_application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{mattermost_application_name}}"
+              name: mattermost-team-edition
+          spec:
+            containers:
+            - image: mattermost/mattermost-team-edition:5.11.0
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /api/v4/system/ping
+                  port: http
+                  scheme: HTTP
+                initialDelaySeconds: 90
+                periodSeconds: 15
+                successThreshold: 1
+                timeoutSeconds: 5
+              name: mattermost-team-edition
+              ports:
+              - containerPort: 8065
+                name: http
+                protocol: TCP
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /api/v4/system/ping
+                  port: http
+                  scheme: HTTP
+                initialDelaySeconds: 15
+                periodSeconds: 15
+                successThreshold: 1
+                timeoutSeconds: 5
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+              - mountPath: /mattermost/config/config.json
+                name: config-json
+                subPath: config.json
+              - mountPath: /mattermost/data
+                name: mattermost-data
+              - mountPath: /mattermost/plugins
+                name: mattermost-plugins
+            dnsPolicy: ClusterFirst
+            initContainers:
+            - command:
+              - sh
+              - -c
+              - until curl --max-time 5 http://mattermost-mysql:3306; do echo waiting for
+                mattermost-mysql; sleep 5; done;
+              image: appropriate/curl:latest
+              imagePullPolicy: IfNotPresent
+              name: init-mysql
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            terminationGracePeriodSeconds: 30
+            volumes:
+            - name: config-json
+              secret:
+                defaultMode: 420
+                secretName: mattermost-team-edition-config-json
+            - name: mattermost-data
+              persistentVolumeClaim:
+                claimName: mattermost-team-edition
+            - name: mattermost-plugins
+              persistentVolumeClaim:
+                claimName: mattermost-team-edition-plugins
+        triggers:
+        - type: ConfigChange
+- name: Deploy Mattermost Database
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: mattermost-mysql
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{mattermost_application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{mattermost_application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{mattermost_application_name}}"
+              name: mattermost-mysql
+          spec:
+            containers:
+            - env:
+              - name: MYSQL_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    key: mysql-root-password
+                    name: mattermost-mysql
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    key: mysql-password
+                    name: mattermost-mysql
+              - name: MYSQL_USER
+                value: mmuser
+              - name: MYSQL_DATABASE
+                value: mattermost
+              image: mysql:5.7.14
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                exec:
+                  command:
+                  - sh
+                  - -c
+                  - mysqladmin ping -u root -p{{mysql_root_password}}
+                failureThreshold: 3
+                initialDelaySeconds: 30
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              name: mattermost-mysql
+              ports:
+              - containerPort: 3306
+                name: mysql
+                protocol: TCP
+              readinessProbe:
+                exec:
+                  command:
+                  - sh
+                  - -c
+                  - mysqladmin ping -u root -p{{mysql_root_password}}
+                failureThreshold: 3
+                initialDelaySeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+              - mountPath: /var/lib/mysql
+                name: data
+            dnsPolicy: ClusterFirst
+            initContainers:
+            - command:
+              - rm
+              - -fr
+              - /var/lib/mysql/lost+found
+              image: busybox:1.29.3
+              imagePullPolicy: IfNotPresent
+              name: remove-lost-found
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+              - mountPath: /var/lib/mysql
+                name: data
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            terminationGracePeriodSeconds: 30
+            volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: mattermost-mysql
+- name: Deploy Mattermost service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{mattermost_application_name}}"
+        name: mattermost-team-edition
+      spec:
+        ports:
+        - port: 8065
+          targetPort: http
+        selector:
+          app: "{{mattermost_application_name}}"
+          name: mattermost-team-edition
+        sessionAffinity: None
+        type: ClusterIP
+      status:
+        loadBalancer: {}
+- name: Deploy Mattermost Mysql service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{mattermost_application_name}}"
+        name: mattermost-mysql
+      spec:
+        ports:
+        - name: mysql
+          port: 3306
+          protocol: TCP
+          targetPort: mysql
+        selector:
+          app: "{{mattermost_application_name}}"
+          name: mattermost-mysql
+        sessionAffinity: None
+        type: ClusterIP
+      status:
+        loadBalancer: {}
+- name: Deploy Mattermost route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        annotations:
+          openshift.io/host.generated: "true"
+          kubernetes.io/tls-acme: "true"
+        name: chat
+      spec:
+        host: "chat-{{namespace}}.{{application_domain}}"
+        port:
+          targetPort: 8065
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: mattermost-team-edition
+          weight: 100
+        wildcardPolicy: None
