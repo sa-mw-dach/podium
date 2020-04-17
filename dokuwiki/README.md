@@ -32,13 +32,10 @@ DokuWiki does not use a database backend nor do we use a persistent volume to sa
 
 Instead, we want the DokuWiki to be linked to a doc/wiki folder in our main Git project. We initialize the DokuWiki from that directory and we regularly commit changes in our Podium DokuWiki back to the main Git.
 
-
-oc rsh dokuwiki-* git clone https://github.com/sa-mw-dach/podium.git project
-oc rsh dokuwiki-* cp -r project/doc/wiki/* data/pages
+```POD=dokuwiki-6d8d7cb575-bqdpk
+oc rsh $POD git clone https://github.com/sa-mw-dach/podium.git project
+oc rsh $POD /bin/sh -c "cp -r project/doc/wiki/* data/pages"
+```
 
 ToDo: Examine means to use DokuWiki API to clone content from Git into the application container
-	As a fallback, we already have the git tool available in the dokuwiki container which would allow to use "oc rsh" for content management.
-
-
-
 
