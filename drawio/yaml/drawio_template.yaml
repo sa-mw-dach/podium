@@ -1,0 +1,97 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: "Mozaik ConfigMap for Podium App"
+  creationTimestamp: null
+  name: mozaik-config
+objects:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"drawio:latest","namespace":"draw"},"fieldPath":"spec.template.spec.containers[?(@.name==\"drawio\")].image"}]'
+    labels:
+      app: drawio
+      app.kubernetes.io/component: drawio
+      app.kubernetes.io/instance: drawio
+      app.kubernetes.io/part-of: drawio
+    name: drawio
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: drawio
+    template:
+      metadata:
+        labels:
+          app: drawio
+          deploymentconfig: drawio
+      spec:
+        containers:
+        - image: docker.io/jgraph/drawio
+          imagePullPolicy: Always
+          name: drawio
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: drawio
+      app.kubernetes.io/component: drawio
+      app.kubernetes.io/instance: drawio
+      app.kubernetes.io/part-of: drawio
+    name: drawio
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      app: drawio
+      deploymentconfig: drawio
+    sessionAffinity: None
+    type: ClusterIP
+  
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: drawio
+      app.kubernetes.io/component: drawio
+      app.kubernetes.io/instance: drawio
+    name: drawio
+  spec:
+    host: drawio-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: drawio
+      weight: 100
+    wildcardPolicy: None
+parameters:
+  - name: NAMESPACE
+    displayName: Application Name
+    description: the name and label for all components
+    value: podium
+    required: true 
+  - name: GUID
+    displayName: Application GUID
+    description: the GUID name component for the individual instance in a series of application deployments, typically a dash followed by a 4 character string like -f3ax
+    required: false
+  - name: APPLICATION_DOMAIN
+    displayName: Application Domain
+    description: Application domain name used in route to service
+    value: apps.cloud.example.com
+    required: true
