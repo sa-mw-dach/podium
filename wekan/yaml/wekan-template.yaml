@@ -305,7 +305,7 @@ parameters:
 - name: APPLICATION_DOMAIN
   displayName: Application Domain
   description: Application domain name used in route to service
-  value: apps.cloud.lunetix.org
+  value: apps.cloud.example.com
 required: true
 - description: Maximum amount of memory the container can use.
   displayName: Memory Limit

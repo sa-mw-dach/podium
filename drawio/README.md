@@ -17,9 +17,9 @@ OpenShift templates allow you to parameterize and automate deployment of all app
 
 ### Deploy Draw.io template
 
-```$ oc process -f drawio_template.yaml -p APPLICATION_DOMAIN=apps.ocp4.keithtenzer.com -p NAMESPACE=podium |oc create -f -```
+```$ oc process -f drawio_template.yaml -p APPLICATION_DOMAIN=apps.cloud.example.com -p NAMESPACE=podium |oc create -f -```
 
-### Deploy Draw.io template
+### Configure TLS Security
 
 Patch route object to enable ACME TLS endpoint termination.
 

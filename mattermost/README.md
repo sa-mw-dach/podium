@@ -11,7 +11,7 @@ Currently the mattermost deployment is using init containers. This of course pro
 
 ### Allow init containers to start in project
 
-```oc adm policy add-scc-to-user anyuid -z default```
+```$ oc adm policy add-scc-to-user anyuid -z default```
 
 ### Template Default Parameters
 OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
@@ -20,4 +20,4 @@ OpenShift templates allow you to parameterize and automate deployment of all app
 
 ### Deploy Etherpad template
 
-```$ oc process -f mattermost_template.yaml -p APPLICATION_DOMAIN=apps.ocp4.keithtenzer.com -p NAMESPACE=podium |oc create -f -```
+```$ oc process -f mattermost_template.yaml -p APPLICATION_DOMAIN=apps.cloud.example.com -p NAMESPACE=podium |oc create -f -```

@@ -37,12 +37,12 @@ In order to make the Dashboard universally usable for many different use cases, 
 
 The provided template gives an example. It is important that the generated URLs match the setup to connect the dashboard with the other application.
 
-```oc process --parameters -f configmap-template.yaml```
-```oc process  -f configmap.yaml -p NAMESPACE=jitsi |oc create -f -```
+```$ oc process --parameters -f configmap-template.yaml```
+```$ oc process  -f configmap.yaml -p NAMESPACE=jitsi |oc create -f -```
 
 In order to activate the ConfigMap we need to patch the Deployment Config created in the previous step and we need to start the rollout of that new configuration.
 
-```oc patch deploymentconfig podium -p '{"spec":{"template":{"spec":{"containers":[{"name":"podium","volumeMounts":[{"mountPath":"/opt/app-root/src/config.js","name":"dashboard-config","subPath":"config.js"}]}],"volumes":[{"configMap":{ "defaultMode":420,"items":[{"key":"hackathon-conf","path":"config.js"}],"name":"mozaik-config" },"name":"dashboard-config"}]}}}}'```
+```$ oc patch deploymentconfig podium -p '{"spec":{"template":{"spec":{"containers":[{"name":"podium","volumeMounts":[{"mountPath":"/opt/app-root/src/config.js","name":"dashboard-config","subPath":"config.js"}]}],"volumes":[{"configMap":{ "defaultMode":420,"items":[{"key":"hackathon-conf","path":"config.js"}],"name":"mozaik-config" },"name":"dashboard-config"}]}}}}'```
 
 ```$ oc rollout latest dc/podium```
 
@@ -52,3 +52,6 @@ The deployment does not expose the service automatically, so we finish our insta
 
 ```$ oc expose svc/podium```
 ```$ oc get route```
+
+
+

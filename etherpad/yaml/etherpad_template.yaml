@@ -96,7 +96,7 @@ parameters:
   - name: APPLICATION_DOMAIN
     displayName: Application Domain
     description: Application domain is the wildcard domain for application routes
-    value: apps.ocp4.keithtenzer.com
+    value: apps.cloud.example.com
     required: true
   - name: NAMESPACE
     displayName: Application Domain

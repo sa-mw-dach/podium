@@ -75,9 +75,9 @@ The template will create a default https route (edge termination) for jitsi and 
 ```
 $ oc get routes
 NAME       HOST/PORT                                   PATH   SERVICES                  PORT   TERMINATION   WILDCARD
-chat       chat-podium.apps.ocp4.keithtenzer.com              mattermost-team-edition   8065   edge          None
-etherpad   etherpad-podium.apps.ocp4.keithtenzer.com          etherpad                  9001   edge          None
-meet       meet-podium.apps.ocp4.keithtenzer.com              web                       http   edge          None
+chat       chat-podium.apps.cloud.example.com              mattermost-team-edition   8065   edge          None
+etherpad   etherpad-podium.apps.cloud.example.com          etherpad                  9001   edge          None
+meet       meet-podium.apps.cloud.example.com              web                       http   edge          None
 ```
 
 You can access jitsi meet using https://meet-podium.apps.ocp4.keithtenzer.com for example.
