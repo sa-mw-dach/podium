@@ -22,9 +22,27 @@ The DokuWiki application is created using the S2I feature of OpenShift. We simpl
 ### Access DokuWiki
 The deployment does not expose the service automatically, so we finish our installation with these steps.
 
-```$ oc expose svc/podium```
+```$ oc expose svc/dokuwiki```
 
 ```$ oc get route```
+
+### Configure TLS Security
+
+Patch route object to enable ACME TLS endpoint termination.
+
+```$ oc patch route dokuwiki -p '{
+    "metadata": {
+        "annotations": {
+            "kubernetes.io/tls-acme": "true"
+        }
+    },
+    "spec": {
+        "tls": {
+            "termination": "edge"
+        }
+    }
+}'
+```
 
 ### Initialize DokuWiki
 
