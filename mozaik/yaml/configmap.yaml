@@ -81,7 +81,7 @@ objects:
                       {
                           type: 'embed.markup',
                           title: 'Knowledge Base',
-                          content: '<center><a href="http://dokuwiki-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://www.dokuwiki.org/_media/wiki:dokuwiki-128.png" alt="Podium Wiki" width="300" height="200"></a> <a href="https://openpracticelibrary.com/" target="_tab" rel="noreferrer noopener"><img src="https://d33wubrfki0l68.cloudfront.net/337d8258554af2343978fdbcd7e854298ab8062c/e7414/images/logo.svg" alt="Open Practice Library" width="300" height="200"></a></center>',
+                          content: '<center><a href="https://dokuwiki-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://www.dokuwiki.org/_media/wiki:dokuwiki-128.png" alt="Podium Wiki" width="200" height="120"></a> <a href="https://openpracticelibrary.com/" target="_tab" rel="noreferrer noopener"><img src="https://d33wubrfki0l68.cloudfront.net/337d8258554af2343978fdbcd7e854298ab8062c/e7414/images/logo.svg" alt="Open Practice Library" width="200" height="120"></a></center>',
                           columns: 1, rows: 1,
                           x: 0, y: 1
                       },
@@ -95,7 +95,7 @@ objects:
                       {
                           type: 'embed.markup',
                           title: 'Productivity Tools',
-                          content: '<center><a href="https://drawio-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://worldvectorlogo.com/download/draw-io.svg" alt="Podium Draw.io" width="300" height="200"></a><a href="https://wekan-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://wekan.github.io/wekan-logo.svg" alt="Podium Kanban" width="300" height="200"></a></center>',
+                          content: '<center><a href="https://drawio-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://cdn.worldvectorlogo.com/logos/draw-io.svg" alt="Podium Draw.io" width="300" height="200"></a><a href="https://wekan-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://wekan.github.io/wekan-logo.svg" alt="Podium Kanban" width="300" height="200"></a></center>',
                           columns: 2, rows: 1,
                           x: 1, y: 2
                       },
