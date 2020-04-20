@@ -7,6 +7,7 @@ spec:
   jitsi_application_name: jitsi
   etherpad_application_name: etherpad
   mattermost_application_name: mattermost-team-edition
+  dokuwiki_application_name: dokuwiki
   application_domain: <apps wildcard domain>
   namespace: podium-bla
   etherpad_default_title: "Welcome to Etherpad"

@@ -1,0 +1,88 @@
+---
+- name: Deploy dokuwiki
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: dokuwiki
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{dokuwiki_application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{dokuwiki_application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{dokuwiki_application_name}}"
+              name: dokuwiki
+          spec:
+            containers:
+            - image: quay.io/ktenzer/dokuwiki:latest
+              imagePullPolicy: Always
+              name: dokuwiki
+              ports:
+              - containerPort: 8080
+                protocol: TCP
+              - containerPort: 8443
+                protocol: TCP
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 8080
+                initialDelaySeconds: 5
+                periodSeconds: 3
+                timeoutSeconds: 60
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: 8080
+                initialDelaySeconds: 10
+                periodSeconds: 3
+            restartPolicy: Always
+        triggers:
+        - type: ConfigChange
+      status: {}
+- name: Deploy dokuwiki service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        labels:
+          app: "{{dokuwiki_application_name}}"
+        name: dokuwiki
+      spec:
+        ports:
+        - port: 8080
+          targetPort: 8080
+        selector:
+          app: "{{dokuwiki_application_name}}"
+          name: dokuwiki
+      status:
+        loadBalancer: {}
+- name: Deploy dokuwiki route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: '{{ meta.namespace }}'
+        annotations:
+          openshift.io/host.generated: "true"
+        name: dokuwiki
+      spec:
+        host: "dokuwiki-{{namespace}}.{{application_domain}}"
+        to:
+          kind: Service
+          name: dokuwiki
+          weight: 100
+        port:
+          targetPort: 8080
+        wildcardPolicy: None
