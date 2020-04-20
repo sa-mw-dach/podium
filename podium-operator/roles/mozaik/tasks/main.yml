@@ -98,7 +98,7 @@
                           {
                               type: 'embed.markup',
                               title: 'Chat',
-                              content: '<ul><li><a href="https://chat-mattermost.${APPLICATION_DOMAIN}" target="_blank" rel="noreferrer noopener">New Chat</a></li></ul>',
+                              content: '<ul><li><a href="https://chat-{{ namespace }}.{{ application_domain }}" target="_blank" rel="noreferrer noopener">New Chat</a></li></ul>',
                               columns: 1, rows: 1,
                               x: 0, y: 2
                           }
