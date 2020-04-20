@@ -38,9 +38,8 @@
 
               // define the interval used by Mozaïk Bus to call registered APIs
               apisPollInterval: 15000,
-
               dashboards: [
-
+  
                   {
                       // 4 x 3 dashboard
                       columns: 4,
@@ -76,7 +75,9 @@
                               x: 3, y: 0
                           },
                           {
-                              type: 'mozaik.inspector',
+                              type: 'embed.markup',
+                              title: 'Knowledge Base',
+                              content: '<center><a href="https://dokuwiki-{{ namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener"><img src="https://www.dokuwiki.org/_media/wiki:dokuwiki-128.png" alt="Podium Wiki" width="200" height="120"></a> <a href="https://openpracticelibrary.com/" target="_tab" rel="noreferrer noopener"><img src="https://d33wubrfki0l68.cloudfront.net/337d8258554af2343978fdbcd7e854298ab8062c/e7414/images/logo.svg" alt="Open Practice Library" width="200" height="120"></a></center>',
                               columns: 1, rows: 1,
                               x: 0, y: 1
                           },
@@ -89,22 +90,22 @@
                           },
                           {
                               type: 'embed.markup',
-                              title: 'Knowledge Base',
-                              content: '<center><a href="http://dokuwiki-{{ namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener"><img src="https://www.dokuwiki.org/_media/wiki:dokuwiki-128.png" alt="Podium Wiki" width="300" height="200"></a> <a href="https://openpracticelibrary.com/" target="_tab" rel="noreferrer noopener"><img src="https://d33wubrfki0l68.cloudfront.net/337d8258554af2343978fdbcd7e854298ab8062c/e7414/images/logo.svg" alt="Open Practice Library" width="300" height="200"></a></center>',
+                              title: 'Productivity Tools',
+                              content: '<center><a href="https://drawio-{{ namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener"><img src="https://cdn.worldvectorlogo.com/logos/draw-io.svg" alt="Podium Draw.io" width="300" height="200"></a><a href="https://wekan-{{ namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener"><img src="https://wekan.github.io/wekan-logo.svg" alt="Podium Kanban" width="300" height="200"></a></center>',
                               columns: 2, rows: 1,
                               x: 1, y: 2
                           },
                           {
                               type: 'embed.markup',
                               title: 'Chat',
-                              content: '<ul><li><a href="https://chat-{{ namespace }}.{{ application_domain }}" target="_blank" rel="noreferrer noopener">New Chat</a></li></ul>',
+                              content: '<ul><li><a href="https://chat-mattermost.${APPLICATION_DOMAIN}" target="_blank" rel="noreferrer noopener">New Chat</a></li></ul>',
                               columns: 1, rows: 1,
                               x: 0, y: 2
                           }
                       ]
                   },
-
-               ]
+  
+              ]
           };
 
           module.exports = config;

@@ -1,25 +1,29 @@
 ---
-- hosts: localhost
-  gather_facts: false
-  connection: local
-
-  tasks:
-    - name: Deploy etherpad
-      include_role:
-        name: etherpad
-
-    - name: Deploy jitsi
-      include_role:
-        name: jitsi
-
-    - name: Deploy mattermost
-      include_role:
-        name: mattermost
-
-    - name: Deploy dokuwiki
-      include_role:
-        name: dokuwiki
-
-    - name: Deploy mozaik
-      include_role:
-        name: mozaik
+#- hosts: localhost
+#  gather_facts: false
+#  connection: local
+#
+#  tasks:
+#    - name: Deploy etherpad
+#      include_role:
+#        name: etherpad
+#
+#    - name: Deploy jitsi
+#      include_role:
+#        name: jitsi
+#
+#    - name: Deploy mattermost
+#      include_role:
+#        name: mattermost
+#
+#    - name: Deploy dokuwiki
+#      include_role:
+#        name: dokuwiki
+#
+#    - name: Deploy drawio
+#      include_role:
+#        name: drawio
+#
+#    - name: Deploy mozaik
+#      include_role:
+#        name: mozaik

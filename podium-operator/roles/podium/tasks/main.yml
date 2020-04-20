@@ -15,6 +15,10 @@
   include_role:
     name: dokuwiki
 
+- name: Deploy drawio
+  include_role:
+    name: drawio
+
 - name: Deploy mozaik
   include_role:
     name: mozaik
