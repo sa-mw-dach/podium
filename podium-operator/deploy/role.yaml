@@ -40,12 +40,15 @@ rules:
   - update
   - watch
 - apiGroups:
+  - ""
   - route.openshift.io
   resources:
   - routes
+  - routes/custom-host
   verbs:
   - create
   - delete
+  - deletecollection
   - get
   - list
   - patch

@@ -6,7 +6,7 @@
       kind: ConfigMap
       metadata:
         name: mozaik-config
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
       data:
         podium-conf: |
           // Load environment variables from .env file if available
@@ -115,7 +115,7 @@
       apiVersion: apps/v1
       metadata:
         name: mozaik
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{mozaik_application_name}}"
       spec:
@@ -173,7 +173,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{mozaik_application_name}}"
         name: mozaik
@@ -195,7 +195,7 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         annotations:
           openshift.io/host.generated: "true"
         name: mozaik

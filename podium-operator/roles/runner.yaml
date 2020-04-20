@@ -4,6 +4,22 @@
   connection: local
 
   tasks:
-    - name: deploy etherpad role
+    - name: Deploy etherpad
       include_role:
         name: etherpad
+
+    - name: Deploy jitsi
+      include_role:
+        name: jitsi
+
+    - name: Deploy mattermost
+      include_role:
+        name: mattermost
+
+    - name: Deploy dokuwiki
+      include_role:
+        name: dokuwiki
+
+    - name: Deploy mozaik
+      include_role:
+        name: mozaik

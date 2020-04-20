@@ -6,7 +6,7 @@
       apiVersion: apps/v1
       metadata:
         name: etherpad
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{etherpad_application_name}}"
       spec:
@@ -55,7 +55,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{etherpad_application_name}}"
         name: etherpad
@@ -74,7 +74,7 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         annotations:
           openshift.io/host.generated: "true"
           kubernetes.io/tls-acme: "true"

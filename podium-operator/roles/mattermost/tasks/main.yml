@@ -18,7 +18,7 @@
       kind: Secret
       metadata:
         name: mattermost-team-edition-config-json
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
       data: 
         config.json: "{{ json.stdout | string | b64encode }}"
 - name: Deploy Mattermost Mysql Secret
@@ -28,7 +28,7 @@
       kind: Secret
       metadata:
         name: mattermost-mysql
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
       stringData:
         mysql-password: "{{mysql_user_password}}"
         mysql-root-password: "{{mysql_root_password}}"
@@ -39,7 +39,7 @@
       kind: ConfigMap
       metadata:
         name: mattermost-mattermost-team-edition-tests
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
       data:
         run.sh: |-
           @test "Testing Mattermost is accessible" {
@@ -52,7 +52,7 @@
       kind: ConfigMap
       metadata:
         name: mattermost-mysql
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
       data:
         run.sh: ""
 - name: Deploy Mattermost persistent volume
@@ -61,7 +61,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         name: mattermost-team-edition
       spec:
         accessModes:
@@ -75,7 +75,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         name: mattermost-team-edition-plugins
       spec:
         accessModes:
@@ -89,7 +89,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         name: mattermost-mysql
       spec:
         accessModes:
@@ -104,7 +104,7 @@
       apiVersion: apps/v1
       metadata:
         name: mattermost-team-edition
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{mattermost_application_name}}"
       spec:
@@ -193,7 +193,7 @@
       apiVersion: apps/v1
       metadata:
         name: mattermost-mysql
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{mattermost_application_name}}"
       spec:
@@ -294,7 +294,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{mattermost_application_name}}"
         name: mattermost-team-edition
@@ -315,7 +315,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         labels:
           app: "{{mattermost_application_name}}"
         name: mattermost-mysql
@@ -338,7 +338,7 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: '{{ meta.namespace }}'
+        namespace: "{{ namespace }}"
         annotations:
           openshift.io/host.generated: "true"
           kubernetes.io/tls-acme: "true"
