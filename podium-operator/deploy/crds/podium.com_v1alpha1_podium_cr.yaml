@@ -3,6 +3,7 @@ kind: Podium
 metadata:
   name: mypodium
 spec:
+  mozaik_application_name: mozaik
   jitsi_application_name: jitsi
   etherpad_application_name: etherpad
   mattermost_application_name: mattermost-team-edition

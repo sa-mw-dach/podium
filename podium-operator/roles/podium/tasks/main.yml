@@ -1,12 +1,16 @@
 ---
-- name: Deploy etherpad
-  include_role:
-    name: etherpad
+#- name: Deploy etherpad
+#  include_role:
+#    name: etherpad
 
-- name: Deploy jitsi
-  include_role:
-    name: jitsi
+#- name: Deploy jitsi
+#  include_role:
+#    name: jitsi
 
-- name: Deploy mattermost
+#- name: Deploy mattermost
+#  include_role:
+#    name: mattermost
+
+- name: Deploy mozaik
   include_role:
-    name: mattermost
+    name: mozaik
