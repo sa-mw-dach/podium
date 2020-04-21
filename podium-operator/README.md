@@ -36,10 +36,6 @@ The video bridge is required for video conferencing. Video and audio from client
 
 ```$ oc new-project podium```
 
-### Allow init containers
-
-```$ oc adm policy add-scc-to-user anyuid -z default```
- 
 ### Instantiate Podium Instance using Operator
 
 ```
