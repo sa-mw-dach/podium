@@ -11,6 +11,45 @@
   file:
     path: /tmp/config.json
     state: absent
+- name: Deploy Mattermost Service Account
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: mattermost-team-edition
+        namespace: "{{ namespace }}"
+        labels:
+          app: "{{mattermost_application_name}}"
+- name: Deploy Mattermost Security Context
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: SecurityContextConstraints
+      metadata:
+        name: mattermost-team-edition
+        namespace: "{{ namespace }}"
+        labels:
+          app: "{{mattermost_application_name}}"
+      allowPrivilegedContainer: true
+      allowedCapabilities:
+        - AUDIT_WRITE
+        - CHOWN
+        - FOWNER
+        - SETUID
+        - SETGID
+        - SYS_CHROOT
+        - DAC_OVERRIDE
+        - NET_BIND_SERVICE
+        - IPC_LOCK
+        - SYS_PTRACE
+        - SYS_RESOURCE
+      runAsUser:
+        type: RunAsAny
+      seLinuxContext:
+        type: RunAsAny
+      users:
+      - system:serviceaccount:{{ namespace }}:mattermost-team-edition
 - name: Deploy Mattermost Config Secret
   k8s:
     definition:
@@ -123,6 +162,8 @@
             containers:
             - image: mattermost/mattermost-team-edition:5.11.0
               imagePullPolicy: IfNotPresent
+              securityContext:
+                privileged: true
               livenessProbe:
                 failureThreshold: 3
                 httpGet:
@@ -171,6 +212,10 @@
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
             restartPolicy: Always
+            securityContext:
+              runAsUser: 0
+            serviceAccount: mattermost-team-edition
+            serviceAccountName: mattermost-team-edition
             schedulerName: default-scheduler
             terminationGracePeriodSeconds: 30
             volumes:
@@ -227,6 +272,8 @@
                 value: mattermost
               image: mysql:5.7.14
               imagePullPolicy: IfNotPresent
+              securityContext:
+                privileged: true
               livenessProbe:
                 exec:
                   command:
@@ -282,6 +329,10 @@
               - mountPath: /var/lib/mysql
                 name: data
             restartPolicy: Always
+            securityContext:
+              runAsUser: 0
+            serviceAccount: mattermost-team-edition
+            serviceAccountName: mattermost-team-edition
             schedulerName: default-scheduler
             terminationGracePeriodSeconds: 30
             volumes:

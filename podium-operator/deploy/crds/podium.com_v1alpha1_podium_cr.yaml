@@ -5,6 +5,7 @@ metadata:
 spec:
   mozaik_application_name: mozaik
   jitsi_application_name: jitsi
+  wekan_application_name: wekan
   etherpad_application_name: etherpad
   mattermost_application_name: mattermost-team-edition
   drawio_application_name: drawio
@@ -15,6 +16,10 @@ spec:
   etherpad_default_text: "Welcome to Etherpad, a real-time editor"
   mysql_user_password: <password>
   mysql_root_password: <password>
+  mongo_database_name: wekan
+  mongo_database_user: wekan
+  mongo_database_password: <password>
+  mongo_admin_password: <password>
   jicofo_component_secret: s3cr3t
   jicofo_auth_user: focus
   jicofo_auth_password: <password>

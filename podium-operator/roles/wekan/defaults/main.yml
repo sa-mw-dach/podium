@@ -1,0 +1,8 @@
+---
+wekan_application_name: wekan
+application_domain:
+namespace: podium
+mongo_database_name: wekan
+mongo_database_user: wekan
+mongo_database_password: <password>
+mongo_admin_password: <password>

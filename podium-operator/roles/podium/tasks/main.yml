@@ -11,6 +11,10 @@
   include_role:
     name: mattermost
 
+- name: Deploy wekan
+  include_role:
+    name: wekan
+
 - name: Deploy dokuwiki
   include_role:
     name: dokuwiki
