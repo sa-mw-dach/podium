@@ -9,10 +9,6 @@ Currently the mattermost deployment is using init containers. This of course pro
 
 ```$ oc new-project mattermost```
 
-### Allow init containers to start in project
-
-```$ oc adm policy add-scc-to-user anyuid -z default```
-
 ### Template Default Parameters
 OpenShift templates allow you to parameterize and automate deployment of all application components. Similar to helm charts.
 

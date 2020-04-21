@@ -2,11 +2,6 @@
 
 ```$ oc create new-project podium```
 
-# Allow anyuid in namespace
-This is something we will be improving but for now, mattermost requires init containers that require elevated permissions
-
-```$ oc adm policy add-scc-to-user anyuid -z default```
-
 # Deploy Mattermost
 
 ```$ oc process -f mattermost/yaml/mattermost_template.yaml -p APPLICATION_DOMAIN=apps.cloud.example.com -p NAMESPACE=podium |oc create -f -```
