@@ -48,26 +48,32 @@ spec:
   mozaik_application_name: mozaik
   jitsi_application_name: jitsi
   etherpad_application_name: etherpad
+  wekan_application_name: wekan
   mattermost_application_name: mattermost-team-edition
   dokuwiki_application_name: dokuwiki
-  application_domain: <apps wildcard domain>
-  namespace: <namespace>
+  drawio_application_name: drawio
+  application_domain: apps.ocp4.keithtenzer.com
+  namespace: podium-dev
   etherpad_default_title: "Welcome to Etherpad"
-  etherpad_default_text: "Etherpad is a real-time text editor"
+  etherpad_default_text: "TEST TEST 1 2 3"
   mysql_user_password: <password>
   mysql_root_password: <password>
+  mongo_database_name: wekan
+  mongo_database_user: wekan
+  mongo_database_password: <password>
+  mongo_admin_password: <password>
   jicofo_component_secret: s3cr3t
   jicofo_auth_user: focus
   jicofo_auth_password: <password>
   jvb_auth_user: jvb
-  jvb_auth_password: redhat123
+  jvb_auth_password: <password>
   jvb_brewery_muc: jvbbrewery
   jvb_tcp_harvester_disabled: 'true'
   jvb_enable_apis: rest
   jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
   timezone: Europe/Berlin
-  jvb_node_port: 30004
-  jvb_node_selector: jvb
+  jvb_node_port: 30000
+  jvb_node_selector: jitsi
 ```
 
 ```$ oc create -f podium.yaml```

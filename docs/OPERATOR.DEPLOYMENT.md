@@ -34,15 +34,23 @@ kind: Podium
 metadata:
   name: mypodium
 spec:
+  mozaik_application_name: mozaik
   jitsi_application_name: jitsi
   etherpad_application_name: etherpad
+  wekan_application_name: wekan
   mattermost_application_name: mattermost-team-edition
-  application_domain: <apps wildcard domain>
-  namespace: podium-bla
+  dokuwiki_application_name: dokuwiki
+  drawio_application_name: drawio
+  application_domain: apps.ocp4.keithtenzer.com
+  namespace: podium-dev
   etherpad_default_title: "Welcome to Etherpad"
-  etherpad_default_text: "Welcome to Etherpad, a real-time editor"
+  etherpad_default_text: "TEST TEST 1 2 3"
   mysql_user_password: <password>
   mysql_root_password: <password>
+  mongo_database_name: wekan
+  mongo_database_user: wekan
+  mongo_database_password: <password>
+  mongo_admin_password: <password>
   jicofo_component_secret: s3cr3t
   jicofo_auth_user: focus
   jicofo_auth_password: <password>
@@ -54,7 +62,7 @@ spec:
   jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
   timezone: Europe/Berlin
   jvb_node_port: 30000
-  jvb_node_selector: jvb
+  jvb_node_selector: jitsi
 ```
 
 ## Label Node you want to run jvb service (video bridge)
