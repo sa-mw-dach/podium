@@ -105,11 +105,11 @@
           port: "{{jvb_node_port}}"
           protocol: UDP
           targetPort: "{{jvb_node_port}}"
-        - name: tcp
-          nodePort: "{{jvb_node_port}}"
-          port: "{{jvb_node_port}}"
-          protocol: TCP
-          targetPort: "{{jvb_node_port}}"
+#        - name: tcp
+#          nodePort: "{{jvb_node_port}}"
+#          port: "{{jvb_node_port}}"
+#          protocol: TCP
+#          targetPort: "{{jvb_node_port}}"
         selector:
           app: "{{jitsi_application_name}}"
           name: jvb
