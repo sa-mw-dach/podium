@@ -28,9 +28,7 @@ rules:
   - ""
   - security.openshift.io
   resources:
-  - podsecuritypolicyreviews
-  - podsecuritypolicyselfsubjectreviews
-  - podsecuritypolicysubjectreviews
+  - securitycontextconstraints
   verbs:
   - create
   - delete
