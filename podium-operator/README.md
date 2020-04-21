@@ -12,8 +12,8 @@ The Podium Operator supports the scope of cluster or namespace. Simply change th
 When running in scope namespace, the operator and instance of podium will run in same project. The cluster namespace allows using a single podium operator and can deploy/manage podium instances accross the cluster.
 
 ### Create Namespace
-This is only required for running operator in a cluster scope. If running in namespace scope just cr
-eate the project as you would for running the podium instance below.
+This is only required for running operator in a cluster scope. If running in namespace scope just create
+the project as you would for running the podium instance below.
 
 ```$ oc new-project podium-operator```
 
