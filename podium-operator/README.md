@@ -91,3 +91,10 @@ spec:
 
 ```$ oc create -f podium.yaml```
 
+### Delete Podium Operator
+
+```$ oc delete project podium-operator
+$ oc delete crd/podia.podium.com
+$ oc delete clusterrole/podium-operator
+$ oc delete clusterrolebinding/podium-operator
+```
