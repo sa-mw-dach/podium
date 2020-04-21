@@ -93,13 +93,13 @@ The template will create a default https route (edge termination) for jitsi and 
 ```
 $ oc get routes
 NAME       HOST/PORT                                       PATH   SERVICES                  PORT   TERMINATION   WILDCARD
-chat       chat-podium.apps.ocp4.keithtenzer.com              mattermost-team-edition   8065   edge          None
-dokuwiki   dokuwiki-podium.apps.ocp4.keithtenzer.com          dokuwiki                  8080   edge          None
-drawio     drawio-podium.apps.ocp4.keithtenzer.com            drawio                    8080   edge          None
-etherpad   etherpad-podium.apps.ocp4.keithtenzer.com          etherpad                  9001   edge          None
-meet       meet-podium.apps.ocp4.keithtenzer.com              web                       http   edge          None
-mozaik     podium-podium.apps.ocp4.keithtenzer.com            mozaik                    8080                 None
-wekan      wekan-podium.apps.ocp4.keithtenzer.com             wekan                     8080   edge          None
+chat       chat-podium.apps.ocp4.keithtenzer.com                  mattermost-team-edition   8065   edge          None
+dokuwiki   dokuwiki-podium.apps.ocp4.keithtenzer.com              dokuwiki                  8080   edge          None
+drawio     drawio-podium.apps.ocp4.keithtenzer.com                drawio                    8080   edge          None
+etherpad   etherpad-podium.apps.ocp4.keithtenzer.com              etherpad                  9001   edge          None
+meet       meet-podium.apps.ocp4.keithtenzer.com                  web                       http   edge          None
+mozaik     podium-podium.apps.ocp4.keithtenzer.com                mozaik                    8080                 None
+wekan      wekan-podium.apps.ocp4.keithtenzer.com                 wekan                     8080   edge          None
 ```
 
 You can access jitsi meet using https://meet-podium.apps.ocp4.keithtenzer.com for example.
