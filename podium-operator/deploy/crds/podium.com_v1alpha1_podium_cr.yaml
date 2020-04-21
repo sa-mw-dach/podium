@@ -7,9 +7,10 @@ spec:
   jitsi_application_name: jitsi
   etherpad_application_name: etherpad
   mattermost_application_name: mattermost-team-edition
+  drawio_application_name: drawio
   dokuwiki_application_name: dokuwiki
   application_domain: <apps wildcard domain>
-  namespace: podium-bla
+  namespace: podium
   etherpad_default_title: "Welcome to Etherpad"
   etherpad_default_text: "Welcome to Etherpad, a real-time editor"
   mysql_user_password: <password>
