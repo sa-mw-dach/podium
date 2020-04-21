@@ -1,24 +1,29 @@
 # Deploy Podium Operator
+The Podium Operator supports the scope of cluster or namespace. Simply change the path to CRD and yaml files to cluster (cluster scope) or namespace (namespace scope).
 
-## Create New Project for Operator
+When running in scope namespace, the operator and instance of podium will run in same project. The cluster namespace allows using a single podium operator and can deploy/manage podium instances accross the cluster.
 
-```$ oc create new-project podium-operator```
+### Create Namespace
 
-## Create Podium Operator CRD
+```$ oc new-project podium-operator```
 
-```$ oc create -f podium-operator/deploy/crds/podium.com_podia_crd.yaml```
+### Create Podium CRD
 
-## Setup RBAC for Podium Operator
+```$ oc create -f podium-operator/deploy/cluster/crds/podium.com_podia_crd.yaml```
 
-```$ oc create -f podium-operator/deploy/service_account.yaml```
+### Create Podium Service Account
 
-```$ oc create -f podium-operator/deploy/role.yaml```
+```$ oc create -f podium-operator/deploy/cluster/service_account.yaml```
 
-```$ oc create -f podium-operator/deploy/role_binding.yaml```
+### Create Podium Cluster Role
 
-## Install Podium Operator
+```$ oc create -f podium-operator/deploy/cluster/role.yaml```
 
-```$ oc create -f podium-operator/deploy/operator.yaml```
+### Create Podium Operator Cluster Role Binding
+```$ oc create -f podium-operator/deploy/cluster/role_binding.yaml```
+
+### Deploy Podium Operator
+```$ oc create -f podium-operator/deploy/cluster/operator.yaml```
 
 # Deploy Instance of Podium using Operator
 

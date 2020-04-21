@@ -7,6 +7,9 @@ The video bridge is required for video conferencing. Video and audio from client
 ```$ oc label node ocp4-n4krq-worker-v996z app=jvb```
 
 ## Install Podium Operator
+The Podium Operator supports the scope of cluster or namespace. Simply change the path to CRD and yaml files to cluster (cluster scope) or namespace (namespace scope). 
+
+When running in scope namespace, the operator and instance of podium will run in same project. The cluster namespace allows using a single podium operator and can deploy/manage podium instances accross the cluster.
 
 ### Create Namespace
 
@@ -14,21 +17,21 @@ The video bridge is required for video conferencing. Video and audio from client
 
 ### Create Podium CRD
 
-```$ oc create -f podium-operator/deploy/crds/podium.com_podia_crd.yaml```
+```$ oc create -f podium-operator/deploy/cluster/crds/podium.com_podia_crd.yaml```
 
 ### Create Podium Service Account
 
-```$ oc create -f podium-operator/deploy/service_account.yaml```
+```$ oc create -f podium-operator/deploy/cluster/service_account.yaml```
 
 ### Create Podium Cluster Role
 
-```$ oc create -f podium-operator/deploy/role.yaml```
+```$ oc create -f podium-operator/deploy/cluster/role.yaml```
 
 ### Create Podium Operator Cluster Role Binding
-```$ oc create -f podium-operator/deploy/role_binding.yaml```
+```$ oc create -f podium-operator/deploy/cluster/role_binding.yaml```
 
 ### Deploy Podium Operator 
-```$ oc create -f podium-operator/deploy/operator.yaml```
+```$ oc create -f podium-operator/deploy/cluster/operator.yaml```
 
 ## Deploy Instance of Podium using Operator
 

@@ -9,8 +9,7 @@ spec:
     listKind: PodiumList
     plural: podia
     singular: podium
-  #scope: Namespaced
-  scope: Cluster
+  scope: Namespaced
   subresources:
     status: {}
   validation:
