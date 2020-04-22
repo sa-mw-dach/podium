@@ -1,4 +1,25 @@
-# Deploy Podium Operator
+# Install Podium Operator Using OLM
+The Operator lifecycle manager comes built-in with OpenShift. It enables lifecyle management of an operator. In order to use OLM you need to package your operator and create a catalog that contains your operator bundle. To use the podium operator through OLM simply create a catalog source, pointing to the podium operator index bundle. Make sure it is created in the openshift-marketplace
+namespace or the namespace that is running OLM.
+
+## Create Catalog Source for Podium Operator
+
+```
+$ vi catalogsource.yaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: podium-operator-catalog
+spec:
+  sourceType: grpc
+  image: quay.io/ktenzer/podium-operator-index:1.0.0
+  displayName: Podium Operator Catalog
+  publisher: Podium Community
+```
+
+```$ oc create -f catalogsource.yaml -n openshift-marketplace```
+
+# Install Podium Operator Manually
 The Podium Operator supports the scope of cluster or namespace. Simply change the path to CRD and yaml files to cluster (cluster scope) or namespace (namespace scope).
 
 When running in scope namespace, the operator and instance of podium will run in same project. The cluster namespace allows using a single podium operator and can deploy/manage podium instances accross the cluster.

@@ -1,0 +1,243 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "podium.com/v1alpha1",
+          "kind": "Podium",
+          "metadata": {
+            "name": "mypodium"
+          },
+          "spec": {
+            "application_domain": "\u003capps wildcard domain\u003e",
+            "dokuwiki": {
+              "application_name": "dokuwiki",
+              "enable": true
+            },
+            "drawio": {
+              "application_name": "drawio",
+              "enable": true
+            },
+            "etherpad": {
+              "application_name": "etherpad",
+              "default_text": "Etherpad is a real-time text editor",
+              "default_title": "Welcome to Etherpad",
+              "enable": true
+            },
+            "jitsi": {
+              "application_name": "jitsi",
+              "enable": true,
+              "jicofo_auth_password": "\u003cpassword\u003e",
+              "jicofo_auth_user": "focus",
+              "jicofo_component_secret": "s3cr3t",
+              "jvb_auth_password": "\u003cpassword\u003e",
+              "jvb_auth_user": "jvb",
+              "jvb_brewery_muc": "jvbbrewery",
+              "jvb_enable_apis": "rest",
+              "jvb_node_selector": "jitsi",
+              "jvb_stun_servers": "meet-jit-si-turnrelay.jitsi.net:443",
+              "jvb_tcp_harvester_disabled": "true",
+              "timezone": "Europe/Berlin"
+            },
+            "jvb_node_port": 30000,
+            "mattermost": {
+              "application_name": "mattermost-team-edition",
+              "enable": true,
+              "mysql_root_password": "\u003cpassword\u003e",
+              "mysql_user_password": "\u003cpassword\u003e"
+            },
+            "mozaik": {
+              "application_name": "mozaik",
+              "enable": true
+            },
+            "namespace": "\u003cnamespace\u003e",
+            "wekan": {
+              "application_name": "wekan",
+              "enable": true,
+              "mongo_admin_password": "\u003cpassword\u003e",
+              "mongo_database_name": "wekan",
+              "mongo_database_password": "\u003cpassword\u003e",
+              "mongo_database_user": "wekan"
+            }
+          }
+        }
+      ]
+    capabilities: Basic Install
+  name: podium-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: Podium
+      name: podia.podium.com
+      version: v1alpha1
+  displayName: Podium Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          - serviceaccounts
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          - route.openshift.io
+          resources:
+          - routes
+          - routes/custom-host
+          verbs:
+          - create
+          - delete
+          - deletecollection
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - podium-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          verbs:
+          - get
+        - apiGroups:
+          - podium.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: podium-operator
+      deployments:
+      - name: podium-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: podium-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: podium-operator
+            spec:
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: podium-operator
+                - name: ANSIBLE_GATHERING
+                  value: explicit
+                image: quay.io/ktenzer/podium-operator:latest
+                imagePullPolicy: Always
+                name: podium-operator
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+              serviceAccountName: podium-operator
+              volumes:
+              - emptyDir: {}
+                name: runner
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - ""
+  maintainers:
+  - {}
+  maturity: alpha
+  provider: {}
+  version: 0.0.1
