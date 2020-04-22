@@ -20,7 +20,7 @@
         name: mattermost-team-edition
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
 - name: Deploy Mattermost Security Context
   k8s:
     definition:
@@ -30,7 +30,7 @@
         name: mattermost-team-edition
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
       allowPrivilegedContainer: true
       allowedCapabilities:
         - AUDIT_WRITE
@@ -69,8 +69,8 @@
         name: mattermost-mysql
         namespace: "{{ namespace }}"
       stringData:
-        mysql-password: "{{mysql_user_password}}"
-        mysql-root-password: "{{mysql_root_password}}"
+        mysql-password: "{{mattermost.mysql_user_password}}"
+        mysql-root-password: "{{mattermost.mysql_root_password}}"
 - name: Deploy Mattermost ConfigMap
   k8s:
     definition:
@@ -145,18 +145,18 @@
         name: mattermost-team-edition
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{mattermost_application_name}}"
+            app: "{{mattermost.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{mattermost_application_name}}"
+              app: "{{mattermost.application_name}}"
               name: mattermost-team-edition
           spec:
             containers:
@@ -240,18 +240,18 @@
         name: mattermost-mysql
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{mattermost_application_name}}"
+            app: "{{mattermost.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{mattermost_application_name}}"
+              app: "{{mattermost.application_name}}"
               name: mattermost-mysql
           spec:
             containers:
@@ -279,7 +279,7 @@
                   command:
                   - sh
                   - -c
-                  - mysqladmin ping -u root -p{{mysql_root_password}}
+                  - mysqladmin ping -u root -p{{mattermost.mysql_root_password}}
                 failureThreshold: 3
                 initialDelaySeconds: 30
                 periodSeconds: 10
@@ -295,7 +295,7 @@
                   command:
                   - sh
                   - -c
-                  - mysqladmin ping -u root -p{{mysql_root_password}}
+                  - mysqladmin ping -u root -p{{mattermost.mysql_root_password}}
                 failureThreshold: 3
                 initialDelaySeconds: 5
                 periodSeconds: 10
@@ -347,14 +347,14 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
         name: mattermost-team-edition
       spec:
         ports:
         - port: 8065
           targetPort: http
         selector:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
           name: mattermost-team-edition
         sessionAffinity: None
         type: ClusterIP
@@ -368,7 +368,7 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
         name: mattermost-mysql
       spec:
         ports:
@@ -377,7 +377,7 @@
           protocol: TCP
           targetPort: mysql
         selector:
-          app: "{{mattermost_application_name}}"
+          app: "{{mattermost.application_name}}"
           name: mattermost-mysql
         sessionAffinity: None
         type: ClusterIP

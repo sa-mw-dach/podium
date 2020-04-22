@@ -1,6 +1,7 @@
 ---
-mattermost_application_name: mattermost-team-edition
 namespace: podium
 application_domain:
-mysql_user_password: redhat123
-mysql_root_password: a7Y792EdCE
+mattermost:
+  application_name: mattermost-team-edition
+  mysql_user_password: redhat123
+  mysql_root_password: a7Y792EdCE

@@ -8,11 +8,11 @@
         name: jitsi-secret
         namespace: "{{ namespace }}"
       stringData:
-        JICOFO_COMPONENT_SECRET: "{{jicofo_component_secret}}"
-        JICOFO_AUTH_USER: "{{jicofo_auth_user}}"
-        JICOFO_AUTH_PASSWORD: "{{jicofo_auth_password}}"
-        JVB_AUTH_USER: "{{jvb_auth_user}}"
-        JVB_AUTH_PASSWORD: "{{jvb_auth_password}}"
+        JICOFO_COMPONENT_SECRET: "{{jitsi.jicofo_component_secret}}"
+        JICOFO_AUTH_USER: "{{jitsi.jicofo_auth_user}}"
+        JICOFO_AUTH_PASSWORD: "{{jitsi.jicofo_auth_password}}"
+        JVB_AUTH_USER: "{{jitsi.jvb_auth_user}}"
+        JVB_AUTH_PASSWORD: "{{jitsi.jvb_auth_password}}"
 - name: Deploy Jitsi ConfigMap
   k8s:
     definition:
@@ -32,7 +32,7 @@
         JWT_TOKEN_AUTH_MODULE: ''
         JIGASI_TRANSCRIBER_ADVERTISE_URL: ''
         LDAP_START_TLS: ''
-        TZ: "{{timezone}}"
+        TZ: "{{jitsi.timezone}}"
         LDAP_BASE: ''
         GLOABL_MODULES: ''
         LOG_LEVEL: ''
@@ -40,8 +40,8 @@
         LDAP_USE_TLS: ''
         JIGASI_TRANSCRIBER_SEND_TXT: ''
         XMPP_INTERNAL_MUC_MODULES: ''
-        JVB_ENABLE_APIS: "{{jvb_enable_apis}}"
-        JVB_TCP_HARVESTER_DISABLED: "{{jvb_tcp_harvester_disabled}}"
+        JVB_ENABLE_APIS: "{{jitsi.jvb_enable_apis}}"
+        JVB_TCP_HARVESTER_DISABLED: "{{jitsi.jvb_tcp_harvester_disabled}}"
         LDAP_TLS_CACERT_DIR: ''
         LDAP_TLS_CIPHERS: ''
         XMPP_DOMAIN: meet-{{namespace}}.{{application_domain}}
@@ -55,7 +55,7 @@
         XMPP_AUTH_DOMAIN: auth.meet-{{namespace}}.{{application_domain}}
         JWT_APP_ID: ''
         XMPP_MUC_DOMAIN: muc.meet-{{namespace}}.{{application_domain}}
-        JVB_STUN_SERVERS: "{{jvb_stun_servers}}"
+        JVB_STUN_SERVERS: "{{jitsi.jvb_stun_servers}}"
         JIBRI_PENDING_TIMEOUT: '90'
         DISABLE_HTTPS: ''
         JIGASI_SIP_TRANSPORT: ''
@@ -82,7 +82,7 @@
         XMPP_RECORDER_DOMAIN: recorder.meet-{{namespace}}.{{application_domain}}
         JWT_ASAP_KEYSERVER: ''
         ENABLE_TRANSCRIPTIONS: ''
-        JVB_BREWERY_MUC: "{{jvb_brewery_muc}}"
+        JVB_BREWERY_MUC: "{{jitsi.jvb_brewery_muc}}"
         XMPP_MODULES: ''
         LDAP_TLS_CACERT_FILE: ''
         JIGASI_HEALTH_CHECK_SIP_URI: ''
@@ -95,7 +95,7 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
         name: jvb
       spec:
         type: NodePort
@@ -111,7 +111,7 @@
 #          protocol: TCP
 #          targetPort: "{{jvb_node_port}}"
         selector:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
           name: jvb
 - name: Deploy Web service
   k8s:
@@ -121,7 +121,7 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
         name: web
       spec:
         ports:
@@ -132,7 +132,7 @@
           port: 4443
           targetPort: 4443
         selector:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
           name: web
 - name: Deploy Prosody service
   k8s:
@@ -142,7 +142,7 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
         name: prosody
       spec:
         ports:
@@ -156,7 +156,7 @@
           port: 5347
           targetPort: 5347
         selector:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
           name: prosody
       status:
         loadBalancer: {}
@@ -191,18 +191,18 @@
         name: prosody
         namespace: "{{ namespace }}"
         labels:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{jitsi_application_name}}"
+            app: "{{jitsi.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{jitsi_application_name}}"
+              app: "{{jitsi.application_name}}"
               name: prosody
           spec:
             containers:
@@ -243,18 +243,18 @@
         name: jicofo 
         namespace: "{{ namespace }}"
         labels:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{jitsi_application_name}}"
+            app: "{{jitsi.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{jitsi_application_name}}"
+              app: "{{jitsi.application_name}}"
               name: jicofo
           spec:
             containers:
@@ -296,22 +296,22 @@
         name: jvb
         namespace: "{{ namespace }}"
         labels:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{jitsi_application_name}}"
+            app: "{{jitsi.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{jitsi_application_name}}"
+              app: "{{jitsi.application_name}}"
               name: jvb
           spec:
             nodeSelector:
-              app: "{{jvb_node_selector}}"
+              app: "{{jitsi.jvb_node_selector}}"
             containers:
             - envFrom:
               - configMapRef:
@@ -359,18 +359,18 @@
         name: web
         namespace: "{{ namespace }}"
         labels:
-          app: "{{jitsi_application_name}}"
+          app: "{{jitsi.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{jitsi_application_name}}"
+            app: "{{jitsi.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{jitsi_application_name}}"
+              app: "{{jitsi.application_name}}"
               name: web
           spec:
             containers:

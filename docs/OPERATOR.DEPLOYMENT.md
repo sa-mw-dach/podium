@@ -41,6 +41,10 @@ If running operator as scope namespace you already created this project so this 
 
 ```$ oc create new-project podium```
 
+## Label Node you want to run jvb service (video bridge)
+
+```$ oc label node ocp4-n4krq-worker-v996z app=jvb```
+
 ## Create Podium CR
 
 ```
@@ -49,40 +53,50 @@ kind: Podium
 metadata:
   name: mypodium
 spec:
-  mozaik_application_name: mozaik
-  jitsi_application_name: jitsi
-  etherpad_application_name: etherpad
-  wekan_application_name: wekan
-  mattermost_application_name: mattermost-team-edition
-  dokuwiki_application_name: dokuwiki
-  drawio_application_name: drawio
-  application_domain: apps.ocp4.keithtenzer.com
-  namespace: podium-dev
-  etherpad_default_title: "Welcome to Etherpad"
-  etherpad_default_text: "TEST TEST 1 2 3"
-  mysql_user_password: <password>
-  mysql_root_password: <password>
-  mongo_database_name: wekan
-  mongo_database_user: wekan
-  mongo_database_password: <password>
-  mongo_admin_password: <password>
-  jicofo_component_secret: s3cr3t
-  jicofo_auth_user: focus
-  jicofo_auth_password: <password>
-  jvb_auth_user: jvb
-  jvb_auth_password: <password>
-  jvb_brewery_muc: jvbbrewery
-  jvb_tcp_harvester_disabled: 'true'
-  jvb_enable_apis: rest
-  jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
-  timezone: Europe/Berlin
+  application_domain: <apps wildcard domain>
+  namespace: <namespace>
   jvb_node_port: 30000
-  jvb_node_selector: jitsi
+  etherpad:
+    enable: true
+    application_name: etherpad
+    default_title: "Welcome to Etherpad"
+    default_text: "Etherpad is a real-time text editor"
+  jitsi:
+    enable: true
+    application_name: jitsi
+    jicofo_component_secret: s3cr3t
+    jicofo_auth_user: focus
+    jicofo_auth_password: <password>
+    jvb_auth_user: jvb
+    jvb_auth_password: <password>
+    jvb_brewery_muc: jvbbrewery
+    jvb_tcp_harvester_disabled: 'true'
+    jvb_enable_apis: rest
+    jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
+    timezone: Europe/Berlin
+    jvb_node_selector: jitsi
+  mattermost:
+    enable: true
+    application_name: mattermost-team-edition
+    mysql_user_password: <password>
+    mysql_root_password: <password>
+  wekan:
+    enable: true
+    application_name: wekan
+    mongo_database_name: wekan
+    mongo_database_user: wekan
+    mongo_database_password: <password>
+    mongo_admin_password: <password>
+  drawio:
+    enable: true
+    application_name: drawio
+  dokuwiki:
+    enable: true
+    application_name: dokuwiki
+  mozaik:
+    enable: true
+    application_name: mozaik
 ```
-
-## Label Node you want to run jvb service (video bridge)
-
-```$ oc label node ocp4-n4krq-worker-v996z app=jvb```
 
 ## Apply Podium CR
 ```$ oc apply -f podium.yaml```

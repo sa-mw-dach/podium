@@ -8,18 +8,18 @@
         name: drawio
         namespace: "{{ namespace }}"
         labels:
-          app: "{{drawio_application_name}}"
+          app: "{{drawio.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{drawio_application_name}}"
+            app: "{{drawio.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{drawio_application_name}}"
+              app: "{{drawio.application_name}}"
               name: drawio
           spec:
             containers:
@@ -59,7 +59,7 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{drawio_application_name}}"
+          app: "{{drawio.application_name}}"
         name: drawio
       spec:
         ports:
@@ -72,7 +72,7 @@
           protocol: TCP
           targetPort: 8443
         selector:
-          app: "{{drawio_application_name}}"
+          app: "{{drawio.application_name}}"
           name: drawio
       status:
         loadBalancer: {}

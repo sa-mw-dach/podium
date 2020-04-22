@@ -1,28 +1,49 @@
 ---
+- debug:
+    msg: Deploy Etherpad (Real-time editor) set to {{ etherpad.enable }}
 - name: Deploy etherpad
   include_role:
     name: etherpad
+  when: etherpad.enable
 
+- debug:
+    msg: Deploy Jitsi (Video Conferencing) set to {{ jitsi.enable }}
 - name: Deploy jitsi
   include_role:
     name: jitsi
+  when: jitsi.enable
 
+- debug:
+    msg: Deploy Mattermost (Chat) set to {{ mattermost.enable }}
 - name: Deploy mattermost
   include_role:
     name: mattermost
+  when: mattermost.enable
 
+- debug:
+    msg: Deploy Wekan (Kanban Board) set to {{ wekan.enable }}
 - name: Deploy wekan
   include_role:
     name: wekan
+  when: wekan.enable
 
+- debug:
+    msg: Deploy Dokuwiki (Wiki) set to {{ dokuwiki.enable }}
 - name: Deploy dokuwiki
   include_role:
     name: dokuwiki
+  when: dokuwiki.enable
 
+- debug:
+    msg: Deploy Drawio (Diagram editor) set to {{ drawio.enable }}
 - name: Deploy drawio
   include_role:
     name: drawio
+  when: drawio.enable
 
+- debug:
+    msg: Deploy Mozaik (Dashboard) set to {{ mozaik.enable }}
 - name: Deploy mozaik
   include_role:
     name: mozaik
+  when: mozaik.enable

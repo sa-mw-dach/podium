@@ -8,26 +8,26 @@
         name: etherpad
         namespace: "{{ namespace }}"
         labels:
-          app: "{{etherpad_application_name}}"
+          app: "{{etherpad.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{etherpad_application_name}}"
+            app: "{{etherpad.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{etherpad_application_name}}"
+              app: "{{etherpad.application_name}}"
               name: etherpad
           spec:
             containers:
             - env:
               - name: TITLE
-                value: "{{etherpad_default_text}}"
+                value: "{{etherpad.default_text}}"
               - name: DEFAULT_PAD_TEXT
-                value: "{{etherpad_default_text}}"
+                value: "{{etherpad.default_text}}"
               image: etherpad/etherpad
               imagePullPolicy: Always
               name: etherpad
@@ -57,14 +57,14 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{etherpad_application_name}}"
+          app: "{{etherpad.application_name}}"
         name: etherpad
       spec:
         ports:
         - port: 9001
           targetPort: 9001
         selector:
-          app: "{{etherpad_application_name}}"
+          app: "{{etherpad.application_name}}"
           name: etherpad
       status:
         loadBalancer: {}

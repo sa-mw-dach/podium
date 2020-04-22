@@ -1,4 +1,5 @@
 ---
-drawio_application_name: drawio
 application_domain:
 namespace: podium
+drawio: 
+  application_name: drawio

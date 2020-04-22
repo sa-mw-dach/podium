@@ -1,4 +1,5 @@
 ---
-dokuwiki_application_name: dokuwiki
 application_domain:
 namespace: podium
+dokuwiki:
+  application_name: dokuwiki

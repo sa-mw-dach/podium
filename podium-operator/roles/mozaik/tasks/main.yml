@@ -118,18 +118,18 @@
         name: mozaik
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mozaik_application_name}}"
+          app: "{{mozaik.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{mozaik_application_name}}"
+            app: "{{mozaik.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{mozaik_application_name}}"
+              app: "{{mozaik.application_name}}"
               name: mozaik
           spec:
             containers:
@@ -176,7 +176,7 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{mozaik_application_name}}"
+          app: "{{mozaik.application_name}}"
         name: mozaik
       spec:
         ports:
@@ -184,7 +184,7 @@
           protocol: TCP
           targetPort: 8080
         selector:
-          app: "{{mozaik_application_name}}"
+          app: "{{mozaik.application_name}}"
           name: mozaik
         sessionAffinity: None
         type: ClusterIP

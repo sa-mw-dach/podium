@@ -8,18 +8,18 @@
         name: dokuwiki
         namespace: "{{ namespace }}"
         labels:
-          app: "{{dokuwiki_application_name}}"
+          app: "{{dokuwiki.application_name}}"
       spec:
         replicas: 1
         strategy:
           type: RollingUpdate
         selector:
           matchLabels:
-            app: "{{dokuwiki_application_name}}"
+            app: "{{dokuwiki.application_name}}"
         template:
           metadata:
             labels:
-              app: "{{dokuwiki_application_name}}"
+              app: "{{dokuwiki.application_name}}"
               name: dokuwiki
           spec:
             containers:
@@ -56,14 +56,14 @@
       metadata:
         namespace: "{{ namespace }}"
         labels:
-          app: "{{dokuwiki_application_name}}"
+          app: "{{dokuwiki.application_name}}"
         name: dokuwiki
       spec:
         ports:
         - port: 8080
           targetPort: 8080
         selector:
-          app: "{{dokuwiki_application_name}}"
+          app: "{{dokuwiki.application_name}}"
           name: dokuwiki
       status:
         loadBalancer: {}
