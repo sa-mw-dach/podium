@@ -37,8 +37,10 @@ In order to make the Dashboard universally usable for many different use cases, 
 
 The provided template gives an example. It is important that the generated URLs match the setup to connect the dashboard with the other application.
 
-```$ oc process --parameters -f configmap-template.yaml```
-```$ oc process  -f configmap.yaml -p NAMESPACE=jitsi |oc create -f -```
+```
+$ oc process --parameters -f configmap_template.yaml
+$ oc process  -f configmap_template.yaml -p NAMESPACE=jitsi |oc create -f -
+```
 
 In order to activate the ConfigMap we need to patch the Deployment Config created in the previous step and we need to start the rollout of that new configuration.
 
@@ -50,8 +52,10 @@ In order to activate the ConfigMap we need to patch the Deployment Config create
 ### Access Mozaik Dashboard
 The deployment does not expose the service automatically, so we finish our installation with these steps.
 
-```$ oc expose svc/podium```
-```$ oc get route```
+```
+$ oc expose svc/podium
+$ oc get route
+```
 
 
 
