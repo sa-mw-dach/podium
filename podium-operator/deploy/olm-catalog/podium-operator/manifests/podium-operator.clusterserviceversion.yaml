@@ -75,6 +75,7 @@ spec:
       name: podia.podium.com
       version: v1alpha1
   displayName: Podium Operator
+  description: Deploys an instance of podium and components enabled in CR such as video conferencing, chat, real-time editor, wiki, etc
   icon:
   - base64data: ""
     mediatype: ""
