@@ -39,7 +39,7 @@
               // define the interval used by Mozaïk Bus to call registered APIs
               apisPollInterval: 15000,
               dashboards: [
-  
+
                   {
                       // 4 x 3 dashboard
                       columns: 4,
@@ -84,7 +84,7 @@
                           {
                               type: 'embed.markup',
                               title: 'Sketch Boards',
-                              content: '<ul><li><a href="https://etherpad-{{ namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener">New Pad</a></li> <li><a href="https://etherpad-{{ namespace }}.{{ application_domain }}/p/Podium" target="_tab" rel="noreferrer noopener">General Podium Pad</a></li> <li><a href="https://etherpad-{{ namespace }}.{{ application_domain }}/p/Draft" target="_tab" rel="noreferrer noopener">Draft Pad</a></li> <li><a href="https://etherpad-{{ namespace }}.{{ application_domain }}/p/ToDo" target="_tab" rel="noreferrer noopener">ToDo Pad</a></li></ul>',
+                              content: '<a href="https://etherpad-{{ namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener"><img src="https://factomedia.files.wordpress.com/2016/12/n4.jpg" alt="Etherpad" width="300" height="200"></a>  <ul><li><a href="https://etherpad-{{ namespace }}.{{ application_domain }}/p/Podium" target="_tab" rel="noreferrer noopener">General Podium Pad</a></li> <li><a href="https://etherpad-{{ namespace }}.{{ application_domain }}/p/Draft" target="_tab" rel="noreferrer noopener">Draft Pad</a></li> <li><a href="https://etherpad-{{ namespace }}.{{ application_domain }}/p/ToDo" target="_tab" rel="noreferrer noopener">ToDo Pad</a></li></ul>',
                               columns: 1, rows: 2,
                               x: 3, y: 1
                           },
@@ -98,13 +98,13 @@
                           {
                               type: 'embed.markup',
                               title: 'Chat',
-                              content: '<ul><li><a href="https://chat-{{ namespace }}.{{ application_domain }}" target="_blank" rel="noreferrer noopener">New Chat</a></li></ul>',
+                              content: '<center><a href="https://chat-{{ namespace }}.{{ application_domain }}" target="_blank" rel="noreferrer noopener"><img src="https://cdn.freebiesupply.com/logos/large/2x/mattermost-logo-png-transparent.png" alt="Mattermost Chat" width="300" height="200"></a></center>',
                               columns: 1, rows: 1,
                               x: 0, y: 2
                           }
                       ]
                   },
-  
+
               ]
           };
 
