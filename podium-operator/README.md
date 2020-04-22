@@ -53,6 +53,7 @@ If running operator as scope namespace you already created this project so this 
 
 ```
 $ vi podium.yaml
+apiVersion: podium.com/v1alpha1
 kind: Podium
 metadata:
   name: mypodium
@@ -106,7 +107,8 @@ spec:
 
 ### Delete Podium Operator
 
-```$ oc delete project podium-operator
+```
+$ oc delete project podium-operator
 $ oc delete crd/podia.podium.com
 $ oc delete clusterrole/podium-operator
 $ oc delete clusterrolebinding/podium-operator
