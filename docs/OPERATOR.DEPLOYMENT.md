@@ -12,7 +12,7 @@ metadata:
   name: podium-operator-catalog
 spec:
   sourceType: grpc
-  image: quay.io/ktenzer/podium-operator-index:1.0.0
+  image: quay.io/ktenzer/podium-operator-index:1.0.1
   displayName: Podium Operator Catalog
   publisher: Podium Community
 ```
