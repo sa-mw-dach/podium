@@ -7,3 +7,5 @@ Your Podium consists of Best of Breed Open Source applications:
   * [[http://etherpad.org|Etherpad]] is a versatile scratch pad for colaborative writing. You find a list of predefined documents in the Scratch Pad widget on your Poduim Dashboard. The New Pad link allows the creation of arbitrary new documents.
   * [[http://www.dokuwiki.org|DokuWiki]] is the backbone of the Podium Knowledge Base, the application you are currently looking at.
   * [[https://github.com/mattermost/mattermost-server|MatterMost]] is the professional chat application
+  * [[https://github.com/jgraph/drawio|Draw.io]] is the professional diagram editor
+   
