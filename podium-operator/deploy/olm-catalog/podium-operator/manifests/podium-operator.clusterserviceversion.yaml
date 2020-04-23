@@ -36,7 +36,7 @@ metadata:
               "jvb_auth_user": "jvb",
               "jvb_brewery_muc": "jvbbrewery",
               "jvb_enable_apis": "rest",
-              "jvb_node_selector": "jitsi",
+              "jvb_node_selector": "jvb",
               "jvb_stun_servers": "meet-jit-si-turnrelay.jitsi.net:443",
               "jvb_tcp_harvester_disabled": "true",
               "timezone": "Europe/Berlin"
@@ -106,7 +106,7 @@ spec:
     ## Installation
     The Podium Operator is a cluster-wide operator. It installs and configure the the toolchain and integrates them in a single-pane-of-glass dashboard. Each component can be enabled or disabled. Enabled means the component will be installed and managed by the operator. Components can be installed by the operator and later disabled to allow for example customizations for the k8s objects. Once the operator is installed, simply create a project, under installed operators for the project select Podium. Under Overview select create instance. 
 
-    After you create a instance of Podium you will in the UI see the object. You can also use ```$ oc get podium -n <namespace>``` to manage podium instances. In the future you can again access the Podium instance via https://console-openshift-console.<apps wildcard domain>/k8s/ns/<namespace>/operators.coreos.com~v1alpha1~ClusterServiceVersion/podium-operator.v1.0.0/podium.com~v1alpha1~Podium.
+    After you create a instance of Podium you will in the UI see the object. You can also use ```$ oc get podium -n <namespace>``` to manage podium instances. In the future you can again access the Podium instance via ```https://console-openshift-console.<apps wildcard domain>/k8s/ns/<namespace>/operators.coreos.com~v1alpha1~ClusterServiceVersion/podium-operator.v1.0.0/podium.com~v1alpha1~Podium```.
 
     ```
     apiVersion: podium.com/v1alpha1
