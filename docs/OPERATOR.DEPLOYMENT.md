@@ -2,6 +2,12 @@
 The Operator lifecycle manager comes built-in with OpenShift. It enables lifecyle management of an operator. In order to use OLM you need to package your operator and create a catalog that contains your operator bundle. To use the podium operator through OLM simply create a catalog source, pointing to the podium operator index bundle. Make sure it is created in the openshift-marketplace
 namespace or the namespace that is running OLM.
 
+## Pre-requisites
+* Public or rotable IP on at least one node.
+* Port 30000 or whatever the jvb node port is on UDP needs to be open to public or routable IP.
+* Port 3478 TCP/UDP needs to be open to public or routable IP.
+* TLS certificate solution like Let's Encrypt.
+
 ## Create Catalog Source for Podium Operator
 
 ```
