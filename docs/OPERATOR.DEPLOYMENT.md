@@ -19,6 +19,23 @@ spec:
 
 ```$ oc create -f catalogsource.yaml -n openshift-marketplace```
 
+## Install Podium Operator via OperatorHub
+Under OperatorHub search for podium and install operator.
+![](podium_1.PNG)
+
+## Select the Podium Operator 
+Create a new project and under installed operators you should see Podium Operator.
+![](podium_2.PNG)
+
+## Create a new podium instance
+The Podium Operator will deploy an instance of Podium in your project. Create a new instance.
+![](podium_3.PNG)
+
+After creating instance you will see the Podium object and Podium will be deployed in your project.
+![](podium_4.PNG)
+
+After complete under routes click the dashboard (Moziak) to get started using Podium.
+
 # Install Podium Operator Manually
 The Podium Operator supports the scope of cluster or namespace. Simply change the path to CRD and yaml files to cluster (cluster scope) or namespace (namespace scope).
 
