@@ -78,7 +78,9 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - kind: Podium
+    - description: Deployment of components from Podium Operator
+      displayName: Podium
+      kind: Podium
       name: podia.podium.com
       version: v1alpha1
   displayName: Podium

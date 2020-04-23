@@ -28,18 +28,18 @@ spec:
 
 ## Install Podium Operator via OperatorHub
 Under OperatorHub search for podium and install operator.
-![](../docs/podium_1.PNG)
+![](../docs/images/podium_1.PNG)
 
 ## Select the Podium Operator
 Create a new project and under installed operators you should see Podium Operator.
-![](../docs/podium_2.PNG)
+![](../docs/images/podium_2.PNG)
 
 ## Create a new podium instance
 The Podium Operator will deploy an instance of Podium in your project. Create a new instance.
-![](../docs/podium_3.PNG)
+![](../docs/images/podium_3.PNG)
 
 After creating instance you will see the Podium object and Podium will be deployed in your project.
-![](../docs/podium_4.PNG)
+![](../docs/images/podium_4.PNG)
 
 After complete under routes click the dashboard (Moziak) to get started using Podium.
 
