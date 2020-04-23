@@ -95,7 +95,7 @@ spec:
     jvb_enable_apis: rest
     jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
     timezone: Europe/Berlin
-    jvb_node_selector: jitsi
+    jvb_node_selector: jvb
   mattermost:
     enable: true
     application_name: mattermost-team-edition
