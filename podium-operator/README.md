@@ -1,6 +1,12 @@
 # Podium Operator
 The podium operator will mange the deployment of podium environments accross the k8s cluster.
 
+## Pre-requisites
+* Public or rotable IP on at least one node.
+* Port 30000 or whatever the jvb node port is on UDP needs to be open to public or routable IP.
+* Port 3478 TCP/UDP needs to be open to public or routable IP.
+* TLS certificate solution like Let's Encrypt.
+
 ## Label node where you want the Jitsi Video Bridge to run
 The video bridge is required for video conferencing. Video and audio from clients are sent to the jitsi video bridge (jvb) via a UDP connection. The node running the jvb must have an internet or routable IP than can be reached from participants. Currently this is done by exposing a node port. The jvb service uses a STUN server to discover the routable IP so this is all dynamic. The deployment sets a nodeSelector so that the jvb pod will only run on nodes with a routable IP. You can label multiple nodes as well, as long as they have a routable IP.
 

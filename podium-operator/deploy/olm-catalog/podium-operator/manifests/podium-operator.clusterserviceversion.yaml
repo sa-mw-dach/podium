@@ -98,7 +98,7 @@ spec:
 
     ```$ oc node label ocp4-n4krq-worker-6mjcz app=jvb```
 
-    The jvb component uses STUN to discover the node routable or public IP. This is similar to a reverse proxy. You can configure and use your own stun servers or the one provided. The jvb_stun_serversis parameter is a comma separated list.
+    The jvb component uses STUN to discover the node routable or public IP. This is similar to a reverse proxy. You can configure and use your own stun servers or the one provided. The jvb_stun_serversis parameter is a comma separated list. You will also need to open port 3478 TCP/UDP to the routable or public IP.
 
     ### TLS Certificates
     This is not a Podium specific requirement, all applications need TLS certificates. You can of course use your own solution but Podium integrates with a Let's Encrypt admission controller. Let's Encrypt is a certificate authority providing free TLS certificates via API up to rate limits. Podium configures the routes with a special annotation that will enable Let's Encrypt admission controller to dynamically configure TLS certificate in the route.

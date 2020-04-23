@@ -1,3 +1,9 @@
+# Pre-requisites
+* Public or rotable IP on at least one node.
+* Port 30000 or whatever the jvb node port is on UDP needs to be open to public or routable IP.
+* Port 3478 TCP/UDP needs to be open to public or routable IP.
+* TLS certificate solution like Let's Encrypt.
+
 # Create New Project
 
 ```$ oc create new-project podium```

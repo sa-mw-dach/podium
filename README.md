@@ -10,6 +10,12 @@ An instance of podium will deploy all components and configure a dashboard so al
 ## Feature requests
 If you would like to see a feature or addition please open a issue and feel welcome to contribute.
 
+## Pre-requisites
+* Public or rotable IP on at least one node.
+* Port 30000 or whatever the jvb node port is on UDP needs to be open to public or routable IP.
+* Port 3478 TCP/UDP needs to be open to public or routable IP.
+* TLS certificate solution like Let's Encrypt.
+
 ## Lets Encrypt Certificate
 Jitsi meet requires a TLS certificate. TLS can be terminated inside the web pod or terminated on the edge. I would recommend edge termination and in this case we can use a lets encrypt k8s admission controller to setup our certificates within the created OpenShift route.
 
