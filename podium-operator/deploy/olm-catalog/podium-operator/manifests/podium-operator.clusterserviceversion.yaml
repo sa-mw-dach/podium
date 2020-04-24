@@ -120,6 +120,7 @@ spec:
       application_domain: <application wildcard domain, ie. apps.ocp.example.com>
       namespace: <namespace where podium instance will be deployed>
       jvb_node_port: 30000
+      lets_encrypt: true
       etherpad:
         enable: true
         application_name: etherpad
