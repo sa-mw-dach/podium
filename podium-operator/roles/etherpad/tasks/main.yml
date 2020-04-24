@@ -90,3 +90,26 @@
           name: etherpad
           weight: 100
         wildcardPolicy: None
+  when: lets_encrypt      
+- name: Deploy etherpad route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+        name: etherpad
+      spec:
+        host: "etherpad-{{namespace}}.{{application_domain}}"
+        port:
+          targetPort: 9001
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: etherpad
+          weight: 100
+        wildcardPolicy: None
+  when: not lets_encrypt      

@@ -89,3 +89,26 @@
           name: dokuwiki
           weight: 100
         wildcardPolicy: None
+  when: lets_encrypt
+- name: Deploy dokuwiki route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+        name: dokuwiki
+      spec:
+        host: "dokuwiki-{{namespace}}.{{application_domain}}"
+        port:
+          targetPort: 8080
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: dokuwiki
+          weight: 100
+        wildcardPolicy: None
+  when: not lets_encrypt

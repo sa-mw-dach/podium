@@ -182,6 +182,29 @@
           name: web
           weight: 100
         wildcardPolicy: None
+  when: lets_encrypt
+- name: Deploy Jitsi route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+        name: meet
+      spec:
+        host: "meet-{{namespace}}.{{application_domain}}"
+        port:
+          targetPort: http
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: web
+          weight: 100
+        wildcardPolicy: None
+  when: not lets_encrypt
 - name: Deploy Jitsi Prosody
   k8s:
     definition:

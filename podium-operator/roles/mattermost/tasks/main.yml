@@ -405,3 +405,26 @@
           name: mattermost-team-edition
           weight: 100
         wildcardPolicy: None
+  when: lets_encrypt
+- name: Deploy Mattermost route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+        name: chat
+      spec:
+        host: "chat-{{namespace}}.{{application_domain}}"
+        port:
+          targetPort: 8065
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: mattermost-team-edition
+          weight: 100
+        wildcardPolicy: None
+  when: not lets_encrypt

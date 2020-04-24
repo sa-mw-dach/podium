@@ -100,6 +100,7 @@ spec:
   application_domain: <apps wildcard domain>
   namespace: <namespace>
   jvb_node_port: 30000
+  lets_encrypt: true
   etherpad:
     enable: true
     application_name: etherpad

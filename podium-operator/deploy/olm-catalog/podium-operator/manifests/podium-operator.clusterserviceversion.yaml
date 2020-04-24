@@ -12,6 +12,9 @@ metadata:
           },
           "spec": {
             "application_domain": "\u003capps wildcard domain\u003e",
+            "jvb_node_port": 30000,
+            "namespace": "\u003cnamespace\u003e",
+            "lets_encrypt": true,
             "dokuwiki": {
               "application_name": "dokuwiki",
               "enable": true
@@ -41,7 +44,6 @@ metadata:
               "jvb_tcp_harvester_disabled": "true",
               "timezone": "Europe/Berlin"
             },
-            "jvb_node_port": 30000,
             "mattermost": {
               "application_name": "mattermost-team-edition",
               "enable": true,
@@ -52,7 +54,6 @@ metadata:
               "application_name": "mozaik",
               "enable": true
             },
-            "namespace": "\u003cnamespace\u003e",
             "wekan": {
               "application_name": "wekan",
               "enable": true,
@@ -108,7 +109,7 @@ spec:
     ## Installation
     The Podium Operator is a cluster-wide operator. It installs and configure the the toolchain and integrates them in a single-pane-of-glass dashboard. Each component can be enabled or disabled. Enabled means the component will be installed and managed by the operator. Components can be installed by the operator and later disabled to allow for example customizations for the k8s objects. Once the operator is installed, simply create a project, under installed operators for the project select Podium. Under Overview select create instance. 
 
-    After you create a instance of Podium you will in the UI see the object. You can also use ```$ oc get podium -n <namespace>``` to manage podium instances. In the future you can again access the Podium instance via ```https://console-openshift-console.<apps wildcard domain>/k8s/ns/<namespace>/operators.coreos.com~v1alpha1~ClusterServiceVersion/podium-operator.v1.0.0/podium.com~v1alpha1~Podium```.
+    After you create a instance of Podium you will in the UI see the CR object under the Podium tab and can manage it there. You can also use ```$ oc get podium -n <namespace>``` to manage podium instances from the CLI.
 
     ```
     apiVersion: podium.com/v1alpha1
