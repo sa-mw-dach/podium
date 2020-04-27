@@ -48,11 +48,29 @@ Patch route object to enable ACME TLS endpoint termination.
 
 DokuWiki does not use a database backend nor do we use a persistent volume to save the Wiki content. That makes the knowledge base ephemeral. We intentionally take that approach, because we do not want to make the deployment depending on the reliability and longevity of a particular OpenShift cluster. Our own OpenShift clusters are subject of constant turnover and we do not want to make our own Podium projects depend on one such cluster.
 
-Instead, we want the DokuWiki to be linked to a doc/wiki folder in our main Git project. We initialize the DokuWiki from that directory and we regularly commit changes in our Podium DokuWiki back to the main Git.
+Instead, we want the DokuWiki to be linked to a docs/wiki folder in our main Git project. We initialize the DokuWiki from that directory and we regularly commit changes in our Podium DokuWiki back to the main Git.
 
-```POD=dokuwiki-6d8d7cb575-bqdpk
-oc rsh $POD git clone https://github.com/sa-mw-dach/podium.git project
-oc rsh $POD /bin/sh -c "cp -r project/doc/wiki/* data/pages"
+```
+POD=dokuwiki-6d8d7cb575-bqdpk
+REPO=https://github.com/sa-mw-dach/podium.git
+oc rsh $POD
+
+wget https://github.com/woolfg/dokuwiki-plugin-gitbacked/archive/master.zip
+unzip -d lib/plugins/ master.zip
+mv lib/plugins/dokuwiki-plugin-gitbacked-master/ lib/plugins/gitbacked
+git clone $REPO data/gitrepo
+cp -a data/pages/wiki/ data/gitrepo/docs/wiki/pages/
+mkdir data/gitrepo/docs/wiki/media
+cp -a data/media/wiki/ data/gitrepo/docs/wiki/media
+
+echo -n "<?php
+\$conf['plugin']['gitbacked']['periodicPull'] = 1;
+\$conf['plugin']['gitbacked']['periodicMinutes'] = 60;
+\$conf['plugin']['gitbacked']['repoPath'] = './data/gitrepo/';
+\$conf['plugin']['gitbacked']['repoWorkDir'] = './data/gitrepo/';
+\$conf['datadir'] = './data/gitrepo/docs/wiki/pages';
+\$conf['mediadir'] = './data/gitrepo/docs/wiki/media';
+" >>conf/local.php
 ```
 
 ToDo: Examine means to use DokuWiki API to clone content from Git into the application container
