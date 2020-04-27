@@ -5,9 +5,7 @@ jitsi:
   application_name: jitsi
   jicofo_component_secret: s3cr3t
   jicofo_auth_user: focus
-  jicofo_auth_password: redhat123
   jvb_auth_user: jvb
-  jvb_auth_password: redhat123
   jvb_brewery_muc: jvbbrewery
   jvb_tcp_harvester_disabled: 'true'
   jvb_enable_apis: rest

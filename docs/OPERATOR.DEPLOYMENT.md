@@ -101,6 +101,8 @@ spec:
   namespace: <namespace>
   jvb_node_port: 30000
   lets_encrypt: true
+  password_salt: password123
+  admin_password_salt: admin123
   etherpad:
     enable: true
     application_name: etherpad
@@ -111,9 +113,7 @@ spec:
     application_name: jitsi
     jicofo_component_secret: s3cr3t
     jicofo_auth_user: focus
-    jicofo_auth_password: <password>
     jvb_auth_user: jvb
-    jvb_auth_password: <password>
     jvb_brewery_muc: jvbbrewery
     jvb_tcp_harvester_disabled: 'true'
     jvb_enable_apis: rest
@@ -123,15 +123,11 @@ spec:
   mattermost:
     enable: true
     application_name: mattermost-team-edition
-    mysql_user_password: <password>
-    mysql_root_password: <password>
   wekan:
     enable: true
     application_name: wekan
     mongo_database_name: wekan
     mongo_database_user: wekan
-    mongo_database_password: <password>
-    mongo_admin_password: <password>
   drawio:
     enable: true
     application_name: drawio

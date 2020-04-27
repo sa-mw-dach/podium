@@ -1,4 +1,10 @@
 ---
+- name: Create Random Jicofo password
+  set_fact:
+    jicofo_auth_password: "{{ lookup('password', '{{ password_salt }} chars=ascii_letters,digits') }}"
+- name: Create Random JVB password
+  set_fact:
+    jvb_auth_password: "{{ lookup('password', '{{ password_salt }} chars=ascii_letters,digits') }}"
 - name: Deploy Mattermost Mysql Secret
   k8s:
     definition:
@@ -10,9 +16,9 @@
       stringData:
         JICOFO_COMPONENT_SECRET: "{{jitsi.jicofo_component_secret}}"
         JICOFO_AUTH_USER: "{{jitsi.jicofo_auth_user}}"
-        JICOFO_AUTH_PASSWORD: "{{jitsi.jicofo_auth_password}}"
+        JICOFO_AUTH_PASSWORD: "{{jicofo_auth_password}}"
         JVB_AUTH_USER: "{{jitsi.jvb_auth_user}}"
-        JVB_AUTH_PASSWORD: "{{jitsi.jvb_auth_password}}"
+        JVB_AUTH_PASSWORD: "{{jvb_auth_password}}"
 - name: Deploy Jitsi ConfigMap
   k8s:
     definition:

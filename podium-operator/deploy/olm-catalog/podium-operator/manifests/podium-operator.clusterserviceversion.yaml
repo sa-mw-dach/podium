@@ -15,6 +15,8 @@ metadata:
             "jvb_node_port": 30000,
             "namespace": "\u003cnamespace\u003e",
             "lets_encrypt": true,
+            "password_salt": "password123",
+            "admin_password_salt": "admin123",
             "dokuwiki": {
               "application_name": "dokuwiki",
               "enable": true
@@ -32,10 +34,8 @@ metadata:
             "jitsi": {
               "application_name": "jitsi",
               "enable": true,
-              "jicofo_auth_password": "\u003cpassword\u003e",
               "jicofo_auth_user": "focus",
               "jicofo_component_secret": "s3cr3t",
-              "jvb_auth_password": "\u003cpassword\u003e",
               "jvb_auth_user": "jvb",
               "jvb_brewery_muc": "jvbbrewery",
               "jvb_enable_apis": "rest",
@@ -46,9 +46,7 @@ metadata:
             },
             "mattermost": {
               "application_name": "mattermost-team-edition",
-              "enable": true,
-              "mysql_root_password": "\u003cpassword\u003e",
-              "mysql_user_password": "\u003cpassword\u003e"
+              "enable": true
             },
             "mozaik": {
               "application_name": "mozaik",
@@ -57,9 +55,7 @@ metadata:
             "wekan": {
               "application_name": "wekan",
               "enable": true,
-              "mongo_admin_password": "\u003cpassword\u003e",
               "mongo_database_name": "wekan",
-              "mongo_database_password": "\u003cpassword\u003e",
               "mongo_database_user": "wekan"
             }
           }
@@ -121,6 +117,9 @@ spec:
       namespace: <namespace where podium instance will be deployed>
       jvb_node_port: 30000
       lets_encrypt: true
+      password_salt: password123
+      admin_password_salt: admin123
+
       etherpad:
         enable: true
         application_name: etherpad
@@ -131,9 +130,7 @@ spec:
         application_name: jitsi
         jicofo_component_secret: s3cr3t
         jicofo_auth_user: focus
-        jicofo_auth_password: <password>
         jvb_auth_user: jvb
-        jvb_auth_password: <password>
         jvb_brewery_muc: jvbbrewery
         jvb_tcp_harvester_disabled: 'true'
         jvb_enable_apis: rest
@@ -143,15 +140,11 @@ spec:
       mattermost:
         enable: true
         application_name: mattermost-team-edition
-        mysql_user_password: <password>
-        mysql_root_password: <password>
       wekan:
         enable: true
         application_name: wekan
         mongo_database_name: wekan
         mongo_database_user: wekan
-        mongo_database_password: <password>
-        mongo_admin_password: <password>
       drawio:
         enable: true
         application_name: drawio

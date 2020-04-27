@@ -1,4 +1,10 @@
 ---
+- name: Create Random mysql password
+  set_fact:
+    mysql_user_password: "{{ lookup('password', '{{ password_salt }} chars=ascii_letters,digits') }}"
+- name: Create Random mysql root password
+  set_fact:
+    mysql_root_password: "{{ lookup('password', '{{ admin_password_salt }} chars=ascii_letters,digits') }}"
 - name: Create temp Mattermost JSON config from template
   template:
     src: templates/mattermost-config.json.j2
@@ -69,8 +75,8 @@
         name: mattermost-mysql
         namespace: "{{ namespace }}"
       stringData:
-        mysql-password: "{{mattermost.mysql_user_password}}"
-        mysql-root-password: "{{mattermost.mysql_root_password}}"
+        mysql-password: "{{mysql_user_password}}"
+        mysql-root-password: "{{mysql_root_password}}"
 - name: Deploy Mattermost ConfigMap
   k8s:
     definition:
@@ -279,7 +285,7 @@
                   command:
                   - sh
                   - -c
-                  - mysqladmin ping -u root -p{{mattermost.mysql_root_password}}
+                  - mysqladmin ping -u root -p{{mysql_root_password}}
                 failureThreshold: 3
                 initialDelaySeconds: 30
                 periodSeconds: 10
@@ -295,7 +301,7 @@
                   command:
                   - sh
                   - -c
-                  - mysqladmin ping -u root -p{{mattermost.mysql_root_password}}
+                  - mysqladmin ping -u root -p{{mysql_root_password}}
                 failureThreshold: 3
                 initialDelaySeconds: 5
                 periodSeconds: 10

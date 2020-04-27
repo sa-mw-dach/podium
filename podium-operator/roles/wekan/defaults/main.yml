@@ -5,5 +5,3 @@ wekan:
   application_name: wekan
   mongo_database_name: wekan
   mongo_database_user: wekan
-  mongo_database_password: <password>
-  mongo_admin_password: <password>

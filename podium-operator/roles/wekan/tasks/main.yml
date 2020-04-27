@@ -1,4 +1,10 @@
 ---
+- name: Create Random Mongo password
+  set_fact:
+    mongo_database_password: "{{ lookup('password', '{{ password_salt }} chars=ascii_letters,digits') }}"
+- name: Create Random Mongo admin password
+  set_fact:
+    mongo_admin_password: "{{ lookup('password', '{{ admin_password_salt }} chars=ascii_letters,digits') }}"
 - name: Deploy Wekan Mongodb Secret
   k8s:
     definition:
@@ -8,9 +14,9 @@
         name: mongodb
         namespace: "{{ namespace }}"
       stringData:
-        database-admin-password: "{{ wekan.mongo_admin_password }}"
+        database-admin-password: "{{ mongo_admin_password }}"
         database-name: "{{ wekan.mongo_database_name }}"
-        database-password: "{{ wekan.mongo_database_password }}"
+        database-password: "{{ mongo_database_password }}"
         database-user: "{{ wekan.mongo_database_user }}"
 - name: Deploy Wekan persistent volume
   k8s:
@@ -110,7 +116,7 @@
                   - /bin/sh
                   - -i
                   - -c
-                  - mongo 127.0.0.1:27017/{{ wekan.mongo_database_name }} -u {{ wekan.mongo_database_user }} -p {{ wekan.mongo_database_password }}
+                  - mongo 127.0.0.1:27017/{{ wekan.mongo_database_name }} -u {{ wekan.mongo_database_user }} -p {{ mongo_database_password }}
                     --eval="quit()"
                 failureThreshold: 3
                 initialDelaySeconds: 3
@@ -173,7 +179,7 @@
             containers:
             - env:
               - name: MONGO_URL
-                value: mongodb://{{ wekan.mongo_database_user }}:{{ wekan.mongo_database_password }}@mongodb:27017/{{ wekan.mongo_database_name }}
+                value: mongodb://{{ wekan.mongo_database_user }}:{{ mongo_database_password }}@mongodb:27017/{{ wekan.mongo_database_name }}
               - name: ROOT_URL
                 value: https://wekan-{{ namespace }}.{{ application_domain }}/
               - name: PORT

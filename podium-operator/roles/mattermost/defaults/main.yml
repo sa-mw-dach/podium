@@ -3,5 +3,3 @@ namespace: podium
 application_domain:
 mattermost:
   application_name: mattermost-team-edition
-  mysql_user_password: redhat123
-  mysql_root_password: a7Y792EdCE
