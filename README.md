@@ -10,7 +10,7 @@ Communication is the key to any high performing team. Podium is a containerized 
 
 An instance of podium will deploy all components and configure a dashboard so all team and non-team members can interact immediately as well as effectively.
 
-[]!(docs/images/podium_demo.PNG)
+![](docs/images/podium_demo.PNG)
 
 ## Feature requests
 If you would like to see a feature or addition please open a issue and feel welcome to contribute.
