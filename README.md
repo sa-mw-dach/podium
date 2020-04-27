@@ -4,20 +4,26 @@ Communication is the key to any high performing team. Podium is a containerized 
 * [Chat (Mattermost)](https://mattermost.com/)
 * [Video Conferencing (Jitsi Meet)](https://jitsi.org/jitsi-meet/)
 * [Real-time Document Editing (Etherpad)](https://etherpad.org/)
+* [Diagram Drawing (Drawio)](https://github.com/jgraph/drawio)
+* [Wiki (Dokuwiki)](https://www.dokuwiki.org/dokuwiki)
+* [Kanban Board (Wekan)](https://github.com/wekan/wekan)
 
 An instance of podium will deploy all components and configure a dashboard so all team and non-team members can interact immediately as well as effectively.
+
+[]!(docs/images/podium_demo.PNG)
 
 ## Feature requests
 If you would like to see a feature or addition please open a issue and feel welcome to contribute.
 
 ## Pre-requisites
+* OpenShift or Kubernetes environment
 * Public or rotable IP on at least one node.
 * Port 30000 or whatever the jvb node port is on UDP needs to be open to public or routable IP.
 * Port 3478 TCP/UDP needs to be open to public or routable IP.
 * TLS certificate solution like Let's Encrypt.
 
 ## Lets Encrypt Certificate
-Jitsi meet requires a TLS certificate. TLS can be terminated inside the web pod or terminated on the edge. I would recommend edge termination and in this case we can use a lets encrypt k8s admission controller to setup our certificates within the created OpenShift route.
+Podium requires proper TLS certificates. For lets encrypt solution, TLS should be terminated on the edge of the OpenShift route or kubermetes ingres. Podium will automatically deploy OpenShift routes with edge termination and dynamically configure certificates using lets encrypt. You can of course configure your own routes or ingres.
 
 [Setup Lets Encrypt on OpenShift](https://keithtenzer.com/2020/04/03/openshift-application-certificate-management-with-lets-encrypt/)
 
