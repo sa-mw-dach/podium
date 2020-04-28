@@ -2,6 +2,8 @@
 
 The DokuWiki instance in the Podium Collaboration Workspace is serving as a shared Knowledge Base for your project. We expect the project to be backed by a Git repository. To ensure consistency between your project Git repo, we initialize the DokuWiki from such repository.
 
+===== Basic Setup =====
+
 You give the URL of your Git repo as parameter to the OpenShift deployment template. If you leave this parameter empty, the default content from the Podium project ist loaded from https://github.com/sa-mw-dach/podium.git
 
 The integration with DokuWiki requires your Git repo to provide a certain directory structure. We expect the Wiki content to be provided as shown in the following listing:
@@ -12,6 +14,46 @@ The integration with DokuWiki requires your Git repo to provide a certain direct
                   wiki/
             pages/
                   wiki/start.txt
-          
+
 
 As you may expect, images and alike are stored in the media section, text files belong to pages. The root document for your wiki is the ''start.txt'' file which has to be provided exactly as shown in the ''pages/wiki'' folder.
+
+Once you have this directory structure in place, you can simply provide the OpenShift Operator or the install template with the URL for your repo and you will instantly find the content of your provided ''pages/wiki'' in the Podium Knowledge Base.
+
+With this basic setup, the content synchronization is a one time, one way replication.
+
+===== Manual Content Push =====
+
+In the default setup, every user of the Podium DokuWiki is allowed to edit and create documents in the Knowledge Base.
+
+In order to push such changed or newly created documents back into your Git repository, you can ''rsh'' into the DokuWiki Pod running in OpenShift and perform the commit and push manually.
+
+  $ oc get pods
+  NAME                                READY   STATUS      RESTARTS   AGE
+  ...
+  dokuwiki-6d8d7cb575-2wr8d           1/1     Running     0          18h
+  drawio-8c7976f96-4nkl4              1/1     Running     0          18h
+  etherpad-6f7544c667-6tnns           1/1     Running     0          18h
+  ...
+  $ oc rsh dokuwiki-6d8d7cb575-2wr8d
+  sh-4.2$ cd data/gitrepo/
+  sh-4.2$ git status
+  # On branch master
+  # Changes not staged for commit:
+  #   (use "git add <file>..." to update what will be committed)
+  #   (use "git checkout -- <file>..." to discard changes in working directory)
+  #
+  #     modified:   docs/wiki/pages/projects/podium_project/start.txt
+  #
+  # Untracked files:
+  #   (use "git add <file>..." to include in what will be committed)
+  #
+  #     docs/wiki/media/
+  #     docs/wiki/pages/wiki
+  no changes added to commit (use "git add" and/or "git commit -a")
+  sh-4.2$ git add docs/wiki/pages/projects/podium_project/start.txt
+  sh-4.2$ git commit -m "update project documentation start page"
+  [master 5098113] update project documentation start page
+   1 file changed, 3 insertions(+), 3 deletions(-)
+  sh-4.2$
+
