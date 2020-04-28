@@ -1,0 +1,223 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: "DokuWiki Deployment on OpenShift"
+  creationTimestamp: null
+  name: dokuwiki
+objects:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: dokuwiki
+    name: dokuwiki
+  spec:
+    selector:
+      matchLabels:
+        app: dokuwiki
+    template:
+      metadata:
+        labels:
+          app: dokuwiki
+          name: dokuwiki
+      spec:
+        containers:
+        - image: quay.io/ktenzer/dokuwiki:latest
+          name: dokuwiki
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 3
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            successThreshold: 1
+            timeoutSeconds: 60
+          resources: {}
+          volumeMounts:
+          - mountPath: /opt/app-root/src/conf/users.auth.php
+            name: dokuwiki-config
+            subPath: users.auth.php
+          - mountPath: /opt/app-root/src/conf/acl.auth.php
+            name: dokuwiki-config
+            subPath: acl.auth.php
+          - mountPath: /opt/app-root/src/conf/local.php
+            name: dokuwiki-config
+            subPath: local.php
+          - mountPath: /opt/app-root/src/data/gitrepo
+            name: repodata
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - grep ${REPO_URL} /opt/app-root/src/data/gitrepo/.git/config
+            && exit 0; rm -fr /opt/app-root/src/data/gitrepo/*; rm -fr /opt/app-root/src/data/gitrepo/.??*;
+            git clone ${REPO_URL} /opt/app-root/src/data/gitrepo;
+            mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/media/; mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/pages/;
+            ln -sf ../../../../../data/media/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/media/wiki;
+            ln -sf ../../../../../data/pages/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/pages/wiki;
+          image: rhscl/s2i-base-rhel7
+          name: clone-github-repo
+          resources:
+            requests:
+              cpu: 10m
+              memory: 10Mi
+          volumeMounts:
+          - mountPath: /opt/app-root/src/data/gitrepo
+            name: repodata
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: dokuwiki-conf
+              path: local.php
+            - key: dokuwiki-users
+              path: users.auth.php
+            - key: dokuwiki-acl
+              path: acl.auth.php
+            name: dokuwiki-config
+          name: dokuwiki-config
+        - name: repodata
+          persistentVolumeClaim:
+            claimName: dokuwiki-repodata
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: dokuwiki-config
+  data:
+    dokuwiki-acl: |
+      # acl.auth.php
+      # <?php exit()?>
+      # Don't modify the lines above
+      #
+      # Access Control Lists
+      #
+      # If your auth backend allows special char like spaces in groups
+      # or user names you need to urlencode them (only chars <128, leave
+      # UTF-8 multibyte chars as is)
+      #
+      # none   0
+      # read   1
+      # edit   2
+      # create 4
+      # upload 8
+      # delete 16
+  
+      *               @ALL        ${DEFAULT_ACL}
+    dokuwiki-conf: |
+      <?php
+      $conf['plugin']['gitbacked']['pushAfterCommit'] = ${ENABLE_GIT_PUSH};
+      $conf['plugin']['gitbacked']['commitPageMsg'] = 'DokuWiki %user% changed %page%: %summary%';
+      $conf['plugin']['gitbacked']['periodicPull'] = 1;
+      $conf['plugin']['gitbacked']['periodicMinutes'] = 60;
+      $conf['plugin']['gitbacked']['repoPath'] = './data/gitrepo/';
+      $conf['plugin']['gitbacked']['repoWorkDir'] = './data/gitrepo/';
+      $conf['datadir'] = './data/gitrepo/docs/wiki/pages';
+      $conf['mediadir'] = './data/gitrepo/docs/wiki/media';
+      $conf['useacl'] = 1;
+      $conf['superuser'] = 'admin';
+    dokuwiki-users: |
+      # users.auth.php
+      # <?php exit()?>
+      # Don't modify the lines above
+      #
+      # Format:
+      #
+      # login:passwordhash:Real Name:email:groups,comma,separated
+  
+      admin:${ADMIN_PWD_HASH}:Podium-Admin:admin@example.com:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: dokuwiki
+      app.kubernetes.io/component: dokuwiki
+      app.kubernetes.io/instance: dokuwiki
+      app.kubernetes.io/part-of: dokuwiki
+    name: dokuwiki
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${APPLICATION_NAME}
+      deploymentconfig: dokuwiki
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+      app.kubernetes.io/component: dokuwiki
+      app.kubernetes.io/instance: dokuwiki
+    name: dokuwiki
+  spec:
+    host: ${APPLICATION_NAME}-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: dokuwiki
+      weight: 100
+    wildcardPolicy: None
+parameters:
+  - name: NAMESPACE
+    displayName: Application Domain
+    description: Application domain name used in route to service
+    value: podium
+    required: true
+  - name: APPLICATION_NAME
+    displayName: Application Name
+    description: the name and label for all components
+    value: dokuwiki
+    required: true
+  - name: GUID
+    displayName: Application GUID
+    description: the GUID name component for the individual instance in a series of application deployments, typically a dash followed by a 4 character string like -f3ax
+    required: false
+  - name: APPLICATION_DOMAIN
+    displayName: Application Domain
+    description: Application domain is the wildcard domain for application routes
+    value: apps.cloud.example.com
+    required: true
+  - name: REPO_URL
+    displayName: Repository URL
+    description: The URL of your project Git repo where the docs/wiki/pages/start.txt file is found to initialize the Knowledge Base
+    value: https://github.com/sa-mw-dach/podium.git
+    required: true
+  - name: DEFAULT_ACL
+    displayName: Default ACL for DokuWiki
+    description: This setting determines what an unauthenticated user is allowed to do in your Wiki. 1 is read-only, 2 is edit, 4 create, 8 upload and 16 delete. 
+    value: '8'
+    required: false
+  - name: ADMIN_PWD_HASH
+    displayName: Admin User Password Hash
+    description: PHP encrypted password hash for the admin user in the DokuWiki. The default value is Geheim!! which is certainly nothing you want to keep.
+    value: '$2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.'
+    required: false
+  - name: ENABLE_GIT_PUSH
+    displayName: Enable Automated Git Push
+    description: If set and the gitbacked plugin is configured properly, changes to the DokuWiki content will be commited and pushed autmatically.
+    value: '1'
+    required: false
+
