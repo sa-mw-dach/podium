@@ -133,7 +133,7 @@
               name: mozaik
           spec:
             containers:
-            - image: quay.io/ktenzer/podium:latest
+            - image: quay.io/ktenzer/mozaik:latest
               imagePullPolicy: Always
               name: mozaik
               ports:
