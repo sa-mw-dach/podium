@@ -11,12 +11,12 @@ The integration with DokuWiki requires your Git repo to provide a certain direct
   docs/
        wiki/
             media/
-                  wiki/
-            pages/
-                  wiki/start.txt
+            pages/start.txt
 
 
-As you may expect, images and alike are stored in the media section, text files belong to pages. The root document for your wiki is the ''start.txt'' file which has to be provided exactly as shown in the ''pages/wiki'' folder.
+As you may expect, images and alike are stored in the media section, text files belong to pages. The root document for your wiki is the ''start.txt'' file which has to be provided exactly as shown in the ''pages/'' folder.
+
+You may want to add additional folders to structure your Knowledge Base as appropriate. Look into the [[wiki:dokuwiki|DokuWiki]] and [[wiki:syntax|Formatting Syntax]] documentation to discover the full potential of your Podium Knowledge Base.
 
 Once you have this directory structure in place, you can simply provide the OpenShift Operator or the install template with the URL for your repo and you will instantly find the content of your provided ''pages/wiki'' in the Podium Knowledge Base.
 
