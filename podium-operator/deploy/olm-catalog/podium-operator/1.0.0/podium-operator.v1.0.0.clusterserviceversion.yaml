@@ -1,0 +1,327 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "podium.com/v1alpha1",
+          "kind": "Podium",
+          "metadata": {
+            "name": "mypodium"
+          },
+          "spec": {
+            "application_domain": "\u003capps wildcard domain\u003e",
+            "jvb_node_port": 30000,
+            "namespace": "\u003cnamespace\u003e",
+            "lets_encrypt": true,
+            "password_salt": "password123",
+            "admin_password_salt": "admin123",
+            "dokuwiki": {
+              "application_name": "dokuwiki",
+              "enable": true
+            },
+            "drawio": {
+              "application_name": "drawio",
+              "enable": true
+            },
+            "etherpad": {
+              "application_name": "etherpad",
+              "default_text": "Etherpad is a real-time text editor",
+              "default_title": "Welcome to Etherpad",
+              "enable": true
+            },
+            "jitsi": {
+              "application_name": "jitsi",
+              "enable": true,
+              "jicofo_auth_user": "focus",
+              "jicofo_component_secret": "s3cr3t",
+              "jvb_auth_user": "jvb",
+              "jvb_brewery_muc": "jvbbrewery",
+              "jvb_enable_apis": "rest",
+              "jvb_node_selector": "jvb",
+              "jvb_stun_servers": "meet-jit-si-turnrelay.jitsi.net:443",
+              "jvb_tcp_harvester_disabled": "true",
+              "timezone": "Europe/Berlin"
+            },
+            "mattermost": {
+              "application_name": "mattermost-team-edition",
+              "enable": true
+            },
+            "mozaik": {
+              "application_name": "mozaik",
+              "enable": true
+            },
+            "wekan": {
+              "application_name": "wekan",
+              "enable": true,
+              "mongo_database_name": "wekan",
+              "mongo_database_user": "wekan"
+            }
+          }
+        }
+      ]
+    capabilities: Basic Install
+    categories: Integration & Delivery, OpenShift Optional
+    certified: "false"
+    containerImage: quay.io/ktenzer/podium-operator:latest
+    description: A Kube-native collaboration platform to enhance remote teams in OpenShift
+    repository: https://github.com/sa-mw-dach/podium
+    support: Podium Community
+  name: podium-operator.v1.0.0
+  support: Podium Community
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Deployment of components from Podium Operator
+      displayName: Podium
+      kind: Podium
+      name: podia.podium.com
+      version: v1alpha1
+  displayName: Podium
+  description: | 
+    # Podium
+    Podium is an opensource collaboration platform with video conferencing (jitsi), mattermost (chat), wekan (kanban board), real-time editor (etherpad), drawing (drawio), wiki (dokuwiki) and dashboard (mozaik). Using the best opensource tooling, Podium provides remote teams a complete collaboration platform native in Kubernetes and OpenShift. The Podium dashboard integrates the toolchain together seamlessly, allowing a team, even extended team members to collaborate more effectively, remotely.
+    
+    Podium provides a Custom Resource Definition (CRD) that represents an instance of podium. Multiple podium instances can exist in a single cluster but only one per namespace.
+
+    ## Prerequisites
+    Podium has a few pre-requities to handle the video bridge and TLS certificates.
+
+    ### Video Bridge
+    Podium uses Jitsi for video conferencing. Video and audio streams are sent from the client (web browser) to the video bridge component over UDP. As such, the video bridge must run on a node that has a routable ip address or public ip. The jvb_node_port setting allows you to choose a port, it will be configured as a node port. Firewall most be open from client IPs (internet/corporate wlan) on the desired port (UDP) to the node public or routable IP. In order to ensure the jvb component runs on a node with a public or routable ip address, a node selector is used. Any nodes that should run the jvb component must be labeled. The jvb does not need to be run on a specific node, just a node that has a routable ip address.
+
+    ```$ oc node label ocp4-n4krq-worker-6mjcz app=jvb```
+
+    The jvb component uses STUN to discover the node routable or public IP. This is similar to a reverse proxy. You can configure and use your own stun servers or the one provided. The jvb_stun_serversis parameter is a comma separated list. You will also need to open port 3478 TCP/UDP to the routable or public IP.
+
+    ### TLS Certificates
+    This is not a Podium specific requirement, all applications need TLS certificates. You can of course use your own solution but Podium integrates with a Let's Encrypt admission controller. Let's Encrypt is a certificate authority providing free TLS certificates via API up to rate limits. Podium configures the routes with a special annotation that will enable Let's Encrypt admission controller to dynamically configure TLS certificate in the route.
+
+    [Configure Let's Encrypt](https://keithtenzer.com/2020/04/03/openshift-application-certificate-management-with-lets-encrypt/)
+
+    ## Installation
+    The Podium Operator is a cluster-wide operator. It installs and configure the the toolchain and integrates them in a single-pane-of-glass dashboard. Each component can be enabled or disabled. Enabled means the component will be installed and managed by the operator. Components can be installed by the operator and later disabled to allow for example customizations for the k8s objects. Once the operator is installed, simply create a project, under installed operators for the project select Podium. Under Overview select create instance. 
+
+    After you create a instance of Podium you will in the UI see the CR object under the Podium tab and can manage it there. You can also use ```$ oc get podium -n <namespace>``` to manage podium instances from the CLI.
+
+    ```
+    apiVersion: podium.com/v1alpha1
+    kind: Podium
+    metadata:
+      name: <name of podium instance>
+    spec:
+      application_domain: <application wildcard domain, ie. apps.ocp.example.com>
+      namespace: <namespace where podium instance will be deployed>
+      jvb_node_port: 30000
+      lets_encrypt: true
+      password_salt: password123
+      admin_password_salt: admin123
+
+      etherpad:
+        enable: true
+        application_name: etherpad
+        default_title: "Welcome to Etherpad"
+        default_text: "Etherpad is a real-time editor"
+      jitsi:
+        enable: true
+        application_name: jitsi
+        jicofo_component_secret: s3cr3t
+        jicofo_auth_user: focus
+        jvb_auth_user: jvb
+        jvb_brewery_muc: jvbbrewery
+        jvb_tcp_harvester_disabled: 'true'
+        jvb_enable_apis: rest
+        jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
+        timezone: Europe/Berlin
+        jvb_node_selector: jvb
+      mattermost:
+        enable: true
+        application_name: mattermost-team-edition
+      wekan:
+        enable: true
+        application_name: wekan
+        mongo_database_name: wekan
+        mongo_database_user: wekan
+      drawio:
+        enable: true
+        application_name: drawio
+      dokuwiki:
+        enable: true
+        application_name: dokuwiki
+      mozaik:
+        enable: true
+        application_name: mozaik
+    ```
+  - base64data: "iVBORw0KGgoAAAANSUhEUgAAABYAAAAoCAYAAAD6xArmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAA6mAAAOpgAYTJ3nYAAALWSURBVEhLzVbPaxNBFJ7Zmf2RTSMUvHRrjaVHvVQPehDxKlLPevISioq34slDqQheShVEEbx4EZUcrDRgURBE/wc9CW1TSRqxMbQ1m+zu+GZ2stltYkyTXfCDL2/emzffvE4eLyVoAORyNyenThx/mckcym6ur32S4QiwtH1hfDx73rKs05Z1dGN1dfm7bdtfIFz2dwdDxjCM22NjE2elHw8opbfApH2vPyjS/hXZbNYYHT28C0vO7pif79DB03eWSphS6XaB5ymIeSoi1JaRDlQr5VTTcb6qbnPu2+OlzzyGT957yDAZqDkCbG+VkN1sIsSYTV3nytqjxdf/fIoDAWPdIfTFsRtz5+IV5gBxl5DF+IUF8FQiwgz6PqGKEUtGmLF67MKK664Tz3uAp+/edzChGG7p75Lw2ILH5NgubaLajzL6/bOCnEbjUuPD+xV8anZW3arUL9TcnTfQKn6mOBFSgCWWPlagBk8qgqnX90Q2Y36MEjqz93alILInL1+/uEPqBXFW7DO4gzsgwl0JEYEPoSFzd2u/QjkMaYo6U11+VRB/PtV1pI1kkJZucQSpYFWwfN0i91Uz7e+Zfh7VDUQ1ST0F1MQVQphoGqKG6dMEpjqpttYGHA7WJpzVEYHCBFUg0dvCcI2oWpAnQgK3AaEqwivjVvg+hRjVgHz4qUhRwYaF4cFFUFAkcF9rk8cCwl7Yh7PQVYJ8Tak/KYMWwwqRVHoSPiK+ws/A2G0RShd6gXAA/m33QHQbPGgTzC+TbE32TuEDwm/LMPY9RdwYTrjHs/2nFffA8MIsMk4CxFGxJ20EwwlDrfD9JVRxV9l4niKxN+7azUMLw6RIquLojzBcI7ok1jfWGH4+ccR8x9cxCPvjTWX42Zlq8erHhQWH+12E+Xzt8f8yDPYwuKrGlKfFajGXz+ddP9oSBldpMi+gg9rr/YzseZ7pkScbVuYaCokihNAfjQrWS3AZ+cUAAAAASUVORK5CYII="
+    mediatype: "image/png"
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          - serviceaccounts
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          - route.openshift.io
+          resources:
+          - routes
+          - routes/custom-host
+          verbs:
+          - create
+          - delete
+          - deletecollection
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - podium-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          verbs:
+          - get
+        - apiGroups:
+          - podium.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: podium-operator
+      deployments:
+      - name: podium-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: podium-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: podium-operator
+            spec:
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: podium-operator
+                - name: ANSIBLE_GATHERING
+                  value: explicit
+                image: quay.io/ktenzer/podium-operator:latest
+                imagePullPolicy: Always
+                name: podium-operator
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+              serviceAccountName: podium-operator
+              volumes:
+              - emptyDir: {}
+                name: runner
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - ""
+  links:
+  - name: Podium Operator Github Repository
+    url: https://github.com/sa-mw-dach/podium/tree/master/podium-operator
+  maintainers:
+  - email: ktenzer@redhat.com
+    name: Keith Tenzer
+  maturity: alpha
+  provider:
+    name: Podium Community
+  version: 1.0.0
