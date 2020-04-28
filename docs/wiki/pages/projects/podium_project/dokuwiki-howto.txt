@@ -55,5 +55,31 @@ In order to push such changed or newly created documents back into your Git repo
   sh-4.2$ git commit -m "update project documentation start page"
   [master 5098113] update project documentation start page
    1 file changed, 3 insertions(+), 3 deletions(-)
+  sh-4.2$ git push
+  Username for 'https://github.com': myUserName
+  Password for 'https://myUserName@github.com':
+  Counting objects: 15, done.
+  Delta compression using up to 4 threads.
+  Compressing objects: 100% (6/6), done.
+  Writing objects: 100% (8/8), 1.79 KiB | 0 bytes/s, done.
+  Total 8 (delta 2), reused 0 (delta 0)
+  remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+  To https://github.com/sa-mw-dach/podium.git
+     756db60..676878d  master -> master
   sh-4.2$
+
+After pushing the new content into the Git repository, the content will be present even if you have to reinstall your Podium Collaboratin Workspace in another OpenShift Cluster.
+
+===== Manual Content Pull =====
+
+You must be aware that there is no synchronization from your Git repo to the DokuWiki after the initialization. If you have updates and changes in your repo that you want to make available in the Knowledge Base of your running Podium, you may log into the DokuWiki container like shown above and perform a ''git pull'' manually.
+
+===== Re-Initialization =====
+
+The DokuWiki makes use of a Persistent Volume in OpenShift to protect its content even in the case the DokuWiki container needs to be restarted.
+
+In order to re-initialize the content from your Git repo, you again need to log into the running DokuWiki container like shown above and delete the content of the ''data/gitrepo'' directory. In particular, the file ''data/gitrepo/.git/config'' needs to be removed. As long as this config file is present, the content of your Git repo will not be cloned into the DokuWiki container.
+
+
+
 
