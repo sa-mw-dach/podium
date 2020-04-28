@@ -22,7 +22,7 @@ Once you have this directory structure in place, you can simply provide the Open
 
 With this basic setup, the content synchronization is a one time, one way replication.
 
-===== Manual Content Push =====
+==== Manual Content Push ====
 
 In the default setup, every user of the Podium DokuWiki is allowed to edit and create documents in the Knowledge Base.
 
@@ -70,16 +70,66 @@ In order to push such changed or newly created documents back into your Git repo
 
 After pushing the new content into the Git repository, the content will be present even if you have to reinstall your Podium Collaboratin Workspace in another OpenShift Cluster.
 
-===== Manual Content Pull =====
+==== Manual Content Pull ====
 
 You must be aware that there is no synchronization from your Git repo to the DokuWiki after the initialization. If you have updates and changes in your repo that you want to make available in the Knowledge Base of your running Podium, you may log into the DokuWiki container like shown above and perform a ''git pull'' manually.
 
-===== Re-Initialization =====
+==== Re-Initialization ====
 
 The DokuWiki makes use of a Persistent Volume in OpenShift to protect its content even in the case the DokuWiki container needs to be restarted.
 
 In order to re-initialize the content from your Git repo, you again need to log into the running DokuWiki container like shown above and delete the content of the ''data/gitrepo'' directory. In particular, the file ''data/gitrepo/.git/config'' needs to be removed. As long as this config file is present, the content of your Git repo will not be cloned into the DokuWiki container.
 
 
+===== Sync Automation =====
+
+In order to fully integrate the Podium Knowledge Base with the underlying Git, we make use of the [[https://www.dokuwiki.org/plugin:gitbacked|gitbacked Plugin]] for DokuWiki. This plugin is not builtin with the standard distribution of DokuWiki and in many cases the simple setup descibed above is well sufficient.
+
+To start with installing the additional plugin, we need to start with logging into DokuWiki as admin user. Your inidividual PHP encrypted password hash is provided as parameter to the DokuWiki deployment.
+
+As admin user, the additional Admin button appears on the top row of the DokuWiki screen. In the Administration Tab, the Extension Manager is available.
+
+After opening the Extension Manager, the Search and Install tab lets us search for ''git''
+The gitbacked Plugin should appear as the top of list entry with an install button on the right. A simple push of that button does the job.
+
+Back to the general Administration Tab, you can go to Configuration Settings and check that the gitbacked Plugin is running and configured properly.
+
+Be aware that the actual settings can not be changed from within the DokuWiki. This is because the coniguration file is provided by the means of a ConfigMap in OpenShift. This ConfigMap data is read only and must be changed from the OpenShift Administrator Console.
+
+The default settings for the gitbacked Plugin are already deployed to allow sophisticated content synchronization. DokuWiki will pull updates from your Git every 60 minutes and it will commit and push all changes to your Knowledge Base content as soon as someone saves a page.
+
+
+==== Push Authentication ====
+
+In order to push into an public upstream Git repo, proper authentication is usually required.
+
+The configuration of that authentication requires a little manual work.
+
+First, it is recommended to use a non personal account for the purpose of this automation. If you do not have created such Machine User account yet, you may want to do so now.
+
+For this user, you should create a new authentication token. Got to the Account Settings and then go to the Developer Settings and proceed to ''Personal access tokens'' for the Machine User.
+
+When creating a new access token for the Machine User, only the ''repo'' scope needs to be activated.
+Keep this token stored in a secure place. In case you fear this token to be compromized, you can sinmly revoke it in the Account Settings where you created it in the first place.
+
+Next step is to give the Machine User access to your project repo. This is simply done by means of inviting the Machine User as contributor to your repo. In your Repo webpage you go to ''Settings->Manage Access'' push the ''Invite Collaborator'' button and enter the name or email of your Machine User.
+
+After the Machine User has accepted the invitation, you are ready to go for push synchronization from DokuWiki to Git.
+
+=== Modification to Git Config in the DokuWiki Container ===
+
+To finish the configiguration of the automated two way sync with your Git repo, you need to log into the DokuWiki container again.
+
+Change into the ''data/gitrepo/.git'' directory and edit the config file to use the Machine User and authentication token for authentication. Your new URL should look somewhat like this:
+
+  url = https://Machine-User:1234567891234567890123456789123456789012@github.com/sa-mw-dach/podium.git
+
+To complete a clean git setup, you should add some default settings to the git configuration while being in the data/gitrepo directory
+
+  sh-4.2$ git config user.email "robot@example.com"
+  sh-4.2$ git config user.name "My Machine User"
+  sh-4.2$ git config push.default matching
+
+From that moment on, your DokuWiki takes care of all changes anyone saves in the Podium Knowledge Base Wiki. Try it out and look for new commit messages from your Machine User in your Git repo.
 
 
