@@ -1,4 +1,5 @@
 # Podium
+![](docs/images/podium_1.PNG)
 Communication is the key to any high performing team. Podium is a containerized deployment of a set of leading opensource communication tools that allow teams interact more effectively in a remote (post COVID-19) world. Podium brings tools together in a way that that allows not only a team to interact better but even more inportantly allows non-team members to interact effectively. Podium current provides the following components:
 * [Dashboard (Mozaik)](http://mozaik.rocks/)
 * [Chat (Mattermost)](https://mattermost.com/)
