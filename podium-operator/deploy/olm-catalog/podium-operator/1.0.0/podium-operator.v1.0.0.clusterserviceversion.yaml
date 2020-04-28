@@ -67,6 +67,8 @@ metadata:
     containerImage: quay.io/ktenzer/podium-operator:latest
     description: A Kube-native collaboration platform to enhance remote teams in OpenShift
     repository: https://github.com/sa-mw-dach/podium
+    support: ktenzer@redhat.com
+    createdAt: 2020-04-27T20:00:00Z
   name: podium-operator.v1.0.0
   namespace: placeholder
 spec:
