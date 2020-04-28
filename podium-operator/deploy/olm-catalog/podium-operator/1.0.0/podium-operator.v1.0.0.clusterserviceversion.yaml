@@ -69,7 +69,7 @@ metadata:
     repository: https://github.com/sa-mw-dach/podium
     support: ktenzer@redhat.com
     createdAt: 2020-04-27T20:00:00Z
-  name: podium-operator.v1.0.0
+  name: podium-operator.v1.0.1
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -316,4 +316,7 @@ spec:
   provider:
     name: Podium Community
     url: https://github.com/sa-mw-dach/podium
-  version: 1.0.0
+  version: 1.0.1
+  labels:
+    alm-owner-enterprise-app: podium-operator
+    alm-status-descriptors: podium-operator.v1.0.1
