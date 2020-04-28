@@ -1,0 +1,17 @@
+====== DokuWiki HowTo ======
+
+The DokuWiki instance in the Podium Collaboration Workspace is serving as a shared Knowledge Base for your project. We expect the project to be backed by a Git repository. To ensure consistency between your project Git repo, we initialize the DokuWiki from such repository.
+
+You give the URL of your Git repo as parameter to the OpenShift deployment template. If you leave this parameter empty, the default content from the Podium project ist loaded from https://github.com/sa-mw-dach/podium.git
+
+The integration with DokuWiki requires your Git repo to provide a certain directory structure. We expect the Wiki content to be provided as shown in the following listing:
+
+  docs/
+       wiki/
+            media/
+                  wiki/
+            pages/
+                  wiki/start.txt
+          
+
+As you may expect, images and alike are stored in the media section, text files belong to pages. The root document for your wiki is the ''start.txt'' file which has to be provided exactly as shown in the ''pages/wiki'' folder.
