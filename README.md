@@ -30,4 +30,4 @@ Podium requires proper TLS certificates. For lets encrypt solution, TLS should b
 [Setup Lets Encrypt on OpenShift](https://keithtenzer.com/2020/04/03/openshift-application-certificate-management-with-lets-encrypt/)
 
 ## Deployment
-You can deploy Podium using [Podium Operator](docs/OPERATOR.DEPLOYMENT.md) for OpenShift 4 or [Deployment Templates](docs/TEMPLATE_DEPLOYMENT.md) for OpenShift 3/4.
+You can deploy Podium using [Podium Operator](podium-operator/README.md) for OpenShift 4 or [Deployment Templates](docs/TEMPLATE_DEPLOYMENT.md) for OpenShift 3/4.
