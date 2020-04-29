@@ -80,8 +80,8 @@ spec:
       kind: Podium
       name: podia.podium.com
       version: v1alpha1
-  displayName: Podium
-  description: | 
+  displayName: Podium Operator
+  description: |
     ## Podium
     Podium is an opensource collaboration platform with video conferencing (jitsi), mattermost (chat), wekan (kanban board), real-time editor (etherpad), drawing (drawio), wiki (dokuwiki) and dashboard (mozaik). Using the best opensource tooling, Podium provides remote teams a complete collaboration platform native in Kubernetes and OpenShift. The Podium dashboard integrates the toolchain together seamlessly, allowing a team, even extended team members to collaborate more effectively, remotely.
     
@@ -305,7 +305,10 @@ spec:
   - supported: true
     type: AllNamespaces
   keywords:
-  - ""
+  - podium
+  - collaboration
+  - remote
+  - microservices
   links:
   - name: Podium Operator Github Repository
     url: https://github.com/sa-mw-dach/podium/tree/master/podium-operator
@@ -315,8 +318,4 @@ spec:
   maturity: alpha
   provider:
     name: Podium Community
-    url: https://github.com/sa-mw-dach/podium
   version: 1.0.2
-  labels:
-    alm-owner-enterprise-app: podium-operator
-    alm-status-descriptors: podium-operator.v1.0.2
