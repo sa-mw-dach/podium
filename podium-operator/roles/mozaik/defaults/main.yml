@@ -1,5 +1,4 @@
 ---
 application_domain:
-namespace: podium
 mozaik:
   application_name: mozaik

@@ -12,7 +12,7 @@
       kind: Secret
       metadata:
         name: jitsi-secret
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
       stringData:
         JICOFO_COMPONENT_SECRET: "{{jitsi.jicofo_component_secret}}"
         JICOFO_AUTH_USER: "{{jitsi.jicofo_auth_user}}"
@@ -26,10 +26,10 @@
       kind: ConfigMap
       metadata:
         name: jitsi-config
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
       data:
         LDAP_VERSION: ''
-        XMPP_INTERNAL_MUC_DOMAIN: internal-muc.meet-{{namespace}}.{{application_domain}}
+        XMPP_INTERNAL_MUC_DOMAIN: internal-muc.meet-{{ meta.namespace }}.{{application_domain}}
         LDAP_AUTH_METHOD: ''
         JIBRI_BREWERY_MUC: jibribrewery
         JIBRI_LOGS_DIR: /config/logs
@@ -50,7 +50,7 @@
         JVB_TCP_HARVESTER_DISABLED: "{{jitsi.jvb_tcp_harvester_disabled}}"
         LDAP_TLS_CACERT_DIR: ''
         LDAP_TLS_CIPHERS: ''
-        XMPP_DOMAIN: meet-{{namespace}}.{{application_domain}}
+        XMPP_DOMAIN: meet-{{ meta.namespace }}.{{application_domain}}
         JICOFO_RESERVATION_REST_BASE_URL: ''
         JIGASI_HEALTH_CHECK_INTERVAL: ''
         JIBRI_FINALIZE_RECORDING_SCRIPT_PATH: /config/finalize.sh
@@ -58,21 +58,21 @@
         JWT_ACCEPTED_AUDIENCES: ''
         LDAP_FILTER: ''
         ENABLE_LETSENCRYPT: ''
-        XMPP_AUTH_DOMAIN: auth.meet-{{namespace}}.{{application_domain}}
+        XMPP_AUTH_DOMAIN: auth.meet-{{ meta.namespace }}.{{application_domain}}
         JWT_APP_ID: ''
-        XMPP_MUC_DOMAIN: muc.meet-{{namespace}}.{{application_domain}}
+        XMPP_MUC_DOMAIN: muc.meet-{{ meta.namespace }}.{{application_domain}}
         JVB_STUN_SERVERS: "{{jitsi.jvb_stun_servers}}"
         JIBRI_PENDING_TIMEOUT: '90'
         DISABLE_HTTPS: ''
         JIGASI_SIP_TRANSPORT: ''
-        XMPP_GUEST_DOMAIN: guest.meet-{{namespace}}.{{application_domain}}
+        XMPP_GUEST_DOMAIN: guest.meet-{{ meta.namespace }}.{{application_domain}}
         ENABLE_RECORDING: ''
         LDAP_TLS_CHECK_PEER: ''
         JIGASI_PORT_MAX: '20050'
         JIGASI_SIP_PORT: ''
         JIGASI_BREWERY_MUC: jigasibrewery
         JIBRI_STRIP_DOMAIN_JID: muc
-        LETSENCRYPT_DOMAIN: meet-{{namespace}}.{{application_domain}}
+        LETSENCRYPT_DOMAIN: meet-{{ meta.namespace }}.{{application_domain}}
         LDAP_URL: ''
         JIGASI_SIP_URI: ''
         ENABLE_GUESTS: ''
@@ -81,11 +81,11 @@
         JIGASI_SIP_SERVER: ''
         XMPP_MUC_MODULES: ''
         JWT_AUTH_TYPE: ''
-        PUBLIC_URL: https://meet-{{namespace}}.{{application_domain}}
+        PUBLIC_URL: https://meet-{{ meta.namespace }}.{{application_domain}}
         JWT_ACCEPTED_ISSUERS: ''
         JIBRI_RECORDING_DIR: /config/recordings
         JIGASI_TRANSCRIBER_RECORD_AUDIO: ''
-        XMPP_RECORDER_DOMAIN: recorder.meet-{{namespace}}.{{application_domain}}
+        XMPP_RECORDER_DOMAIN: recorder.meet-{{ meta.namespace }}.{{application_domain}}
         JWT_ASAP_KEYSERVER: ''
         ENABLE_TRANSCRIPTIONS: ''
         JVB_BREWERY_MUC: "{{jitsi.jvb_brewery_muc}}"
@@ -99,7 +99,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{jitsi.application_name}}"
         name: jvb
@@ -125,7 +125,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{jitsi.application_name}}"
         name: web
@@ -146,7 +146,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{jitsi.application_name}}"
         name: prosody
@@ -172,13 +172,13 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
           kubernetes.io/tls-acme: "true"
         name: meet
       spec:
-        host: "meet-{{namespace}}.{{application_domain}}"
+        host: "meet-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: http
         tls:
@@ -195,12 +195,12 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
         name: meet
       spec:
-        host: "meet-{{namespace}}.{{application_domain}}"
+        host: "meet-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: http
         tls:
@@ -218,7 +218,7 @@
       apiVersion: apps/v1
       metadata:
         name: prosody
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{jitsi.application_name}}"
       spec:
@@ -270,7 +270,7 @@
       apiVersion: apps/v1
       metadata:
         name: jicofo 
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{jitsi.application_name}}"
       spec:
@@ -323,7 +323,7 @@
       apiVersion: apps/v1
       metadata:
         name: jvb
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{jitsi.application_name}}"
       spec:
@@ -386,7 +386,7 @@
       apiVersion: apps/v1
       metadata:
         name: web
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{jitsi.application_name}}"
       spec:

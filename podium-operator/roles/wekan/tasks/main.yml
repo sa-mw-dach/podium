@@ -12,7 +12,7 @@
       kind: Secret
       metadata:
         name: mongodb
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
       stringData:
         database-admin-password: "{{ mongo_admin_password }}"
         database-name: "{{ wekan.mongo_database_name }}"
@@ -24,7 +24,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         name: mongodb
       spec:
         accessModes:
@@ -38,7 +38,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{wekan.application_name}}"
         name: mongodb
@@ -58,7 +58,7 @@
       apiVersion: apps/v1
       metadata:
         name: mongodb
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{wekan.application_name}}"
       spec:
@@ -150,7 +150,7 @@
       kind: ServiceAccount
       metadata:
         name: wekan
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{wekan.application_name}}"
 - name: Deploy Wekan
@@ -160,7 +160,7 @@
       apiVersion: apps/v1
       metadata:
         name: wekan
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{wekan.application_name}}"
       spec:
@@ -181,7 +181,7 @@
               - name: MONGO_URL
                 value: mongodb://{{ wekan.mongo_database_user }}:{{ mongo_database_password }}@mongodb:27017/{{ wekan.mongo_database_name }}
               - name: ROOT_URL
-                value: https://wekan-{{ namespace }}.{{ application_domain }}/
+                value: https://wekan-{{ meta.namespace }}.{{ application_domain }}/
               - name: PORT
                 value: "8080"
               image: wekanteam/wekan:latest
@@ -225,7 +225,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{wekan.application_name}}"
         name: wekan
@@ -244,13 +244,13 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
           kubernetes.io/tls-acme: "true"
         name: wekan
       spec:
-        host: "wekan-{{namespace}}.{{application_domain}}"
+        host: "wekan-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: 8080
         tls:
@@ -267,12 +267,12 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
         name: wekan
       spec:
-        host: "wekan-{{namespace}}.{{application_domain}}"
+        host: "wekan-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: 8080
         tls:

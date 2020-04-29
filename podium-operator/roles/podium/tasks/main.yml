@@ -1,4 +1,20 @@
 ---
+- name: Get Application Domain from Cluster Ingress
+  k8s_info:
+    api_version: config.openshift.io/v1
+    kind: Ingress
+    name: cluster
+  when: application_domain is undefined
+  register: ingress
+
+- name: Set Application Domain
+  set_fact:
+    application_domain: "{{ ingress.resources[0].spec.domain }}"
+  when: application_domain is undefined
+
+- debug:
+    msg: "Application Domain: {{ application_domain }}"
+
 - debug:
     msg: Deploy Etherpad (Real-time editor) set to {{ etherpad.enable }}
 - name: Deploy etherpad

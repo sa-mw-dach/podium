@@ -24,7 +24,7 @@
       kind: ServiceAccount
       metadata:
         name: mattermost-team-edition
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{mattermost.application_name}}"
 - name: Deploy Mattermost Security Context
@@ -34,7 +34,7 @@
       kind: SecurityContextConstraints
       metadata:
         name: mattermost-team-edition
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{mattermost.application_name}}"
       allowPrivilegedContainer: true
@@ -55,7 +55,7 @@
       seLinuxContext:
         type: RunAsAny
       users:
-      - system:serviceaccount:{{ namespace }}:mattermost-team-edition
+      - system:serviceaccount:{{ meta.namespace }}:mattermost-team-edition
 - name: Deploy Mattermost Config Secret
   k8s:
     definition:
@@ -63,7 +63,7 @@
       kind: Secret
       metadata:
         name: mattermost-team-edition-config-json
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
       data: 
         config.json: "{{ json.stdout | string | b64encode }}"
 - name: Deploy Mattermost Mysql Secret
@@ -73,7 +73,7 @@
       kind: Secret
       metadata:
         name: mattermost-mysql
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
       stringData:
         mysql-password: "{{mysql_user_password}}"
         mysql-root-password: "{{mysql_root_password}}"
@@ -84,7 +84,7 @@
       kind: ConfigMap
       metadata:
         name: mattermost-mattermost-team-edition-tests
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
       data:
         run.sh: |-
           @test "Testing Mattermost is accessible" {
@@ -97,7 +97,7 @@
       kind: ConfigMap
       metadata:
         name: mattermost-mysql
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
       data:
         run.sh: ""
 - name: Deploy Mattermost persistent volume
@@ -106,7 +106,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         name: mattermost-team-edition
       spec:
         accessModes:
@@ -120,7 +120,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         name: mattermost-team-edition-plugins
       spec:
         accessModes:
@@ -134,7 +134,7 @@
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         name: mattermost-mysql
       spec:
         accessModes:
@@ -149,7 +149,7 @@
       apiVersion: apps/v1
       metadata:
         name: mattermost-team-edition
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{mattermost.application_name}}"
       spec:
@@ -244,7 +244,7 @@
       apiVersion: apps/v1
       metadata:
         name: mattermost-mysql
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{mattermost.application_name}}"
       spec:
@@ -351,7 +351,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{mattermost.application_name}}"
         name: mattermost-team-edition
@@ -372,7 +372,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{mattermost.application_name}}"
         name: mattermost-mysql
@@ -395,13 +395,13 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
           kubernetes.io/tls-acme: "true"
         name: chat
       spec:
-        host: "chat-{{namespace}}.{{application_domain}}"
+        host: "chat-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: 8065
         tls:
@@ -418,12 +418,12 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
         name: chat
       spec:
-        host: "chat-{{namespace}}.{{application_domain}}"
+        host: "chat-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: 8065
         tls:

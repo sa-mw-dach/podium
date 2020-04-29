@@ -6,7 +6,7 @@
       apiVersion: apps/v1
       metadata:
         name: dokuwiki
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{dokuwiki.application_name}}"
       spec:
@@ -54,7 +54,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         labels:
           app: "{{dokuwiki.application_name}}"
         name: dokuwiki
@@ -73,13 +73,13 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
           kubernetes.io/tls-acme: "true"
         name: dokuwiki
       spec:
-        host: "dokuwiki-{{namespace}}.{{application_domain}}"
+        host: "dokuwiki-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: 8080
         tls:
@@ -96,12 +96,12 @@
       apiVersion: route.openshift.io/v1
       kind: Route
       metadata:
-        namespace: "{{ namespace }}"
+        namespace: "{{ meta.namespace }}"
         annotations:
           openshift.io/host.generated: "true"
         name: dokuwiki
       spec:
-        host: "dokuwiki-{{namespace}}.{{application_domain}}"
+        host: "dokuwiki-{{ meta.namespace }}.{{application_domain}}"
         port:
           targetPort: 8080
         tls:

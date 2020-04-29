@@ -1,6 +1,5 @@
 ---
 application_domain:
-namespace: podium
 jitsi:
   application_name: jitsi
   jicofo_component_secret: s3cr3t
