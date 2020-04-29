@@ -33,31 +33,31 @@ spec:
 ```$ oc create -f catalogsource.yaml -n openshift-marketplace```
 
 The Podium catalog pod will be deployed in the openshift-marketplace namespace.
-![](../docs/images/podium_operator_6.PNG)
+![](../docs/images/podium-operator_6.PNG)
 
 ### Install Podium Operator via OperatorHub
 Under OperatorHub search for podium and install operator.
-![](../docs/images/podium_operator_1.PNG)
+![](../docs/images/podium-operator_1.PNG)
 
-![](../docs/images/podium_operator_2.PNG)
+![](../docs/images/podium-operator_2.PNG)
 
-![](../docs/images/podium_operator_3.PNG)
+![](../docs/images/podium-operator_3.PNG)
 
 The Podium operator will be installed as a pod in the openshift-operators namespace.
-![](../docs/images/podium_operator_7.PNG)
+![](../docs/images/podium-operator_7.PNG)
 
 ### Create new project
 Under the project, installed operators, the Podium Operator should be visible. Select the Podium operator.
-![](../docs/images/podium_operator_4.PNG)
+![](../docs/images/podium-operator_4.PNG)
 
 ### Create a new podium instance
-Select create new instance. At a minimum you will need to change application_domain (wildcard domain) and namespace (name of project). The Podium Operator will deploy an instance of Podium in your project. After Podium is deployed it can be accessed via the mozaik route.
-![](../docs/images/podium_operator_5.PNG)
+Select create new instance. At a minimum you will need to change application_domain (wildcard domain) and namespace (name of project). The Podium Operator will deploy an instance of Podium in your project. After complete under routes click the dashboard (Moziak) to get started using Podium.
+![](../docs/images/podium-operator_5.PNG)
 
-After creating instance you will see the Podium object and Podium will be deployed in your project.
-![](../docs/images/podium_4.PNG)
+The Podium instance can be managed under the Podium tab.
+![](../docs/images/podium-operator_8.PNG)
 
-After complete under routes click the dashboard (Moziak) to get started using Podium.
+If you would like to manually change any of the components after deployment, set 'enable: false' in the Podium CR so that the operator ignores it.
 
 ## Install Podium Operator Manually
 The Podium Operator supports the scope of cluster or namespace. Simply change the path to CRD and yaml files to cluster (cluster scope) or namespace (namespace scope). 
