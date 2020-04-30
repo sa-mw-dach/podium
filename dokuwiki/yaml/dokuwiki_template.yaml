@@ -160,7 +160,7 @@ objects:
       targetPort: 8080
     selector:
       app: ${APPLICATION_NAME}
-      deploymentconfig: dokuwiki
+      name: dokuwiki
     sessionAffinity: None
     type: ClusterIP
 - apiVersion: route.openshift.io/v1
