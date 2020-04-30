@@ -5,7 +5,6 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: podium-operator
-  namespace: podium-operator
 roleRef:
   kind: Role
   name: podium-operator
