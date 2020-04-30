@@ -26,6 +26,15 @@ rules:
   - watch
 - apiGroups:
   - ""
+  - config.openshift.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
   - security.openshift.io
   resources:
   - securitycontextconstraints

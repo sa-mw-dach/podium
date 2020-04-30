@@ -62,7 +62,7 @@ metadata:
     capabilities: Basic Install
     categories: Integration & Delivery, OpenShift Optional
     certified: "false"
-    containerImage: quay.io/ktenzer/podium-operator:1.0.3
+    containerImage: quay.io/ktenzer/podium-operator-test:1.0.3
     description: A Kube-native collaboration platform to enhance remote teams in OpenShift
     repository: https://github.com/sa-mw-dach/podium
     support: ktenzer@redhat.com
@@ -85,7 +85,7 @@ spec:
     
     Podium provides a Custom Resource Definition (CRD) that represents an instance of podium. Multiple podium instances can exist in a single cluster but only one per namespace.
     ## Installation
-    The Podium Operator is a cluster-wide operator. It installs and configure the the toolchain and integrates them in a single-pane-of-glass dashboard. Each component can be enabled or disabled. Enabled means the component will be installed and managed by the operator. Components can be installed by the operator and later disabled to allow for example customizations for the k8s objects. Once the operator is installed, simply create a project, under installed operators for the project select Podium. Under Overview select create instance. 
+    The Podium Operator is a cluster-wide operator. It installs and configures the the toolchain, integrating everything in a single-pane-of-glass dashboard. Each component can be enabled or disabled. Enabled means the component will be installed and managed by the operator. Components can be installed by the operator and later disabled to allow for example, customizations of the k8s objects. Once the operator is installed, simply create a project, under installed operators for the project select Podium. Under Overview select create instance. 
     After you create a instance of Podium you will in the UI see the CR object under the Podium tab and can manage it there. You can also use ```$ oc get podium -n <namespace>``` to manage podium instances from the CLI.
     ```
     apiVersion: podium.com/v1alpha1
@@ -167,6 +167,15 @@ spec:
           - list
           - patch
           - update
+          - watch
+        - apiGroups:
+          - ""
+          - config.openshift.io
+          resources:
+          - ingresses
+          verbs:
+          - get
+          - list
           - watch
         - apiGroups:
           - ""
@@ -279,7 +288,7 @@ spec:
                   value: podium-operator
                 - name: ANSIBLE_GATHERING
                   value: explicit
-                image: quay.io/ktenzer/podium-operator:1.0.3
+                image: quay.io/ktenzer/podium-operator-test:1.0.3
                 imagePullPolicy: Always
                 name: podium-operator
                 resources: {}
@@ -315,4 +324,4 @@ spec:
   provider:
     name: Podium Community
   version: 1.0.3
-  replaces: podium-operator.v1.0.3
+  replaces: podium-operator.v1.0.2

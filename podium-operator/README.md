@@ -25,7 +25,7 @@ metadata:
   name: podium-operator-catalog
 spec:
   sourceType: grpc
-  image: quay.io/ktenzer/podium-operator-index:1.0.2
+  image: quay.io/ktenzer/podium-operator-index:1.0.3
   displayName: Podium Operator Catalog
   publisher: Podium Community
 ```
@@ -51,7 +51,7 @@ Under the project, installed operators, the Podium Operator should be visible. S
 ![](../docs/images/podium-operator_4.PNG)
 
 ### Create a new podium instance
-Select create new instance. At a minimum you will need to change application_domain (wildcard domain) and namespace (name of project). The Podium Operator will deploy an instance of Podium in your project. After complete under routes click the dashboard (Moziak) to get started using Podium.
+Select create new instance. Ensure at least one node is labeled with the jvb node selector. The Podium Operator will deploy an instance of Podium in your project. After complete under routes click the dashboard (Moziak) to get started using Podium.
 ![](../docs/images/podium-operator_5.PNG)
 
 The Podium instance can be managed under the Podium tab.
@@ -111,8 +111,6 @@ kind: Podium
 metadata:
   name: mypodium
 spec:
-  application_domain: <apps wildcard domain>
-  namespace: <namespace>
   jvb_node_port: 30000
   lets_encrypt: true
   password_salt: password123
