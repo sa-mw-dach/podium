@@ -1,4 +1,66 @@
 ---
+- name: Deploy Dokuwiki ConfigMap
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: dokuwiki-config
+        namespace: "{{ meta.namespace }}"
+      data:
+        dokuwiki-acl: |
+          # Don't modify the lines above
+          #
+          # Access Control Lists
+          #
+          # If your auth backend allows special char like spaces in groups
+          # or user names you need to urlencode them (only chars <128, leave
+          # UTF-8 multibyte chars as is)
+          #
+          # none   0
+          # read   1
+          # edit   2
+          # create 4
+          # upload 8
+          # delete 16
+
+          *               @ALL        8
+        dokuwiki-conf: |
+          <?php
+          $conf['plugin']['gitbacked']['pushAfterCommit'] = 1;
+          $conf['plugin']['gitbacked']['commitPageMsg'] = 'DokuWiki %user% changed %page%: %summary%';
+          $conf['plugin']['gitbacked']['periodicPull'] = 1;
+          $conf['plugin']['gitbacked']['periodicMinutes'] = 60;
+          $conf['plugin']['gitbacked']['repoPath'] = './data/gitrepo/';
+          $conf['plugin']['gitbacked']['repoWorkDir'] = './data/gitrepo/';
+          $conf['datadir'] = './data/gitrepo/docs/wiki/pages';
+          $conf['mediadir'] = './data/gitrepo/docs/wiki/media';
+          $conf['useacl'] = 1;
+          $conf['superuser'] = 'admin';
+        dokuwiki-users: |
+          # users.auth.php
+          # <?php exit()?>
+          # Don't modify the lines above
+          #
+          # Format:
+          #
+          # login:passwordhash:Real Name:email:groups,comma,separated
+
+          admin:$2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.:Podium-Admin:admin@example.com:
+- name: Deploy Dokuwiki persistent volume
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        namespace: "{{ meta.namespace }}"
+        name: dokuwiki-repodata
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
 - name: Deploy dokuwiki
   k8s:
     definition:
@@ -25,6 +87,16 @@
             containers:
             - image: quay.io/ktenzer/dokuwiki:latest
               imagePullPolicy: Always
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 10
+                periodSeconds: 3
+                successThreshold: 1
+                timeoutSeconds: 1
               name: dokuwiki
               ports:
               - containerPort: 8080
@@ -32,19 +104,70 @@
               - containerPort: 8443
                 protocol: TCP
               readinessProbe:
+                failureThreshold: 3
                 httpGet:
                   path: /
                   port: 8080
+                  scheme: HTTP
                 initialDelaySeconds: 5
                 periodSeconds: 3
+                successThreshold: 1
                 timeoutSeconds: 60
-              livenessProbe:
-                httpGet:
-                  path: /
-                  port: 8080
-                initialDelaySeconds: 10
-                periodSeconds: 3
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+              - mountPath: /opt/app-root/src/conf/users.auth.php
+                name: dokuwiki-config
+                subPath: users.auth.php
+              - mountPath: /opt/app-root/src/conf/acl.auth.php
+                name: dokuwiki-config
+                subPath: acl.auth.php
+              - mountPath: /opt/app-root/src/conf/local.php
+                name: dokuwiki-config
+                subPath: local.php
+              - mountPath: /opt/app-root/src/data/gitrepo
+                name: repodata
+            dnsPolicy: ClusterFirst
+            initContainers:
+            - command:
+              - sh
+              - -c
+              - grep https://github.com/sa-mw-dach/podium.git /opt/app-root/src/data/gitrepo/.git/config
+                && exit 0; rm -fr /opt/app-root/src/data/gitrepo/*; rm -fr /opt/app-root/src/data/gitrepo/.??*;
+                git clone https://github.com/sa-mw-dach/podium.git /opt/app-root/src/data/gitrepo;
+                mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/media/; mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/pages/;
+                ln -sf ../../../../../data/media/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/media/wiki;
+                ln -sf ../../../../../data/pages/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/pages/wiki;
+              image: rhscl/s2i-base-rhel7
+              imagePullPolicy: Always
+              name: clone-github-repo
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+              - mountPath: /opt/app-root/src/data/gitrepo
+                name: repodata
             restartPolicy: Always
+            schedulerName: default-scheduler
+            terminationGracePeriodSeconds: 30
+            volumes:
+            - configMap:
+                defaultMode: 420
+                items:
+                - key: dokuwiki-conf
+                  path: local.php
+                - key: dokuwiki-users
+                  path: users.auth.php
+                - key: dokuwiki-acl
+                  path: acl.auth.php
+                name: dokuwiki-config
+              name: dokuwiki-config
+            - name: repodata
+              persistentVolumeClaim:
+                claimName: dokuwiki-repodata
         triggers:
         - type: ConfigChange
       status: {}
