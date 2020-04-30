@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podium-operator
-  namespace: podium-operator
 spec:
   replicas: 1
   selector:
