@@ -62,7 +62,7 @@ metadata:
     capabilities: Basic Install
     categories: Integration & Delivery, OpenShift Optional
     certified: "false"
-    containerImage: quay.io/ktenzer/podium-operator-test:1.0.3
+    containerImage: quay.io/ktenzer/podium-operator:1.0.3
     description: A Kube-native collaboration platform to enhance remote teams in OpenShift
     repository: https://github.com/sa-mw-dach/podium
     support: ktenzer@redhat.com
@@ -288,7 +288,7 @@ spec:
                   value: podium-operator
                 - name: ANSIBLE_GATHERING
                   value: explicit
-                image: quay.io/ktenzer/podium-operator-test:1.0.3
+                image: quay.io/ktenzer/podium-operator:1.0.3
                 imagePullPolicy: Always
                 name: podium-operator
                 resources: {}
