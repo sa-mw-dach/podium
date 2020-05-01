@@ -24,10 +24,10 @@
           # upload 8
           # delete 16
 
-          *               @ALL        8
+          *               @ALL        {{ dokuwiki.default_acl }}
         dokuwiki-conf: |
           <?php
-          $conf['plugin']['gitbacked']['pushAfterCommit'] = 1;
+          $conf['plugin']['gitbacked']['pushAfterCommit'] = {{ dokuwiki.enable_git_push_integer }};
           $conf['plugin']['gitbacked']['commitPageMsg'] = 'DokuWiki %user% changed %page%: %summary%';
           $conf['plugin']['gitbacked']['periodicPull'] = 1;
           $conf['plugin']['gitbacked']['periodicMinutes'] = 60;
@@ -46,7 +46,7 @@
           #
           # login:passwordhash:Real Name:email:groups,comma,separated
 
-          admin:$2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.:Podium-Admin:admin@example.com:
+          admin:{{ dokuwiki.admin_password_hash }}:Podium-Admin:admin@example.com:
 - name: Deploy Dokuwiki persistent volume
   k8s:
     definition:
@@ -132,9 +132,9 @@
             - command:
               - sh
               - -c
-              - grep https://github.com/sa-mw-dach/podium.git /opt/app-root/src/data/gitrepo/.git/config
+              - grep {{ dokuwiki.repo_url }} /opt/app-root/src/data/gitrepo/.git/config
                 && exit 0; rm -fr /opt/app-root/src/data/gitrepo/*; rm -fr /opt/app-root/src/data/gitrepo/.??*;
-                git clone https://github.com/sa-mw-dach/podium.git /opt/app-root/src/data/gitrepo;
+                git clone {{ dokuwiki.repo_url }} /opt/app-root/src/data/gitrepo;
                 mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/media/; mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/pages/;
                 ln -sf ../../../../../data/media/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/media/wiki;
                 ln -sf ../../../../../data/pages/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/pages/wiki;

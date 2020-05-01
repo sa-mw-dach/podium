@@ -5,6 +5,8 @@ metadata:
 spec:
   jvb_node_port: 30000
   lets_encrypt: true
+  password_salt: password123
+  admin_password_salt: "admin123
   etherpad:
     enable: true
     application_name: etherpad
@@ -42,6 +44,10 @@ spec:
   dokuwiki:
     enable: true
     application_name: dokuwiki
+    repo_url: https://github.com/sa-mw-dach/podium.git
+    default_acl: 8
+    enable_git_push_integer: 1
+    admin_password_hash: $2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.
   mozaik:
     enable: true
     application_name: mozaik

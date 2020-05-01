@@ -1,5 +1,4 @@
 ---
-application_domain:
 etherpad:
   application_name: etherpad
   default_title: "Welcome to Etherpad"

@@ -1,5 +1,4 @@
 ---
-application_domain:
 jitsi:
   application_name: jitsi
   jicofo_component_secret: s3cr3t

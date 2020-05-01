@@ -1,5 +1,4 @@
 ---
-application_domain:
 wekan:
   application_name: wekan
   mongo_database_name: wekan

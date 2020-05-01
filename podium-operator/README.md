@@ -146,6 +146,10 @@ spec:
   dokuwiki:
     enable: true
     application_name: dokuwiki
+    repo_url: https://github.com/sa-mw-dach/podium.git
+    default_acl: 8
+    enable_git_push_integer: 1
+    admin_password_hash: $2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.
   mozaik:
     enable: true
     application_name: mozaik
