@@ -21,7 +21,7 @@ metadata:
               "repo_url": "https://github.com/sa-mw-dach/podium.git",
               "default_acl": 8,
               "enable_git_push_integer": 1,
-              "admin_password_hash": $2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.
+              "admin_password_hash": "$2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm."
             },
             "drawio": {
               "application_name": "drawio",
