@@ -10,6 +10,8 @@ Communication is the key to any high performing team. Podium is a containerized 
 * [Wiki (Dokuwiki)](https://www.dokuwiki.org/dokuwiki)
 * [Kanban Board (Wekan)](https://github.com/wekan/wekan)
 
+[Podium Introduction Video and Demo](https://youtu.be/ZqHwEURHfJY)
+
 An instance of podium will deploy all components and configure a dashboard so all team and non-team members can interact immediately as well as effectively.
 
 ![](docs/images/podium_demo.PNG)
