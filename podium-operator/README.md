@@ -155,7 +155,7 @@ spec:
     application_name: mozaik
 ```
 
-```$ oc create -f podium.yaml```
+```$ oc create -f podium.yaml -n <namespace>```
 
 ### Delete Podium Operator
 
