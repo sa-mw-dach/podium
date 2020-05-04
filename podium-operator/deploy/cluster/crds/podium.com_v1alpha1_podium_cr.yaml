@@ -29,15 +29,11 @@ spec:
   mattermost:
     enable: true
     application_name: mattermost-team-edition
-    mysql_user_password: <password>
-    mysql_root_password: <password>
   wekan:
     enable: true
     application_name: wekan
     mongo_database_name: wekan
     mongo_database_user: wekan
-    mongo_database_password: <password>
-    mongo_admin_password: <password>
   drawio:
     enable: true
     application_name: drawio
