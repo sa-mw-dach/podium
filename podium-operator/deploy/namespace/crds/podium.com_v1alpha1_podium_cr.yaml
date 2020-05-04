@@ -6,7 +6,7 @@ spec:
   jvb_node_port: 30000
   lets_encrypt: true
   password_salt: password123
-  admin_password_salt: "admin123
+  admin_password_salt: admin123
   etherpad:
     enable: true
     application_name: etherpad
