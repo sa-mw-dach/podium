@@ -1,7 +1,7 @@
 # Podium
 ![](docs/images/podium_logo.png)
 
-Communication is the key to any high performing team. Podium is a containerized deployment of a set of leading opensource communication tools that allow teams interact more effectively in a remote (post COVID-19) world. Podium brings tools together in a way that that allows not only a team to interact better but even more inportantly allows non-team members to interact effectively. Podium current provides the following components:
+Communication is the key to any high performing team. Podium is a containerized deployment of a set of leading opensource communication tools that allow teams interact more effectively in a remote (post COVID-19) world. Podium brings tools together in a way that that allows not only a team to interact better but even more importantly attempts to re-create the incidental interactions so lacking in a virtual-only world. All those watercooler, breakroom encounters we thought were a waste of time, were critical to our productivity. Podium not only promotes incidental interactions virtually but also allows team stakeholders or external members to better interact with teams. Podium takes a team approach to collaboration instead of an organizational approach. Podium currently provides the following components:
 * [Dashboard (Mozaik)](http://mozaik.rocks/)
 * [Chat (Mattermost)](https://mattermost.com/)
 * [Video Conferencing (Jitsi Meet)](https://jitsi.org/jitsi-meet/)
@@ -12,7 +12,7 @@ Communication is the key to any high performing team. Podium is a containerized 
 
 [Podium Introduction Video and Demo](https://youtu.be/ZqHwEURHfJY)
 
-An instance of podium will deploy all components and configure a dashboard so all team and non-team members can interact immediately as well as effectively.
+An instance of podium will deploy all components and configure a dashboard so all team and non-team members can interact immediately as well as effectively. Onboarding a new team member is self explanatory.
 
 ![](docs/images/podium_demo.PNG)
 
