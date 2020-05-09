@@ -51,6 +51,7 @@
         LDAP_TLS_CACERT_DIR: ''
         LDAP_TLS_CIPHERS: ''
         XMPP_DOMAIN: meet-{{ meta.namespace }}.{{application_domain}}
+        JICOFO_ENABLE_HEALTH_CHECKS: '1'
         JICOFO_RESERVATION_REST_BASE_URL: ''
         JIGASI_HEALTH_CHECK_INTERVAL: ''
         JIBRI_FINALIZE_RECORDING_SCRIPT_PATH: /config/finalize.sh
