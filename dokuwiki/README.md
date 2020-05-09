@@ -30,7 +30,8 @@ The deployment does not expose the service automatically, so we finish our insta
 
 Patch route object to enable ACME TLS endpoint termination.
 
-```$ oc patch route dokuwiki -p '{
+```
+$ oc patch route dokuwiki -p '{
     "metadata": {
         "annotations": {
             "kubernetes.io/tls-acme": "true"
@@ -46,7 +47,7 @@ Patch route object to enable ACME TLS endpoint termination.
 
 ### Initialize DokuWiki
 
-DokuWiki does not use a database backend nor do we use a persistent volume to save the Wiki content. That makes the knowledge base ephemeral. We intentionally take that approach, because we do not want to make the deployment depending on the reliability and longevity of a particular OpenShift cluster. Our own OpenShift clusters are subject of constant turnover and we do not want to make our own Podium projects depend on one such cluster.
+Our DokuWiki does not use a database backend nor do we use a persistent volume to save the Wiki content. That makes the knowledge base ephemeral. We intentionally take that approach, because we do not want to make the deployment depending on the reliability and longevity of a particular OpenShift cluster. Our own OpenShift clusters are subject of constant turnover and we do not want to make our own Podium projects depend on one such cluster.
 
 Instead, we want the DokuWiki to be linked to a docs/wiki folder in our main Git project. We initialize the DokuWiki from that directory and we regularly commit changes in our Podium DokuWiki back to the main Git.
 
@@ -59,9 +60,10 @@ wget https://github.com/woolfg/dokuwiki-plugin-gitbacked/archive/master.zip
 unzip -d lib/plugins/ master.zip
 mv lib/plugins/dokuwiki-plugin-gitbacked-master/ lib/plugins/gitbacked
 git clone $REPO data/gitrepo
-cp -a data/pages/wiki/ data/gitrepo/docs/wiki/pages/
-mkdir data/gitrepo/docs/wiki/media
-cp -a data/media/wiki/ data/gitrepo/docs/wiki/media
+mkdir -p data/gitrepo/docs/wiki/pages/
+ln -s ../../../../../data/pages/wiki/ data/gitrepo/docs/wiki/pages/wiki
+mkdir -p data/gitrepo/docs/wiki/media/
+ln -s ../../../../../data/media/wiki/ data/gitrepo/docs/wiki/media/wiki
 
 echo -n "<?php
 \$conf['plugin']['gitbacked']['periodicPull'] = 1;
