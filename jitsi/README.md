@@ -36,3 +36,22 @@ OpenShift templates allow you to parameterize and automate deployment of all app
 The template will create a default https route (edge termination). Assuming you configured the lets encrypt admission controller, the certificate will automatically be added to your route. It can take several minutes for the lets encrypt certificate to be issues so be patient.
 
 ```$ oc get route```
+
+## Build Jitsi Containers for OpenShift
+
+The upstream project https://github.com/jitsi/docker-jitsi-meet for Jitsi Meet on Docker does not meet the requirements for containers running on OpenShift. In particular, the containers provided by the upstream project are running with root permissions.
+
+Paul Tiedke has submitted a pull request to the upstream project that changes the containers to run without priviledges. This pull request has not been merged yet.
+
+In order to build your own Jitsi containers for OpenShift with the most recent upstream versions of https://github.com/jitsi/docker-jitsi-meet, we provide the Paul Tiedke changes in one unified patch that is easy to apply to the upstream sources.
+
+```
+$ git clone https://github.com/jitsi/docker-jitsi-meet.git
+$ cd docker-jitsi-meet
+$ patch -p1 ../podium/jitsi/sapkra-ocp.patch
+$ FORCE_REBUILD=1 make
+$ podman images
+```
+
+In order to tag the newly created images and push them to the repository of your choice, you can use the tag-all and push-all Make targets for docker-jitsi-meet.
+
