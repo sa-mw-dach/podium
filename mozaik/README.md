@@ -44,7 +44,7 @@ $ oc process  -f configmap_template.yaml -p NAMESPACE=jitsi |oc create -f -
 
 In order to activate the ConfigMap we need to patch the Deployment Config created in the previous step and we need to start the rollout of that new configuration.
 
-```$ oc patch deploymentconfig podium -p '{"spec":{"template":{"spec":{"containers":[{"name":"podium","volumeMounts":[{"mountPath":"/opt/app-root/src/config.js","name":"dashboard-config","subPath":"config.js"}]}],"volumes":[{"configMap":{ "defaultMode":420,"items":[{"key":"hackathon-conf","path":"config.js"}],"name":"mozaik-config" },"name":"dashboard-config"}]}}}}'```
+```$ oc patch deploymentconfig podium -p '{"spec":{"template":{"spec":{"containers":[{"name":"podium","volumeMounts":[{"mountPath":"/opt/app-root/src/config.js","name":"dashboard-config","subPath":"config.js"}]}],"volumes":[{"configMap":{ "defaultMode":420,"items":[{"key":"podium-conf","path":"config.js"}],"name":"mozaik-config" },"name":"dashboard-config"}]}}}}'```
 
 ```$ oc rollout latest dc/podium```
 
