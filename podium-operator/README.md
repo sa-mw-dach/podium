@@ -13,6 +13,7 @@ The video bridge is required for video conferencing. Video and audio from client
 ```$ oc label node ocp4-n4krq-worker-v996z app=jvb```
 
 ## Install Podium Operator Using OLM (Operator Lifecycle Manager)
+The podium-operator is available in OpenShift OperatorHub as a community operator. However you may want to use the latest version, if so you can follow these steps.
 The Operator lifecycle manager comes built-in with OpenShift. It enables lifecyle management of an operator. In order to use OLM you need to package your operator and create a catalog that contains your operator bundle. To use the podium operator through OLM simply create a catalog source, pointing to the podium operator index bundle. Make sure it is created in the openshift-marketplace namespace or the namespace that is running OLM.
 
 ### Create Catalog Source for Podium Operator
@@ -25,7 +26,7 @@ metadata:
   name: podium-operator-catalog
 spec:
   sourceType: grpc
-  image: quay.io/ktenzer/podium-operator-index:1.0.3
+  image: quay.io/podium/podium-operator-index:1.0.4
   displayName: Podium Operator Catalog
   publisher: Podium Community
 ```
