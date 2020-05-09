@@ -70,6 +70,8 @@ objects:
           - grep ${REPO_URL} /opt/app-root/src/data/gitrepo/.git/config
             && exit 0; rm -fr /opt/app-root/src/data/gitrepo/*; rm -fr /opt/app-root/src/data/gitrepo/.??*;
             git clone ${REPO_URL} /opt/app-root/src/data/gitrepo;
+            git config -f /opt/app-root/src/data/gitrepo/.git/config  user.email "robot@example.com";
+            git config -f /opt/app-root/src/data/gitrepo/.git/config  user.name "Podium-Robot";
             mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/media/; mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/pages/;
             ln -sf ../../../../../data/media/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/media/wiki;
             ln -sf ../../../../../data/pages/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/pages/wiki;
