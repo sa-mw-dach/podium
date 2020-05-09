@@ -1,0 +1,531 @@
+diff -Nur docker-jitsi-meet/base/Dockerfile docker-jitsi-meet-ocp/base/Dockerfile
+--- docker-jitsi-meet/base/Dockerfile	2020-05-09 14:03:43.357946029 +0200
++++ docker-jitsi-meet-ocp/base/Dockerfile	2020-05-08 20:16:05.070424670 +0200
+@@ -2,11 +2,12 @@
+ 
+ ARG JITSI_RELEASE=stable
+ 
++ENV S6_READ_ONLY_ROOT 1
+ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+ 
+ ADD https://github.com/just-containers/s6-overlay/releases/download/v1.22.1.0/s6-overlay-amd64.tar.gz /tmp/s6-overlay.tar.gz
+ ADD https://download.jitsi.org/jitsi-key.gpg.key /tmp/jitsi.key
+-ADD https://github.com/subchen/frep/releases/download/v1.3.5/frep-1.3.5-linux-amd64 /usr/bin/frep
++ADD https://github.com/subchen/frep/releases/download/v1.3.7/frep-1.3.7-linux-amd64 /usr/bin/frep
+ 
+ COPY rootfs /
+ 
+@@ -22,7 +23,8 @@
+ 	apt-dpkg-wrap apt-get update && \
+ 	apt-dpkg-wrap apt-get dist-upgrade -y && \
+ 	apt-cleanup && \
+-	chmod +x /usr/bin/frep
++	chmod +x /usr/bin/frep && \
++	/install-devtools.sh
+ 
+ RUN \
+ 	[ "$JITSI_RELEASE" = "unstable" ] && \
+@@ -31,4 +33,6 @@
+ 	apt-cleanup || \
+ 	true
+ 
+-ENTRYPOINT [ "/init" ]
++RUN mkdir /config
++
++ENTRYPOINT [ "/pre-init.sh" ]
+diff -Nur docker-jitsi-meet/base/rootfs/fix-permissions.sh docker-jitsi-meet-ocp/base/rootfs/fix-permissions.sh
+--- docker-jitsi-meet/base/rootfs/fix-permissions.sh	1970-01-01 01:00:00.000000000 +0100
++++ docker-jitsi-meet-ocp/base/rootfs/fix-permissions.sh	2020-05-08 20:17:31.827213349 +0200
+@@ -0,0 +1,7 @@
++#!/bin/bash
++
++chown 1001:0 -R /config /var/log /var/lib /etc/jitsi
++chmod g=u -R /config /var/log /var/lib /etc/localtime /etc/timezone /etc/s6 /etc/jitsi /etc/passwd /run /root /usr/bin
++
++# File should delete itself
++rm -- "$0"
+diff -Nur docker-jitsi-meet/base/rootfs/install-devtools.sh docker-jitsi-meet-ocp/base/rootfs/install-devtools.sh
+--- docker-jitsi-meet/base/rootfs/install-devtools.sh	1970-01-01 01:00:00.000000000 +0100
++++ docker-jitsi-meet-ocp/base/rootfs/install-devtools.sh	2020-05-08 20:17:31.828213347 +0200
+@@ -0,0 +1,10 @@
++#!/bin/bash
++
++if [[ "$JITSI_RELEASE" == "unstable" ]]; then
++	apt-dpkg-wrap apt-get update;
++	apt-dpkg-wrap apt-get install -y jq procps curl vim iputils-ping net-tools;
++	apt-cleanup;
++fi
++
++# File should delete itself
++rm -- "$0"
+diff -Nur docker-jitsi-meet/base/rootfs/pre-init.sh docker-jitsi-meet-ocp/base/rootfs/pre-init.sh
+--- docker-jitsi-meet/base/rootfs/pre-init.sh	1970-01-01 01:00:00.000000000 +0100
++++ docker-jitsi-meet-ocp/base/rootfs/pre-init.sh	2020-05-08 20:17:31.828213347 +0200
+@@ -0,0 +1,16 @@
++#!/bin/sh
++
++# set user for s6
++sed -i "s/\${3}/$(id -u)/g" /usr/bin/fix-attrs
++
++# workaround around mounts taking too much time
++while ! mkdir -p /run/s6; do sleep 1; done
++
++# set username
++if ! whoami > /dev/null 2>&1; then
++  if [ -w /etc/passwd ]; then
++    echo "${USER_NAME:-default}:x:$(id -u):0:${USER_NAME:-default} user:${HOME}:/sbin/nologin" >> /etc/passwd
++  fi
++fi
++
++exec /init
+diff -Nur docker-jitsi-meet/base-java/Dockerfile docker-jitsi-meet-ocp/base-java/Dockerfile
+--- docker-jitsi-meet/base-java/Dockerfile	2020-05-09 14:03:43.357946029 +0200
++++ docker-jitsi-meet-ocp/base-java/Dockerfile	2020-05-08 20:16:05.070424670 +0200
+@@ -1,6 +1,8 @@
+ ARG JITSI_REPO=jitsi
+ FROM ${JITSI_REPO}/base
+ 
++ENV JAVA_SYS_PROPS "-Djava.util.prefs.userRoot=/root"
++
+ RUN	\
+ 	mkdir -p /usr/share/man/man1 && \
+ 	apt-dpkg-wrap apt-get update && \
+diff -Nur docker-jitsi-meet/CHANGELOG.md docker-jitsi-meet-ocp/CHANGELOG.md
+--- docker-jitsi-meet/CHANGELOG.md	2020-05-09 14:03:43.357946029 +0200
++++ docker-jitsi-meet-ocp/CHANGELOG.md	2020-05-09 14:50:09.041969730 +0200
+@@ -1,3 +1,8 @@
++## stable-4548-ocp
++
++* apply sapkra (Paul Tiedtke) patches for non priviledged deployment on OpenShift https://github.com/sapkra/docker-jitsi-meet
++* this build is tested with: jitsi-meet-web/stable,now 1.0.4074-1; jitsi-videobridge2/now 2.1-197-g38256192-1; prosody/now 0.11.5-1~stretch6; jicofo/now 1.0-567-1 
++
+ ## stable-4548-1
+ 
+ Based on stable release 4548-1.
+diff -Nur docker-jitsi-meet/docker-compose.yml docker-jitsi-meet-ocp/docker-compose.yml
+--- docker-jitsi-meet/docker-compose.yml	2020-05-09 14:03:43.358946026 +0200
++++ docker-jitsi-meet-ocp/docker-compose.yml	2020-05-08 20:16:05.070424670 +0200
+@@ -6,8 +6,8 @@
+         image: jitsi/web:latest
+         restart: ${RESTART_POLICY}
+         ports:
+-            - '${HTTP_PORT}:80'
+-            - '${HTTPS_PORT}:443'
++            - '${HTTP_PORT}:8080'
++            - '${HTTPS_PORT}:8443'
+         volumes:
+             - ${CONFIG}/web:/config:Z
+             - ${CONFIG}/web/letsencrypt:/etc/letsencrypt:Z
+diff -Nur docker-jitsi-meet/etherpad/Dockerfile docker-jitsi-meet-ocp/etherpad/Dockerfile
+--- docker-jitsi-meet/etherpad/Dockerfile	2020-05-09 14:03:43.359946024 +0200
++++ docker-jitsi-meet-ocp/etherpad/Dockerfile	2020-05-08 20:16:05.071424667 +0200
+@@ -1,5 +1,3 @@
+ FROM etherpad/etherpad:1.8.3
+ 
+ ADD ./rootfs/defaults/settings.json /opt/etherpad-lite/settings.json
+-
+-EXPOSE 9001
+diff -Nur docker-jitsi-meet/examples/kubernetes/web-service.yaml docker-jitsi-meet-ocp/examples/kubernetes/web-service.yaml
+--- docker-jitsi-meet/examples/kubernetes/web-service.yaml	2020-05-09 14:03:43.362946016 +0200
++++ docker-jitsi-meet-ocp/examples/kubernetes/web-service.yaml	2020-05-08 20:16:05.071424667 +0200
+@@ -8,11 +8,11 @@
+ spec:
+   ports:
+   - name: "http"
+-    port: 80
+-    targetPort: 80
++    port: 8080
++    targetPort: 8080
+   - name: "https"
+-    port: 443
+-    targetPort: 443
++    port: 8443
++    targetPort: 8443
+   selector:
+     k8s-app: jitsi
+ ---
+@@ -29,4 +29,4 @@
+       - path: /
+         backend:
+           serviceName: web
+-          servicePort: https
+\ No newline at end of file
++          servicePort: https
+diff -Nur docker-jitsi-meet/examples/traefik/docker-compose.yml docker-jitsi-meet-ocp/examples/traefik/docker-compose.yml
+--- docker-jitsi-meet/examples/traefik/docker-compose.yml	2020-05-09 14:03:43.362946016 +0200
++++ docker-jitsi-meet-ocp/examples/traefik/docker-compose.yml	2020-05-08 20:16:05.071424667 +0200
+@@ -47,7 +47,7 @@
+             - "traefik.backend=jc_backend"
+             # traefik: change that to your actual fqdn 
+             - "traefik.basic.frontend.rule=Host:your.host.name"
+-            - "traefik.basic.port=80"
++            - "traefik.basic.port=8080"
+ 
+     # XMPP server
+     prosody:
+diff -Nur docker-jitsi-meet/jibri/Dockerfile docker-jitsi-meet-ocp/jibri/Dockerfile
+--- docker-jitsi-meet/jibri/Dockerfile	2020-05-09 14:03:43.363946014 +0200
++++ docker-jitsi-meet-ocp/jibri/Dockerfile	2020-05-08 20:16:05.071424667 +0200
+@@ -44,5 +44,8 @@
+ 
+ COPY rootfs/ /
+ 
++RUN /fix-permissions.sh
++
+ VOLUME /config
+ 
++USER 1001
+diff -Nur docker-jitsi-meet/jibri/rootfs/etc/cont-init.d/10-config docker-jitsi-meet-ocp/jibri/rootfs/etc/cont-init.d/10-config
+--- docker-jitsi-meet/jibri/rootfs/etc/cont-init.d/10-config	2020-05-09 14:03:43.364946011 +0200
++++ docker-jitsi-meet-ocp/jibri/rootfs/etc/cont-init.d/10-config	2020-05-08 20:16:05.071424667 +0200
+@@ -25,6 +25,7 @@
+ [ -z "$(lsmod | grep -om1 snd_aloop)" ] \
+ && ( echo -e "\e[31mERROR: Please load snd-aloop module on the docker host.\e[39m"; kill 1; exit 1 )
+ 
++# TODO Fix this for OpenShift
+ # get host's audio group id
+ host_audio_group="$(stat -c %g /dev/snd/pcmC0D0p 2>/dev/null)"
+ 
+@@ -42,7 +43,7 @@
+ && [ ! -x "${JIBRI_FINALIZE_RECORDING_SCRIPT_PATH}" ] \
+ && chmod +x ${JIBRI_FINALIZE_RECORDING_SCRIPT_PATH}
+ 
+-# set rundom jibri nickname for the instance if is not set
++# set random jibri nickname for the instance if is not set
+ [ -z "${JIBRI_INSTANCE_ID}" ] && export JIBRI_INSTANCE_ID=$(date +%N)
+ 
+ # always recreate configs
+@@ -51,10 +52,8 @@
+ 
+ # make recording dir
+ [ -z "${JIBRI_RECORDING_DIR}" ] && export JIBRI_RECORDING_DIR=/config/recordings
+-mkdir -p ${JIBRI_RECORDING_DIR}
+-chown -R jibri ${JIBRI_RECORDING_DIR}
++mkdir -pm 770 ${JIBRI_RECORDING_DIR}
+ 
+ # make logs dir
+ [ -z "${JIBRI_LOGS_DIR}" ] && export JIBRI_LOGS_DIR=/config/logs
+-mkdir -p ${JIBRI_LOGS_DIR}
+-chown -R jibri ${JIBRI_LOGS_DIR}
++mkdir -pm 770 ${JIBRI_LOGS_DIR}
+diff -Nur docker-jitsi-meet/jibri/rootfs/etc/services.d/10-xorg/run docker-jitsi-meet-ocp/jibri/rootfs/etc/services.d/10-xorg/run
+--- docker-jitsi-meet/jibri/rootfs/etc/services.d/10-xorg/run	2020-05-09 14:03:43.367946004 +0200
++++ docker-jitsi-meet-ocp/jibri/rootfs/etc/services.d/10-xorg/run	2020-05-08 20:16:05.071424667 +0200
+@@ -1,5 +1,5 @@
+ #!/usr/bin/with-contenv bash
+ 
+ DAEMON="/usr/bin/Xorg -nocursor -noreset  +extension RANDR +extension RENDER -logfile /tmp/xorg.log  -config /etc/jitsi/jibri/xorg-video-dummy.conf ${DISPLAY}"
+-exec s6-setuidgid jibri /bin/bash -c "exec $DAEMON"
++exec /bin/bash -c "exec $DAEMON"
+ 
+diff -Nur docker-jitsi-meet/jibri/rootfs/etc/services.d/30-jibri/run docker-jitsi-meet-ocp/jibri/rootfs/etc/services.d/30-jibri/run
+--- docker-jitsi-meet/jibri/rootfs/etc/services.d/30-jibri/run	2020-05-09 14:03:43.368946001 +0200
++++ docker-jitsi-meet-ocp/jibri/rootfs/etc/services.d/30-jibri/run	2020-05-08 20:16:05.071424667 +0200
+@@ -4,5 +4,5 @@
+ HOME=/home/jibri
+ 
+ DAEMON=/opt/jitsi/jibri/launch.sh
+-exec s6-setuidgid jibri /bin/bash -c "exec $DAEMON"
++exec /bin/bash -c "exec $DAEMON"
+ 
+diff -Nur docker-jitsi-meet/jicofo/Dockerfile docker-jitsi-meet-ocp/jicofo/Dockerfile
+--- docker-jitsi-meet/jicofo/Dockerfile	2020-05-09 14:03:43.369945999 +0200
++++ docker-jitsi-meet-ocp/jicofo/Dockerfile	2020-05-08 20:16:05.071424667 +0200
+@@ -8,5 +8,8 @@
+ 
+ COPY rootfs/ /
+ 
++RUN /fix-permissions.sh
++
+ VOLUME /config
+ 
++USER 1001
+diff -Nur docker-jitsi-meet/jicofo/rootfs/etc/cont-init.d/10-config docker-jitsi-meet-ocp/jicofo/rootfs/etc/cont-init.d/10-config
+--- docker-jitsi-meet/jicofo/rootfs/etc/cont-init.d/10-config	2020-05-09 14:03:43.370945996 +0200
++++ docker-jitsi-meet-ocp/jicofo/rootfs/etc/cont-init.d/10-config	2020-05-08 20:16:05.071424667 +0200
+@@ -24,5 +24,3 @@
+ if [[ ! -f /config/logging.properties ]]; then
+     cp /defaults/logging.properties /config
+ fi
+-
+-chown -R jicofo:jitsi /config
+diff -Nur docker-jitsi-meet/jicofo/rootfs/etc/services.d/jicofo/run docker-jitsi-meet-ocp/jicofo/rootfs/etc/services.d/jicofo/run
+--- docker-jitsi-meet/jicofo/rootfs/etc/services.d/jicofo/run	2020-05-09 14:03:43.370945996 +0200
++++ docker-jitsi-meet-ocp/jicofo/rootfs/etc/services.d/jicofo/run	2020-05-08 20:16:05.072424665 +0200
+@@ -1,8 +1,8 @@
+ #!/usr/bin/with-contenv bash
+ 
+-JAVA_SYS_PROPS="-Dnet.java.sip.communicator.SC_HOME_DIR_LOCATION=/ -Dnet.java.sip.communicator.SC_HOME_DIR_NAME=config -Djava.util.logging.config.file=/config/logging.properties"
++JAVA_SYS_PROPS="$JAVA_SYS_PROPS -Dnet.java.sip.communicator.SC_HOME_DIR_LOCATION=/ -Dnet.java.sip.communicator.SC_HOME_DIR_NAME=config -Djava.util.logging.config.file=/config/logging.properties"
+ DAEMON=/usr/share/jicofo/jicofo.sh
+ DAEMON_DIR=/usr/share/jicofo/
+ DAEMON_OPTS="--domain=$XMPP_DOMAIN --host=$XMPP_SERVER --secret=$JICOFO_COMPONENT_SECRET --user_name=$JICOFO_AUTH_USER --user_domain=$XMPP_AUTH_DOMAIN --user_password=$JICOFO_AUTH_PASSWORD"
+ 
+-exec s6-setuidgid jicofo /bin/bash -c "cd $DAEMON_DIR; JAVA_SYS_PROPS=\"$JAVA_SYS_PROPS\" exec $DAEMON $DAEMON_OPTS"
++exec /bin/bash -c "cd $DAEMON_DIR; JAVA_SYS_PROPS=\"$JAVA_SYS_PROPS\" exec $DAEMON $DAEMON_OPTS"
+diff -Nur docker-jitsi-meet/jigasi/Dockerfile docker-jitsi-meet-ocp/jigasi/Dockerfile
+--- docker-jitsi-meet/jigasi/Dockerfile	2020-05-09 14:03:43.370945996 +0200
++++ docker-jitsi-meet-ocp/jigasi/Dockerfile	2020-05-08 20:16:05.072424665 +0200
+@@ -10,4 +10,8 @@
+ 
+ COPY rootfs/ /
+ 
++RUN /fix-permissions.sh
++
+ VOLUME ["/config", "/tmp/transcripts"]
++
++USER 1001
+diff -Nur docker-jitsi-meet/jigasi/rootfs/etc/cont-init.d/10-config docker-jitsi-meet-ocp/jigasi/rootfs/etc/cont-init.d/10-config
+--- docker-jitsi-meet/jigasi/rootfs/etc/cont-init.d/10-config	2020-05-09 14:03:43.370945996 +0200
++++ docker-jitsi-meet-ocp/jigasi/rootfs/etc/cont-init.d/10-config	2020-05-08 20:16:05.072424665 +0200
+@@ -19,9 +19,6 @@
+     cp /defaults/logging.properties /config
+ fi
+ 
+-mkdir -pm777 /tmp/transcripts
+-chown jigasi:jitsi /tmp/transcripts
+-
+ # Create Google Cloud Credentials
+ if [[ $ENABLE_TRANSCRIPTIONS -eq 1 || $ENABLE_TRANSCRIPTIONS == "true" ]] && [[ ! -f /config/key.json ]]; then
+     if [[ -z $GC_PROJECT_ID || -z $GC_PRIVATE_KEY_ID || -z $GC_PRIVATE_KEY || -z $GC_CLIENT_EMAIL || -z $GC_CLIENT_ID || -z $GC_CLIENT_CERT_URL ]]; then
+diff -Nur docker-jitsi-meet/jigasi/rootfs/etc/services.d/jigasi/run docker-jitsi-meet-ocp/jigasi/rootfs/etc/services.d/jigasi/run
+--- docker-jitsi-meet/jigasi/rootfs/etc/services.d/jigasi/run	2020-05-09 14:03:43.370945996 +0200
++++ docker-jitsi-meet-ocp/jigasi/rootfs/etc/services.d/jigasi/run	2020-05-08 20:16:05.072424665 +0200
+@@ -5,5 +5,5 @@
+ DAEMON=/usr/share/jigasi/jigasi.sh
+ DAEMON_OPTS="--nocomponent=true --configdir=/ --configdirname=config --min-port=$JIGASI_PORT_MIN --max-port=$JIGASI_PORT_MAX"
+ 
+-exec s6-setuidgid jigasi /bin/bash -c "JAVA_SYS_PROPS=\"$JAVA_SYS_PROPS\" exec $DAEMON $DAEMON_OPTS"
++exec /bin/bash -c "JAVA_SYS_PROPS=\"$JAVA_SYS_PROPS\" exec $DAEMON $DAEMON_OPTS"
+ 
+diff -Nur docker-jitsi-meet/jvb/Dockerfile docker-jitsi-meet-ocp/jvb/Dockerfile
+--- docker-jitsi-meet/jvb/Dockerfile	2020-05-09 14:03:43.370945996 +0200
++++ docker-jitsi-meet-ocp/jvb/Dockerfile	2020-05-08 20:16:05.072424665 +0200
+@@ -8,4 +8,8 @@
+ 
+ COPY rootfs/ /
+ 
++RUN /fix-permissions.sh
++
+ VOLUME /config
++
++USER 1001
+diff -Nur docker-jitsi-meet/jvb/rootfs/etc/cont-init.d/10-config docker-jitsi-meet-ocp/jvb/rootfs/etc/cont-init.d/10-config
+--- docker-jitsi-meet/jvb/rootfs/etc/cont-init.d/10-config	2020-05-09 14:03:43.371945993 +0200
++++ docker-jitsi-meet-ocp/jvb/rootfs/etc/cont-init.d/10-config	2020-05-08 20:16:05.072424665 +0200
+@@ -18,5 +18,3 @@
+ if [[ ! -f /config/logging.properties ]]; then
+     cp /defaults/logging.properties /config
+ fi
+-
+-chown -R jvb:jitsi /config
+diff -Nur docker-jitsi-meet/jvb/rootfs/etc/services.d/jvb/run docker-jitsi-meet-ocp/jvb/rootfs/etc/services.d/jvb/run
+--- docker-jitsi-meet/jvb/rootfs/etc/services.d/jvb/run	2020-05-09 14:03:43.371945993 +0200
++++ docker-jitsi-meet-ocp/jvb/rootfs/etc/services.d/jvb/run	2020-05-08 20:16:05.072424665 +0200
+@@ -12,5 +12,5 @@
+ 
+ DAEMON_OPTS=${JVB_ENABLE_APIS:=$DEFAULT_DAEMON_OPTS}
+ 
+-exec s6-setuidgid jvb /bin/bash -c "JAVA_SYS_PROPS=\"$JAVA_SYS_PROPS\" exec $DAEMON --apis=${DAEMON_OPTS}"
++exec /bin/bash -c "JAVA_SYS_PROPS=\"$JAVA_SYS_PROPS\" exec $DAEMON --apis=${DAEMON_OPTS}"
+ 
+diff -Nur docker-jitsi-meet/prosody/Dockerfile docker-jitsi-meet-ocp/prosody/Dockerfile
+--- docker-jitsi-meet/prosody/Dockerfile	2020-05-09 14:03:43.371945993 +0200
++++ docker-jitsi-meet-ocp/prosody/Dockerfile	2020-05-08 20:16:05.072424665 +0200
+@@ -3,6 +3,7 @@
+ 
+ ADD https://prosody.im/files/prosody-debian-packages.key /tmp/prosody.key
+ 
++# Install
+ RUN \
+     apt-key add /tmp/prosody.key \
+     && rm -f /tmp/prosody.key \
+@@ -44,10 +45,24 @@
+     && apt-cleanup \
+     && rm -rf /tmp/pkg /var/cache/apt
+ 
+-RUN patch -d /usr/lib/prosody/modules/muc -p0 < /prosody-plugins/muc_owner_allow_kick.patch
+-
+ COPY rootfs/ /
+ 
++RUN \
++    patch -d /usr/lib/prosody/modules/muc -p0 < /prosody-plugins/muc_owner_allow_kick.patch && \
++    patch -d /usr/bin -p1 < /prosodyctl-certdir-permission-fix.patch
++
++# Apply config
++RUN echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf
++
++# Fix permissions
++RUN \
++  /fix-permissions.sh && \
++  touch /etc/saslauthd.conf && \
++  chmod g=u -R /prosody-plugins /etc/saslauthd.conf && \
++  chgrp -R root /etc/sasldb2 /run/saslauthd
++
+ EXPOSE 5222 5269 5347 5280
+ 
+ VOLUME ["/config", "/prosody-plugins-custom"]
++
++USER 1001
+diff -Nur docker-jitsi-meet/prosody/rootfs/defaults/conf.d/jitsi-meet.cfg.lua docker-jitsi-meet-ocp/prosody/rootfs/defaults/conf.d/jitsi-meet.cfg.lua
+--- docker-jitsi-meet/prosody/rootfs/defaults/conf.d/jitsi-meet.cfg.lua	2020-05-09 14:03:43.371945993 +0200
++++ docker-jitsi-meet-ocp/prosody/rootfs/defaults/conf.d/jitsi-meet.cfg.lua	2020-05-08 20:16:05.072424665 +0200
+@@ -1,5 +1,5 @@
+ admins = { "{{ .Env.JICOFO_AUTH_USER }}@{{ .Env.XMPP_AUTH_DOMAIN }}" }
+-plugin_paths = { "/prosody-plugins/", "/prosody-plugins-custom" }
++plugin_paths = { "/prosody-plugins", "/prosody-plugins-custom" }
+ http_default_host = "{{ .Env.XMPP_DOMAIN }}"
+ 
+ {{ $ENABLE_AUTH := .Env.ENABLE_AUTH | default "0" | toBool }}
+diff -Nur docker-jitsi-meet/prosody/rootfs/defaults/prosody.cfg.lua docker-jitsi-meet-ocp/prosody/rootfs/defaults/prosody.cfg.lua
+--- docker-jitsi-meet/prosody/rootfs/defaults/prosody.cfg.lua	2020-05-09 14:03:43.371945993 +0200
++++ docker-jitsi-meet-ocp/prosody/rootfs/defaults/prosody.cfg.lua	2020-05-08 20:16:05.072424665 +0200
+@@ -93,8 +93,6 @@
+ 
+ daemonize = false;
+ 
+-pidfile = "/config/data/prosody.pid";
+-
+ -- Force clients to use encrypted connections? This option will
+ -- prevent clients from authenticating unless they are using encryption.
+ 
+diff -Nur docker-jitsi-meet/prosody/rootfs/etc/cont-init.d/10-config docker-jitsi-meet-ocp/prosody/rootfs/etc/cont-init.d/10-config
+--- docker-jitsi-meet/prosody/rootfs/etc/cont-init.d/10-config	2020-05-09 14:03:43.371945993 +0200
++++ docker-jitsi-meet-ocp/prosody/rootfs/etc/cont-init.d/10-config	2020-05-08 20:16:05.073424662 +0200
+@@ -2,27 +2,12 @@
+ 
+ if [[ ! -f /etc/saslauthd.conf ]]; then
+   tpl /defaults/saslauthd.conf > /etc/saslauthd.conf
+-  mkdir -pm777 /var/run/saslauthd
+-  adduser prosody sasl
+-  echo >> /etc/ldap/ldap.conf "TLS_REQCERT allow"
+ fi
+ 
+ PROSODY_CFG="/config/prosody.cfg.lua"
+ 
+ if [[ ! -d /config/data ]]; then
+-    mkdir -pm 750 /config/data
+-fi
+-
+-if [[ "$(stat -c %U /config)" != "prosody" ]]; then
+-    chown -R prosody /config
+-fi
+-
+-if [[ "$(stat -c %U /prosody-plugins)" != "prosody" ]]; then
+-    chown -R prosody /prosody-plugins
+-fi
+-
+-if [[ "$(stat -c %U /prosody-plugins-custom)" != "prosody" ]]; then
+-    chown -R prosody /prosody-plugins-custom
++    mkdir -pm 770 /config/data
+ fi
+ 
+ if [[ ! -f $PROSODY_CFG ]]; then
+diff -Nur docker-jitsi-meet/prosody/rootfs/etc/services.d/10-saslauthd/run docker-jitsi-meet-ocp/prosody/rootfs/etc/services.d/10-saslauthd/run
+--- docker-jitsi-meet/prosody/rootfs/etc/services.d/10-saslauthd/run	2020-05-09 14:03:43.372945991 +0200
++++ docker-jitsi-meet-ocp/prosody/rootfs/etc/services.d/10-saslauthd/run	2020-05-08 20:16:05.073424662 +0200
+@@ -1,2 +1,2 @@
+ #!/usr/bin/with-contenv bash
+-exec s6-setuidgid root saslauthd -a ldap -O /etc/saslauthd.conf -c -m /var/run/saslauthd -n 5 -d
++exec saslauthd -a ldap -O /etc/saslauthd.conf -c -m /var/run/saslauthd -n 5 -d
+diff -Nur docker-jitsi-meet/prosody/rootfs/etc/services.d/prosody/run docker-jitsi-meet-ocp/prosody/rootfs/etc/services.d/prosody/run
+--- docker-jitsi-meet/prosody/rootfs/etc/services.d/prosody/run	2020-05-09 14:03:43.372945991 +0200
++++ docker-jitsi-meet-ocp/prosody/rootfs/etc/services.d/prosody/run	2020-05-08 20:16:05.073424662 +0200
+@@ -1,3 +1,3 @@
+ #!/usr/bin/with-contenv bash
+-exec s6-setuidgid prosody prosody --config /config/prosody.cfg.lua
++exec prosody --config /config/prosody.cfg.lua
+ 
+diff -Nur docker-jitsi-meet/prosody/rootfs/prosodyctl-certdir-permission-fix.patch docker-jitsi-meet-ocp/prosody/rootfs/prosodyctl-certdir-permission-fix.patch
+--- docker-jitsi-meet/prosody/rootfs/prosodyctl-certdir-permission-fix.patch	1970-01-01 01:00:00.000000000 +0100
++++ docker-jitsi-meet-ocp/prosody/rootfs/prosodyctl-certdir-permission-fix.patch	2020-05-09 14:37:34.645844556 +0200
+@@ -0,0 +1,27 @@
++diff --git a/prosodyctl b/prosodyctl
++index 964285a..0fcf2a5 100755
++--- a/prosodyctl
+++++ b/prosodyctl
++@@ -803,15 +803,17 @@ function commands.cert(arg)
++ 			return 1; -- TODO Should we create it?
++ 		end
++ 		local uid = pposix.getuid();
++-		if uid ~= 0 and uid ~= cert_dir_attrs.uid then
++-			show_warning("The directory "..cert_basedir.." is not owned by the current user, won't be able to write files to it");
+++		local gid = pposix.getgid();
+++		if uid ~= 0 and not (
+++			(cert_dir_attrs.permissions:match("^.w.......$") and uid == cert_dir_attrs.uid) or
+++			(cert_dir_attrs.permissions:match("^....w....$") and gid == cert_dir_attrs.gid) or
+++			cert_dir_attrs.permissions:match("^.......w.$")
+++		) then
+++			show_warning("The directory "..cert_basedir.." is not writable by this user");
++ 			return 1;
++ 		elseif not cert_dir_attrs.permissions then -- COMPAT with LuaFilesystem < 1.6.2 (hey CentOS!)
++ 			show_message("Unable to check permissions on "..cert_basedir.." (LuaFilesystem 1.6.2+ required)");
++ 			show_message("Please confirm that Prosody (and only Prosody) can write to this directory)");
++-		elseif cert_dir_attrs.permissions:match("^%.w..%-..%-.$") then
++-			show_warning("The directory "..cert_basedir.." not only writable by its owner");
++-			return 1;
++ 		end
++ 		local subcmd = table.remove(arg, 1);
++ 		if type(cert_commands[subcmd]) == "function" then
+diff -Nur docker-jitsi-meet/web/Dockerfile docker-jitsi-meet-ocp/web/Dockerfile
+--- docker-jitsi-meet/web/Dockerfile	2020-05-09 14:03:43.373945988 +0200
++++ docker-jitsi-meet-ocp/web/Dockerfile	2020-05-08 20:16:05.073424662 +0200
+@@ -20,6 +20,10 @@
+ 	chmod a+x /usr/local/bin/certbot-auto && \
+ 	certbot-auto --noninteractive --install-only
+ 
+-EXPOSE 80 443
++RUN /fix-permissions.sh
++
++EXPOSE 8080 8443
+ 
+ VOLUME ["/config", "/etc/letsencrypt", "/usr/share/jitsi-meet/transcripts"]
++
++USER 1001
+diff -Nur docker-jitsi-meet/web/rootfs/defaults/default docker-jitsi-meet-ocp/web/rootfs/defaults/default
+--- docker-jitsi-meet/web/rootfs/defaults/default	2020-05-09 14:03:43.374945986 +0200
++++ docker-jitsi-meet-ocp/web/rootfs/defaults/default	2020-05-08 20:16:05.073424662 +0200
+@@ -1,5 +1,5 @@
+ server {
+-	listen 80 default_server;
++	listen 8080 default_server;
+ 
+ 	{{ if .Env.ENABLE_HTTP_REDIRECT | default "0" | toBool }}
+ 	return 301 https://$host$request_uri;
+@@ -10,7 +10,7 @@
+ 
+ {{ if not (.Env.DISABLE_HTTPS | default "0" | toBool) }}
+ server {
+-	listen 443 ssl http2;
++	listen 8443 ssl http2;
+ 
+ 	include /config/nginx/ssl.conf;
+ 	include /config/nginx/meet.conf;
+diff -Nur docker-jitsi-meet/web/rootfs/defaults/nginx.conf docker-jitsi-meet-ocp/web/rootfs/defaults/nginx.conf
+--- docker-jitsi-meet/web/rootfs/defaults/nginx.conf	2020-05-09 14:03:43.374945986 +0200
++++ docker-jitsi-meet-ocp/web/rootfs/defaults/nginx.conf	2020-05-08 20:16:05.073424662 +0200
+@@ -1,4 +1,3 @@
+-user www-data;
+ worker_processes 4;
+ pid /run/nginx.pid;
+ include /etc/nginx/modules-enabled/*.conf;
+@@ -59,7 +58,7 @@
+ 	##
+ 	# Virtual Host Configs
+ 	##
+-        include /config/nginx/site-confs/*;
++	include /config/nginx/site-confs/*;
+ }
+ 
+ 
+diff -Nur docker-jitsi-meet/web/rootfs/etc/cont-init.d/10-config docker-jitsi-meet-ocp/web/rootfs/etc/cont-init.d/10-config
+--- docker-jitsi-meet/web/rootfs/etc/cont-init.d/10-config	2020-05-09 14:03:43.374945986 +0200
++++ docker-jitsi-meet-ocp/web/rootfs/etc/cont-init.d/10-config	2020-05-08 20:16:05.073424662 +0200
+@@ -3,7 +3,6 @@
+ # make our folders
+ mkdir -p \
+     /config/{nginx/site-confs,keys} \
+-    /run \
+     /var/lib/nginx/tmp/client_body \
+     /var/tmp/nginx
+ 
