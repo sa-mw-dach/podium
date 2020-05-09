@@ -140,7 +140,7 @@
                 mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/media/; mkdir -p /opt/app-root/src/data/gitrepo/docs/wiki/pages/;
                 ln -sf ../../../../../data/media/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/media/wiki;
                 ln -sf ../../../../../data/pages/wiki/ /opt/app-root/src/data/gitrepo/docs/wiki/pages/wiki;
-              image: rhscl/s2i-base-rhel7
+              image: quay.io/podium/s2i-base-rhel7:latest
               imagePullPolicy: Always
               name: clone-github-repo
               resources:

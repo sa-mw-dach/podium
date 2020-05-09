@@ -241,7 +241,7 @@
                   name: jitsi-config
               - secretRef:
                   name: jitsi-secret
-              image: ktenzer/jitsi-prosody:build_4392
+              image: quay.io/podium/jitsi-prosody:4548-ocp
               imagePullPolicy: Always
               name: prosody
               readinessProbe:
@@ -311,7 +311,7 @@
                 periodSeconds: 3
               ports:
               - containerPort: 8888
-              image: ktenzer/jitsi-jicofo:build_4392
+              image: quay.io/podium/jitsi-jicofo:4548-ocp
               imagePullPolicy: Always
               name: jicofo
             restartPolicy: Always
@@ -372,7 +372,7 @@
                   port: 8080
                 initialDelaySeconds: 10
                 periodSeconds: 3
-              image: ktenzer/jitsi-jvb:build_4392
+              image: quay.io/podium/jitsi-jvb:4548-ocp
               imagePullPolicy: Always
               name: jvb
               resources: {}
@@ -414,7 +414,7 @@
                 value: http://$(PROSODY_SERVICE_HOST):$(PROSODY_SERVICE_PORT_5280)
               - name: ETHERPAD_URL_BASE
                 value: http://$(ETHERPAD_SERVICE_HOST):$(ETHERPAD_SERVICE_PORT)
-              image: ktenzer/jitsi-web:build_4392
+              image: quay.io/podium/jitsi-web:4548-ocp
               imagePullPolicy: Always
               name: web
               ports:

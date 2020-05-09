@@ -166,7 +166,7 @@
               name: mattermost-team-edition
           spec:
             containers:
-            - image: mattermost/mattermost-team-edition:5.11.0
+            - image: quay.io/podium/mattermost-team-edition:5.11.0
               imagePullPolicy: IfNotPresent
               securityContext:
                 privileged: true
@@ -212,7 +212,7 @@
               - -c
               - until curl --max-time 5 http://mattermost-mysql:3306; do echo waiting for
                 mattermost-mysql; sleep 5; done;
-              image: appropriate/curl:latest
+              image: quay.io/podium/curl:latest
               imagePullPolicy: IfNotPresent
               name: init-mysql
               terminationMessagePath: /dev/termination-log
@@ -276,7 +276,7 @@
                 value: mmuser
               - name: MYSQL_DATABASE
                 value: mattermost
-              image: mysql:5.7.14
+              image: quay.io/podium/mysql:5.7.14
               imagePullPolicy: IfNotPresent
               securityContext:
                 privileged: true
@@ -322,7 +322,7 @@
               - rm
               - -fr
               - /var/lib/mysql/lost+found
-              image: busybox:1.29.3
+              image: quay.io/podium/busybox:1.29.3
               imagePullPolicy: IfNotPresent
               name: remove-lost-found
               resources:

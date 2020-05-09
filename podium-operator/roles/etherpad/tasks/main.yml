@@ -28,7 +28,7 @@
                 value: "{{etherpad.default_text}}"
               - name: DEFAULT_PAD_TEXT
                 value: "{{etherpad.default_text}}"
-              image: etherpad/etherpad
+              image: quay.io/podium/etherpad:4548-ocp
               imagePullPolicy: Always
               name: etherpad
               readinessProbe:

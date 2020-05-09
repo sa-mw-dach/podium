@@ -23,7 +23,7 @@
               name: drawio
           spec:
             containers:
-            - image: docker.io/jgraph/drawio
+            - image: quay.io/podium/drawio:latest
               imagePullPolicy: Always
               name: drawio
               ports:

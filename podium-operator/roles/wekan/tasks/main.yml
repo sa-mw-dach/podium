@@ -96,7 +96,7 @@
                   secretKeyRef:
                     key: database-name
                     name: mongodb
-              image: registry.redhat.io/rhscl/mongodb-36-rhel7
+              image: quay.io/podium/mongodb-36-rhel7:latest
               imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 3
@@ -184,7 +184,7 @@
                 value: https://wekan-{{ meta.namespace }}.{{ application_domain }}/
               - name: PORT
                 value: "8080"
-              image: wekanteam/wekan:latest
+              image: quay.io/podium/wekan:latest
               imagePullPolicy: Always
               livenessProbe:
                 failureThreshold: 30
