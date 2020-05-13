@@ -1,0 +1,110 @@
+---
+- name: Deploy mindmaps
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: mindmaps
+        namespace: "{{ meta.namespace }}"
+        labels:
+          app: "{{mindmaps.application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{mindmaps.application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{mindmaps.application_name}}"
+              name: mindmaps
+          spec:
+            containers:
+            - image: quay.io/podium/mindmaps:latest
+              imagePullPolicy: Always
+              name: mindmaps
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 8081
+                initialDelaySeconds: 60
+                periodSeconds: 10
+                timeoutSeconds: 60
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: 8081
+                initialDelaySeconds: 120
+                periodSeconds: 10
+              ports:
+              - containerPort: 8081
+            restartPolicy: Always
+        triggers:
+        - type: ConfigChange
+- name: Deploy mindmaps service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: "{{ meta.namespace }}"
+        labels:
+          app: "{{mindmaps.application_name}}"
+        name: mindmaps
+      spec:
+        ports:
+        - port: 8081
+          targetPort: 8081
+        selector:
+          app: "{{mindmaps.application_name}}"
+          name: mindmaps
+      status:
+        loadBalancer: {}
+- name: Deploy mindmaps route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ meta.namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+          kubernetes.io/tls-acme: "true"
+        name: mindmaps
+      spec:
+        host: "mindmaps-{{ meta.namespace }}.{{application_domain}}"
+        port:
+          targetPort: 8081
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: mindmaps
+          weight: 100
+        wildcardPolicy: None
+  when: lets_encrypt      
+- name: Deploy mindmaps route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ meta.namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+        name: mindmaps
+      spec:
+        host: "mindmaps-{{ meta.namespace }}.{{application_domain}}"
+        port:
+          targetPort: 8081
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: mindmaps
+          weight: 100
+        wildcardPolicy: None
+  when: not lets_encrypt      

@@ -23,6 +23,13 @@
   when: etherpad.enable
 
 - debug:
+    msg: Deploy Etherdraw (Real-time whiteboard) set to {{ etherdraw.enable }}
+- name: Deploy etherdraw
+  include_role:
+    name: etherdraw
+  when: etherdraw.enable
+
+- debug:
     msg: Deploy Jitsi (Video Conferencing) set to {{ jitsi.enable }}
 - name: Deploy jitsi
   include_role:
@@ -56,6 +63,13 @@
   include_role:
     name: drawio
   when: drawio.enable
+
+- debug:
+    msg: Deploy Mindmaps (Organizational tool) set to {{ mindmaps.enable }}
+- name: Deploy mindmaps
+  include_role:
+    name: mindmaps
+  when: mindmaps.enable
 
 - debug:
     msg: Deploy Mozaik (Dashboard) set to {{ mozaik.enable }}

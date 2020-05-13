@@ -85,7 +85,7 @@
               name: dokuwiki
           spec:
             containers:
-            - image: quay.io/ktenzer/dokuwiki:latest
+            - image: quay.io/podium/dokuwiki:gitbacked
               imagePullPolicy: Always
               livenessProbe:
                 failureThreshold: 3
