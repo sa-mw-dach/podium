@@ -42,7 +42,7 @@ objects:
           deploymentconfig: mindmaps
       spec:
         containers:
-                - image: quay.io/podium/mindmaps:latest
+        - image: quay.io/podium/mindmaps:latest
           imagePullPolicy: Always
           name: mindmaps
           resources: {}
