@@ -1,0 +1,114 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: "Etherdraw Template for Podium App"
+  creationTimestamp: null
+  name: etherdraw
+objects:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      alpha.image.policy.openshift.io/resolve-names: '*'
+      app.openshift.io/vcs-ref: master
+      app.openshift.io/vcs-uri: https://github.com/shetze/draw.git
+      deployment.kubernetes.io/revision: "2"
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"etherdraw:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"etherdraw\")].image"}]'
+    labels:
+      app: etherdraw
+      app.kubernetes.io/component: etherdraw
+      app.kubernetes.io/instance: etherdraw
+      app.kubernetes.io/part-of: etherdraw
+    name: etherdraw
+    namespace: etherdraw
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: etherdraw
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: etherdraw
+          deploymentconfig: etherdraw
+      spec:
+        containers:
+        - image: quay.io/podium/etherdraw:latest
+          imagePullPolicy: Always
+          name: etherdraw
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      app.openshift.io/vcs-ref: master
+      app.openshift.io/vcs-uri: https://github.com/shetze/draw.git
+    labels:
+      app: etherdraw
+      app.kubernetes.io/component: etherdraw
+      app.kubernetes.io/instance: etherdraw
+      app.kubernetes.io/part-of: etherdraw
+    name: etherdraw
+    namespace: etherdraw
+  spec:
+    ports:
+    - port: 9002
+      protocol: TCP
+      targetPort: 9002
+    selector:
+      app: etherdraw
+      deploymentconfig: etherdraw
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+    labels:
+      app: etherdraw
+      app.kubernetes.io/component: etherdraw
+      app.kubernetes.io/instance: etherdraw
+      app.kubernetes.io/part-of: etherdraw
+    name: etherdraw
+    namespace: etherdraw
+  spec:
+    host: etherdraw-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}
+    port:
+      targetPort: 9002
+    to:
+      kind: Service
+      name: etherdraw
+      weight: 100
+    wildcardPolicy: None
+parameters:
+  - name: NAMESPACE
+    displayName: Application Name
+    description: the name and label for all components
+    value: podium
+    required: true 
+  - name: GUID
+    displayName: Application GUID
+    description: the GUID name component for the individual instance in a series of application deployments, typically a dash followed by a 4 character string like -f3ax
+    required: false
+  - name: APPLICATION_DOMAIN
+    displayName: Application Domain
+    description: Application domain name used in route to service
+    value: apps.cloud.example.com
+    required: true
