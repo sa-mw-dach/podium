@@ -1,14 +1,16 @@
 # Podium
 ![](docs/images/podium_logo.png)
 
-Communication is the key to any high performing team. Podium is a containerized deployment of a set of leading opensource communication tools that allow teams interact more effectively in a remote (post COVID-19) world. Podium brings tools together in a way that that allows not only a team to interact better but even more importantly attempts to re-create the incidental interactions so lacking in a virtual-only world. All those watercooler, breakroom encounters we thought were a waste of time, were critical to our productivity. Podium not only promotes incidental interactions virtually but also allows team stakeholders or external members to better interact with teams. Podium takes a team approach to collaboration instead of an organizational approach. Podium currently provides the following components:
+Communication is the key to any high performing team. Podium is a containerized deployment of a set of leading opensource communication and collaboration tools that allow teams interact more effectively in a remote (post COVID-19) world. Podium brings tools together in a way that that allows not only a team to interact better but even more importantly attempts to re-create the incidental interactions so lacking in a virtual-only world. All those watercooler, breakroom encounters we thought were a waste of time, were critical to our productivity. Podium not only promotes incidental interactions virtually but also allows team stakeholders or external members to better interact with teams. Podium takes a team approach to collaboration instead of an organizational approach. Podium currently provides the following components:
 * [Dashboard (Mozaik)](http://mozaik.rocks/)
-* [Chat (Mattermost)](https://mattermost.com/)
 * [Video Conferencing (Jitsi Meet)](https://jitsi.org/jitsi-meet/)
-* [Real-time Document Editing (Etherpad)](https://etherpad.org/)
-* [Diagram Drawing (Drawio)](https://github.com/jgraph/drawio)
+* [Chat (Mattermost)](https://mattermost.com/)
+* [Real-time Document Editing (EtherPad)](https://etherpad.org/)
+* [Real-time Image Drawing (EtherDraw)](https://github.com/JohnMcLear/draw)
 * [Wiki (Dokuwiki)](https://www.dokuwiki.org/dokuwiki)
+* [Diagram Drawing (Drawio)](https://github.com/jgraph/drawio)
 * [Kanban Board (Wekan)](https://github.com/wekan/wekan)
+* [Mindmaps](https://github.com/drichard/mindmaps)
 
 [Podium Introduction Video and Demo](https://youtu.be/ZqHwEURHfJY)
 
