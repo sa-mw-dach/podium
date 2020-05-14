@@ -1,0 +1,110 @@
+---
+- name: Deploy etherdraw
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: etherdraw
+        namespace: "{{ meta.namespace }}"
+        labels:
+          app: "{{etherdraw.application_name}}"
+      spec:
+        replicas: 1
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            app: "{{etherdraw.application_name}}"
+        template:
+          metadata:
+            labels:
+              app: "{{etherdraw.application_name}}"
+              name: etherdraw
+          spec:
+            containers:
+            - image: quay.io/podium/etherdraw:latest
+              imagePullPolicy: Always
+              name: etherdraw
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 9002
+                initialDelaySeconds: 60
+                periodSeconds: 10
+                timeoutSeconds: 60
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: 9002
+                initialDelaySeconds: 120
+                periodSeconds: 10
+              ports:
+              - containerPort: 9002
+            restartPolicy: Always
+        triggers:
+        - type: ConfigChange
+- name: Deploy etherdraw service
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: "{{ meta.namespace }}"
+        labels:
+          app: "{{etherdraw.application_name}}"
+        name: etherdraw
+      spec:
+        ports:
+        - port: 9002
+          targetPort: 9002
+        selector:
+          app: "{{etherdraw.application_name}}"
+          name: etherdraw
+      status:
+        loadBalancer: {}
+- name: Deploy etherdraw route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ meta.namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+          kubernetes.io/tls-acme: "true"
+        name: etherdraw
+      spec:
+        host: "etherdraw-{{ meta.namespace }}.{{application_domain}}"
+        port:
+          targetPort: 9002
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: etherdraw
+          weight: 100
+        wildcardPolicy: None
+  when: lets_encrypt      
+- name: Deploy etherdraw route
+  k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        namespace: "{{ meta.namespace }}"
+        annotations:
+          openshift.io/host.generated: "true"
+        name: etherdraw
+      spec:
+        host: "etherdraw-{{ meta.namespace }}.{{application_domain}}"
+        port:
+          targetPort: 9002
+        tls:
+          termination: edge
+        to:
+          kind: Service
+          name: etherdraw
+          weight: 100
+        wildcardPolicy: None
+  when: not lets_encrypt      

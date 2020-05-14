@@ -12,14 +12,15 @@ spec:
     application_name: etherpad
     default_title: "Welcome to Etherpad"
     default_text: "Etherpad is a real-time text editor"
+  etherdraw:
+    enable: true
+    application_name: etherdraw
   jitsi:
     enable: true
     application_name: jitsi
     jicofo_component_secret: s3cr3t
     jicofo_auth_user: focus
-    jicofo_auth_password: <password>
     jvb_auth_user: jvb
-    jvb_auth_password: <password>
     jvb_brewery_muc: jvbbrewery
     jvb_tcp_harvester_disabled: 'true'
     jvb_enable_apis: rest
@@ -44,6 +45,9 @@ spec:
     default_acl: 8
     enable_git_push_integer: 1
     admin_password_hash: '$2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.'
+  mindmaps:
+    enable: true
+    application_name: mindmaps
   mozaik:
     enable: true
     application_name: mozaik
