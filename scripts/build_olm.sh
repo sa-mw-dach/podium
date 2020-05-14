@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION="1.0.4"
+VERSION="1.0.5"
 
 cd ../podium-operator
 echo "Building Operator..."
@@ -19,7 +19,7 @@ sudo docker push quay.io/podium/podium-operator-catalog:$VERSION
 if [ $? != 0 ]; then exit 1; fi
 
 echo "Building OPM Catalog Index..."
-sudo opm index add -c docker --bundles quay.io/podium/podium-operator-catalog:1.0.2 --bundles quay.io/podium/podium-operator-catalog:1.0.3 --bundles quay.io/podium/podium-operator-catalog:$VERSION --tag quay.io/podium/podium-operator-index:$VERSION
+sudo opm index add -c docker --bundles quay.io/podium/podium-operator-catalog:1.0.2 --bundles quay.io/podium/podium-operator-catalog:1.0.3 --bundles quay.io/podium/podium-operator-catalog:1.0.4 --bundles quay.io/podium/podium-operator-catalog:$VERSION --tag quay.io/podium/podium-operator-index:$VERSION
 if [ $? != 0 ]; then exit 1; fi
 
 echo "Pushing Catalog Index to registry..."
