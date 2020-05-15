@@ -26,7 +26,7 @@ metadata:
   name: podium-operator-catalog
 spec:
   sourceType: grpc
-  image: quay.io/podium/podium-operator-index:1.0.4
+  image: quay.io/podium/podium-operator-index:1.0.5
   displayName: Podium Operator Catalog
   publisher: Podium Community
 ```
@@ -151,6 +151,12 @@ spec:
     default_acl: 8
     enable_git_push_integer: 1
     admin_password_hash: $2y$10$Az2nsAQKqNHWj09YV33v8.VWEmmXRKFm5AxfFWOAGGO4JDIsglIm.
+  etherdraw:
+    enable: true
+    application_name: etherdraw
+  mindmaps:
+    enable: true
+    application_name: mindmaps
   mozaik:
     enable: true
     application_name: mozaik
