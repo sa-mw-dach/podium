@@ -1,9 +1,10 @@
 # Jitsi Meet
 A lightweight opensource video conferencing tool. Jitsi Meet has 4 service components: jicofo prosody web jvb. Currently we are using an all-in-one image that runs a single pod and these four services as containers within the pod. 
 
-Jitsi has two modes of communication peer-to-peer and video bridge. For meetings with more than two people the video bridge is required. When using the video bridge TCP/UDP connections will be made from the client (browser/app) to the JVB service. The node running the JVB service must have an public IP. In this configuration we are using a node port on the jvb service. The following ports must be open to the node running the jvb service:
-* 30000 (TCP/UDP) JVB Service
-* 3478 (TCP/UDP) Stun Server 
+Jitsi has two modes of communication peer-to-peer and video bridge. For meetings with more than two people the video bridge is required. When using the video bridge TCP/UDP connections will be made from the client (browser/app) to the JVB service. The node running the JVB service must have an public IP. In this configuration we are using a node port on the jvb service. The following ports must be open:
+* Port 30000 TCP/UDP ingress must be open on the node running the jvb pod.
+* Port 3478 TCP/UDP egress must be open for from jvb node to STUN server.
+* Ports 5347 TCP, 5222 TCP and 5280 TCP ingress must be open on all nodes running jitsi pods jvb, jicofo, prosody and web.
 
 If you are having issues with video bridge, likely it is a firewall issue.
 

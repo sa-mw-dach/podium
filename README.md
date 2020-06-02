@@ -22,10 +22,11 @@ An instance of podium will deploy all components and configure a dashboard so al
 If you would like to see a feature or addition please open a issue and feel welcome to contribute.
 
 ## Pre-requisites
-* OpenShift or Kubernetes environment
-* Public or rotable IP on at least one node.
-* Port 30000 or whatever the jvb node port is on UDP needs to be open to public or routable IP.
-* Port 3478 TCP/UDP needs to be open to public or routable IP.
+* OpenShift environment
+* Public or rotable IP exists on node running the jvb (jitsi video bridge) pod.
+* Port 30000 TCP/UDP ingress must be open on the node running the jvb pod.
+* Port 3478 TCP/UDP egress must be open for from jvb node to STUN server.
+* Ports 5347 TCP, 5222 TCP and 5280 TCP ingress must be open on all nodes running jitsi pods jvb, jicofo, prosody and web.
 * TLS certificate solution like Let's Encrypt.
 
 ## Lets Encrypt Certificate
