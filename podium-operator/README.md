@@ -3,7 +3,7 @@ The podium operator will mange the deployment of podium environments accross the
 
 ## Pre-requisites
 * OpenShift environment
-* Public or rotable IP exists on node running the jvb (jitsi video bridge) pod.
+* Public or routable IP exists on node running the jvb (jitsi video bridge) pod.
 * Port 30000 TCP/UDP ingress must be open on the node running the jvb pod.
 * Port 3478 TCP/UDP egress must be open for from jvb node to STUN server.
 * Ports 5347 TCP, 5222 TCP and 5280 TCP ingress must be open on all nodes running jitsi pods jvb, jicofo, prosody and web.
@@ -165,6 +165,67 @@ spec:
 ```
 
 ```$ oc create -f podium.yaml -n <namespace>```
+
+#### Customize Podium Dashboard
+The podium dashboard is fully customizable. Each widget can be replaced with your own tools. You need to provide the URL to your tool, a name and sometimes a image URL.
+
+An example for adding bluejeans and google chat would be as follows:
+
+```
+  mozaik:
+    enable: true
+    application_name: mozaik
+    custom_meeting_1_name: Bluejeans
+    custom_meeting_1_url: https://redhat.bluejeans.com/5841755887
+    custom_meeting_1_image_url: https://www.pennmedicine.org/-/media/images/logos/bluejeans%20logo.ashx?la=en
+    custom_chat_name: GoogleChat
+    custom_chat_url: https://chat.google.com/u/1/room/AAAAAf9HfUc
+    custom_chat_image_url: https://1000logos.net/wp-content/uploads/2020/05/Google-Hangouts-Logo-640x360.png
+```
+
+An entire list of all the parameters can be found below:
+
+```
+  mozaik:
+    enable: true
+    application_name: mozaik
+    custom_meeting_1_name:
+    custom_meeting_1_url:
+    custom_meeting_1_image_url:
+    custom_meeting_2_name:
+    custom_meeting_2_url:
+    custom_meeting_2_image_url:
+    custom_meeting_3_name:
+    custom_meeting_3_url:
+    custom_meeting_3_image_url:
+    custom_wiki_name:
+    custom_wiki_url:
+    custom_wiki_image_url:
+    custom_etherpad_1_name:
+    custom_etherpad_1_url:
+    custom_etherpad_2_name:
+    custom_etherpad_2_url:
+    custom_etherpad_3_name:
+    custom_etherpad_3_url:
+    custom_etherdraw_1_name:
+    custom_etherdraw_1_url:
+    custom_etherdraw_2_name:
+    custom_etherdraw_2_url:
+    custom_etherdraw_3_name:
+    custom_etherdraw_3_url:
+    custom_draw_name:
+    custom_draw_url:
+    custom_draw_image_url:
+    custom_kanban_name:
+    custom_kanban_url:
+    custom_kanban_image_url:
+    custom_mindmaps_name:
+    custom_mindmaps_url:
+    custom_mindmaps_image_url:
+    custom_chat_name:
+    custom_chat_url:
+    custom_chat_image_url:
+```
 
 ### Delete Podium Operator
 
