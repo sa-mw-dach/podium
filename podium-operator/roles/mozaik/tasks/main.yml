@@ -35,11 +35,11 @@
     etherpad_3_name: "{{ meeting_3_name }} Agenda and Notes"
     etherpad_3_url: "https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_3_name }}"
     etherdraw_1_name: "{{ meeting_1_name }} Whiteboard"
-    etherdraw_1_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_1_name }}"
+    etherdraw_1_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ meeting_1_name }}"
     etherdraw_2_name: "{{ meeting_2_name }} Whiteboard"
-    etherdraw_2_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_2_name }}"
+    etherdraw_2_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ meeting_2_name }}"
     etherdraw_3_name: "{{ meeting_3_name }} Whiteboard"
-    etherdraw_3_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_3_name }}"
+    etherdraw_3_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ meeting_3_name }}"
 
 - name: Deploy Mozaik ConfigMap
   k8s:
