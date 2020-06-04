@@ -23,6 +23,7 @@ If you would like to see a feature or addition please open a issue and feel welc
 
 ## Pre-requisites
 * OpenShift environment
+* Block storage
 * Public or routable IP exists on node running the jvb (jitsi video bridge) pod.
 * Port 30000 TCP/UDP ingress must be open on the node running the jvb pod.
 * Port 3478 TCP/UDP egress must be open for from jvb node to STUN server.
