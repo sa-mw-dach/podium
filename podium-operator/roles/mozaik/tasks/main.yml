@@ -13,18 +13,6 @@
     wiki_name: "{{ mozaik.custom_wiki_url if mozaik.custom_wiki_url is defined else 'Wiki' }}"
     wiki_url: "{{ mozaik.custom_wiki_name if mozaik.custom_wiki_name is defined else 'https://dokuwiki-{{ meta.namespace }}.{{ application_domain }}' }}"
     wiki_image_url: "{{ mozaik.custom_wiki_image_url if mozaik.custom_wiki_image_url is defined else 'https://www.dokuwiki.org/_media/wiki:dokuwiki-128.png' }}"
-    etherpad_1_name: "{{ mozaik.custom_etherpad_1_name if mozaik.custom_etherpad_1_name is defined else 'Townhall Agenda and Notes' }}"
-    etherpad_1_url: "{{ mozaik.custom_etherpad_1_url if mozaik.custom_etherpad_1_url is defined else 'https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/Townhall' }}"
-    etherpad_2_name: "{{ mozaik.custom_etherpad_2_name if mozaik.custom_etherpad_2_name is defined else 'Roundtable Agenda and Notes' }}"
-    etherpad_2_url: "{{ mozaik.custom_etherpad_2_url if mozaik.custom_etherpad_2_url is defined else 'https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/Roundtable' }}"
-    etherpad_3_name: "{{ mozaik.custom_etherpad_3_name if mozaik.custom_etherpad_3_name is defined else 'Lobby Agenda and Notes' }}"
-    etherpad_3_url: "{{ mozaik.custom_etherpad_3_url if mozaik.custom_etherpad_3_url is defined else 'https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/Lobby' }}"
-    etherdraw_1_name: "{{ mozaik.custom_etherdraw_1_name if mozaik.custom_etherdraw_1_name is defined else 'Townhall Whiteboard' }}"
-    etherdraw_1_url: "{{ mozaik.custom_etherdraw_1_url if mozaik.custom_etherdraw_1_url is defined else 'https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/Townhall' }}"
-    etherdraw_2_name: "{{ mozaik.custom_etherdraw_2_name if mozaik.custom_etherdraw_2_name is defined else 'Roundtable Whiteboard' }}"
-    etherdraw_2_url: "{{ mozaik.custom_etherdraw_2_url if mozaik.custom_etherdraw_2_url is defined else 'https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/Roundtable' }}"
-    etherdraw_3_name: "{{ mozaik.custom_etherdraw_3_name if mozaik.custom_etherdraw_3_name is defined else 'Lobby Whiteboard' }}"
-    etherdraw_3_url: "{{ mozaik.custom_etherdraw_3_url if mozaik.custom_etherdraw_3_url is defined else 'https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/Lobby' }}"
     draw_name: "{{ mozaik.custom_draw_name if mozaik.custom_draw_name is defined else 'Draw.io' }}"
     draw_url: "{{ mozaik.custom_draw_url if mozaik.custom_draw_url is defined else 'https://drawio-{{ meta.namespace }}.{{ application_domain }}' }}"
     draw_image_url: "{{ mozaik.custom_draw_image_url if mozaik.custom_draw_image_url is defined else 'https://cdn.worldvectorlogo.com/logos/draw-io.svg' }}"
@@ -37,6 +25,21 @@
     chat_name: "{{ mozaik.custom_chat_name if mozaik.custom_chat_name is defined else 'Mattermost Chat' }}"
     chat_url: "{{ mozaik.custom_chat_url if mozaik.custom_chat_url is defined else 'https://chat-{{ meta.namespace }}.{{ application_domain }}' }}"
     chat_image_url: "{{ mozaik.custom_chat_image_url if mozaik.custom_chat_image_url is defined else 'https://cdn.freebiesupply.com/logos/large/2x/mattermost-logo-png-transparent.png' }}"
+
+- name: Set Etherpad/Etherdraw Dashboard Links
+  set_fact:
+    etherpad_1_name: "{{ meeting_1_name }} Agenda and Notes"
+    etherpad_1_url: "https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_1_name }}"
+    etherpad_2_name: "{{ meeting_2_name }} Agenda and Notes"
+    etherpad_2_url: "https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_2_name }}"
+    etherpad_3_name: "{{ meeting_3_name }} Agenda and Notes"
+    etherpad_3_url: "https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_3_name }}"
+    etherdraw_1_name: "{{ meeting_1_name }} Whiteboard"
+    etherdraw_1_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_1_name }}"
+    etherdraw_2_name: "{{ meeting_2_name }} Whiteboard"
+    etherdraw_2_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_2_name }}"
+    etherdraw_3_name: "{{ meeting_3_name }} Whiteboard"
+    etherdraw_3_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/p/{{ meeting_3_name }}"
 
 - name: Deploy Mozaik ConfigMap
   k8s:
