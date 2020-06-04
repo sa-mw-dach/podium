@@ -28,7 +28,7 @@ metadata:
   name: podium-operator-catalog
 spec:
   sourceType: grpc
-  image: quay.io/podium/podium-operator-index:1.0.5
+  image: quay.io/podium/podium-operator-index:1.0.6
   displayName: Podium Operator Catalog
   publisher: Podium Community
 ```
