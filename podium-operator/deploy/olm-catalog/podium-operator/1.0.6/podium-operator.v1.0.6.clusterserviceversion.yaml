@@ -190,18 +190,6 @@ spec:
         custom_wiki_name:
         custom_wiki_url:
         custom_wiki_image_url:
-        custom_etherpad_1_name:
-        custom_etherpad_1_url:
-        custom_etherpad_2_name:
-        custom_etherpad_2_url:
-        custom_etherpad_3_name:
-        custom_etherpad_3_url:
-        custom_etherdraw_1_name:
-        custom_etherdraw_1_url:
-        custom_etherdraw_2_name:
-        custom_etherdraw_2_url:
-        custom_etherdraw_3_name:
-        custom_etherdraw_3_url:
         custom_draw_name:
         custom_draw_url:
         custom_draw_image_url:
