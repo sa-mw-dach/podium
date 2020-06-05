@@ -113,6 +113,109 @@ objects:
       };
   
       module.exports = config;
+   redhat-conf: |
+      // Load environment variables from .env file if available
+      require('dotenv').load();
+  
+      var config = {
+          env:  'prod',
+  
+          host: '0.0.0.0',
+          port: process.env.PORT || 8080,
+  
+          // Available themes:
+          // + bordeau
+          // + harlequin
+          // + light-grey
+          // + light-yellow
+          // + night-blue
+          // + snow
+          // + yellow
+          theme: 'night-blue',
+  
+          // clients configs
+          api: {
+              github: {
+                  baseUrl: '${GIT_API}',
+                  token: '${GIT_TOKEN}'
+              }
+          },
+  
+          // define the interval used by Mozaïk Bus to call registered APIs
+          apisPollInterval: 15000,
+  
+          dashboards: [
+  
+              {
+                  // 4 x 3 dashboard
+                  columns: 4,
+                  rows:    3,
+                  widgets: [
+                      {
+                          type: 'embed.markup',
+                          title: 'Shared Storage',
+                          content: '<center><a href="https://drive.google.com" target="_blank" rel="noreferrer noopener"><img src="https://seeklogo.com/images/G/google-drive-logo-ED4F6E7476-seeklogo.com.png" alt="Google Drive" width="300" height="200"></a></center>',
+                          columns: 1, rows: 1,
+                          x: 0, y: 0
+                      },
+                      {
+                          type: 'github.repository_contributors_stats',
+                          repository: 'sa-mw-dach/podium',
+                          columns: 1, rows: 1,
+                          x: 2, y: 0
+                      },
+                      {
+                          type: 'mozaik.inspector',
+                          columns: 1, rows: 1,
+                          x: 1, y: 0
+                      },
+                      {
+                          type: 'embed.markup',
+                          title: 'Red Hatter´s HomeOffice',
+                          content: '<center><a href="https://bluejeans.com/111" target="_blank" rel="noreferrer noopener"><img src="https://images.saasworthy.com/bluejeans_5498_logo_1579759422_nayyu.jpg" alt="BlueJeans" width="300" height="200"></a>  <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/WorkPlace" target="_blank" rel="noreferrer noopener"><img src="https://cdn.pixabay.com/photo/2016/11/23/14/49/building-1853330_960_720.jpg" alt="WorkPlace Desk" width="300" height="200"></a>  <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/ThinkTank" target="_blank" rel="noreferrer noopener"><img src="https://cdn.pixabay.com/photo/2017/02/22/21/06/fractal-2090592_960_720.jpg" alt="ThinkTank" width="300" height="200"></a></center>',
+                          columns: 2, rows: 1,
+                          x: 1, y: 1
+                      },
+                      {
+                          type: 'time.clock',
+                          columns: 1, rows: 1,
+                          x: 3, y: 0
+                      },
+                      {
+                          type: 'embed.markup',
+                          title: 'Knowledge Base',
+                          content: '<center><a href="https://dokuwiki-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://www.dokuwiki.org/_media/wiki:dokuwiki-128.png" alt="Plenum Wiki" width="200" height="120"></a> <a href="https://openpracticelibrary.com/" target="_tab" rel="noreferrer noopener"><img src="https://d33wubrfki0l68.cloudfront.net/337d8258554af2343978fdbcd7e854298ab8062c/e7414/images/logo.svg" alt="Open Practice Library" width="200" height="120"></a></center>',
+                          columns: 1, rows: 1,
+                          x: 0, y: 1
+                      },
+                      {
+                          type: 'embed.markup',
+                          title: 'Collaboration Boards',
+                          content: '<a href="https://etherpad-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://raw.githubusercontent.com/sa-mw-dach/podium/master/docs/images/etherpad-300x600.png" alt="Etherpad" width="300" height="150"></a>  <ul> <li><a href="https://etherpad-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/p/Plenum" target="_tab" rel="noreferrer noopener">Plenum Agenda and Notes</a></li> <li><a href="https://etherpad-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/p/WorkPlace" target="_tab" rel="noreferrer noopener">WorkPlace Agenda and Notes</a></li> <li><a href="https://etherpad-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/p/ThinkTank" target="_tab" rel="noreferrer noopener">ThinkTank Agenda and Notes</a></li> <li><a href="https://etherpad-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/p/ToDo" target="_tab" rel="noreferrer noopener">ToDo Pad</a></li></ul><p><a href="https://etherdraw-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://raw.githubusercontent.com/sa-mw-dach/podium/master/docs/images/etherdraw-300x600.png" alt="Etherdraw" width="300" height="150"></a>  <ul> <li><a href="https://etherdraw-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/d/Plenum" target="_tab" rel="noreferrer noopener">Plenum Whiteboard</a></li> <li><a href="https://etherdraw-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/d/WorkPlace" target="_tab" rel="noreferrer noopener">WorkPlace Whiteboard</a></li> <li><a href="https://etherdraw-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/d/ThinkTank" target="_tab" rel="noreferrer noopener">ThinkTank Whiteboard</a></li> <li><a href="https://etherdraw-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/d/Draft" target="_tab" rel="noreferrer noopener">Draft Whiteboard</a></li></ul>',
+                          columns: 1, rows: 2,
+                          x: 3, y: 1
+                      },
+                      {
+                          type: 'embed.markup',
+                          title: 'Productivity Tools',
+                          content: '<center><a href="https://drawio-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://cdn.worldvectorlogo.com/logos/draw-io.svg" alt="Podium Draw.io" width="300" height="200"></a><a href="https://app.smartsheet.com/b/orgsso/97662287327824B8DDC5BD896C677BE2" target="_tab" rel="noreferrer noopener"><img src="https://www.qbssoftware.com/image/cache/catalog/qbs/smartsheet-550x550.png" alt="SmartSheet" width="300" height="200"></a><a href="https://mindmaps-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/" target="_tab" rel="noreferrer noopener"><img src="https://raw.githubusercontent.com/sa-mw-dach/podium/master/docs/images/mindmap.png" alt="Podium Mindmaps" width="300" height="200"></center>',
+                          columns: 2, rows: 1,
+                          x: 1, y: 2
+                      },
+                      {
+                          type: 'embed.markup',
+                          title: 'Chat',
+                          content: '<center><a href="https://chat.google.com" target="_blank" rel="noreferrer noopener"><img src="https://www.lclark.edu/live/image/gid/8/width/300/height/600/78198_hangouts_chat_2.rev.1555350502.png" alt="Google Chat" width="300" height="200"></a></center>',
+                          columns: 1, rows: 1,
+                          x: 0, y: 2
+                      }
+                  ]
+              },
+  
+          ]
+      };
+  
+      module.exports = config;
 parameters:
   - name: NAMESPACE
     displayName: Application Name
