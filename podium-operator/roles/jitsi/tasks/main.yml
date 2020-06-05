@@ -296,19 +296,6 @@
               env:
               - name: XMPP_SERVER
                 value: $(PROSODY_SERVICE_HOST)
-              readinessProbe:
-                httpGet:
-                  path: /about/health
-                  port: 8888
-                initialDelaySeconds: 5
-                periodSeconds: 3
-                timeoutSeconds: 60
-              livenessProbe:
-                httpGet:
-                  path: /about/health
-                  port: 8888
-                initialDelaySeconds: 10
-                periodSeconds: 3
               ports:
               - containerPort: 8888
               image: quay.io/podium/jitsi-jicofo:4548-ocp
@@ -359,19 +346,6 @@
                 value: $(JVB_SERVICE_PORT_UDP)
               - name: JVB_TCP_PORT
                 value: $(JVB_SERVICE_PORT_TCP)
-              readinessProbe:
-                httpGet:
-                  path: /about/health
-                  port: 8080
-                initialDelaySeconds: 5
-                periodSeconds: 3
-                timeoutSeconds: 60
-              livenessProbe:
-                httpGet:
-                  path: /about/health
-                  port: 8080
-                initialDelaySeconds: 10
-                periodSeconds: 3
               image: quay.io/podium/jitsi-jvb:4548-ocp
               imagePullPolicy: Always
               name: jvb

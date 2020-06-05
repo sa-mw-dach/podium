@@ -164,9 +164,11 @@ spec:
       mozaik:
         enable: true
         application_name: mozaik
+        custom_meeting_title: 'Keith Home Office'
         custom_meeting_1_name: Bluejeans
         custom_meeting_1_url: https://redhat.bluejeans.com/5841755887
         custom_meeting_1_image_url: https://www.pennmedicine.org/-/media/images/logos/bluejeans%20logo.ashx?la=en
+        custom_chat_title: 'Google Chat'
         custom_chat_name: GoogleChat
         custom_chat_url: https://chat.google.com/u/1/room/AAAAAf9HfUc
         custom_chat_image_url: https://1000logos.net/wp-content/uploads/2020/05/Google-Hangouts-Logo-640x360.png
@@ -178,6 +180,7 @@ spec:
       mozaik:
         enable: true
         application_name: mozaik
+        custom_meeting_title:
         custom_meeting_1_name:
         custom_meeting_1_url:
         custom_meeting_1_image_url:
@@ -187,9 +190,11 @@ spec:
         custom_meeting_3_name:
         custom_meeting_3_url:
         custom_meeting_3_image_url:
+        custom_wiki_title:
         custom_wiki_name:
         custom_wiki_url:
         custom_wiki_image_url:
+        custom_productivity_tools_title:
         custom_draw_name:
         custom_draw_url:
         custom_draw_image_url:
@@ -199,9 +204,11 @@ spec:
         custom_mindmaps_name:
         custom_mindmaps_url:
         custom_mindmaps_image_url:
+        custom_chat_title:
         custom_chat_name:
         custom_chat_url:
         custom_chat_image_url:
+        custom_collaboration_boards_title:
     ```
 
     ## Passwords
