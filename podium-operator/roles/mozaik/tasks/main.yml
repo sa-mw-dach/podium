@@ -30,6 +30,37 @@
     chat_url: "{{ mozaik.custom_chat_url if mozaik.custom_chat_url is defined else 'https://chat-{{ meta.namespace }}.{{ application_domain }}' }}"
     chat_image_url: "{{ mozaik.custom_chat_image_url if mozaik.custom_chat_image_url is defined else 'https://cdn.freebiesupply.com/logos/large/2x/mattermost-logo-png-transparent.png' }}"
 
+
+    rh_meeting_title : "Red Hatter´s HomeOffice"
+    rh_meeting_1_name: "BlueJeans"
+    rh_meeting_1_url: "https://bluejeans.com/111"
+    rh_meeting_1_image_url: "https://images.saasworthy.com/bluejeans_5498_logo_1579759422_nayyu.jpg"
+    rh_meeting_2_name: "WorkPlace"
+    rh_meeting_2_url: "https://meet-{{ meta.namespace }}.{{ application_domain }}/WorkPlace"
+    rh_meeting_2_image_url: "https://cdn.pixabay.com/photo/2016/11/23/14/49/building-1853330_960_720.jpg"
+    rh_meeting_3_name: "ThinkTank"
+    rh_meeting_3_url: "https://meet-{{ meta.namespace }}.{{ application_domain }}/ThinkTank"
+    rh_meeting_3_image_url: "https://cdn.pixabay.com/photo/2017/02/22/21/06/fractal-2090592_960_720.jpg"
+    rh_wiki_title : "{{ mozaik.custom_wiki_title if mozaik.custom_wiki_title is defined else 'Knowledge Base' }}"
+    rh_wiki_name: "{{ mozaik.custom_wiki_url if mozaik.custom_wiki_url is defined else 'Wiki' }}"
+    rh_wiki_url: "{{ mozaik.custom_wiki_name if mozaik.custom_wiki_name is defined else 'https://dokuwiki-{{ meta.namespace }}.{{ application_domain }}' }}"
+    rh_wiki_image_url: "{{ mozaik.custom_wiki_image_url if mozaik.custom_wiki_image_url is defined else 'https://www.dokuwiki.org/_media/wiki:dokuwiki-128.png' }}"
+    rh_productivity_tools_title: "{{ mozaik.custom_productivity_tools_title if mozaik.custom_productivity_tools_title is defined else 'Productivity Tools' }}"
+    rh_draw_name: "{{ mozaik.custom_draw_name if mozaik.custom_draw_name is defined else 'Draw.io' }}"
+    rh_draw_url: "{{ mozaik.custom_draw_url if mozaik.custom_draw_url is defined else 'https://drawio-{{ meta.namespace }}.{{ application_domain }}' }}"
+    rh_draw_image_url: "{{ mozaik.custom_draw_image_url if mozaik.custom_draw_image_url is defined else 'https://cdn.worldvectorlogo.com/logos/draw-io.svg' }}"
+    rh_kanban_name: "SmartSheet"
+    rh_kanban_url: "https://app.smartsheet.com/b/orgsso/97662287327824B8DDC5BD896C677BE2"
+    rh_kanban_image_url: "https://www.qbssoftware.com/image/cache/catalog/qbs/smartsheet-550x550.png"
+    rh_mindmaps_name: "{{ mozaik.custom_mindmaps_name if mozaik.custom_mindmaps_name is defined else 'Mindmaps' }}"
+    rh_mindmaps_url: "{{ mozaik.custom_mindmaps_url if mozaik.custom_mindmaps_url is defined else 'https://mindmaps-{{ meta.namespace }}.{{ application_domain }}' }}"
+    rh_mindmaps_image_url: "{{ mozaik.custom_mindmaps_image_url if mozaik.custom_mindmaps_image_url is defined else 'https://raw.githubusercontent.com/sa-mw-dach/podium/master/docs/images/mindmap.png' }}"
+    rh_chat_title: "{{ mozaik.custom_chat_title if mozaik.custom_chat_title is defined else 'Chat' }}"
+    rh_chat_name: "Google Chat"
+    rh_chat_url: "https://chat.google.com"
+    rh_chat_image_url: "https://www.lclark.edu/live/image/gid/8/width/300/height/600/78198_hangouts_chat_2.rev.1555350502.png"
+
+
 - name: Set Etherpad/Etherdraw Dashboard Links
   set_fact:
     collaboration_boards_title : "{{ mozaik.custom_collaboration_boards_title if mozaik.custom_collaboration_boards_title is defined else 'Collaboration Boards' }}"
@@ -45,6 +76,20 @@
     etherdraw_2_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ meeting_2_name }}"
     etherdraw_3_name: "{{ meeting_3_name }} Whiteboard"
     etherdraw_3_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ meeting_3_name }}"
+
+    rh_collaboration_boards_title : "Collaboration Boards"
+    rh_etherpad_1_name: "{{ rh_meeting_1_name }} Agenda and Notes"
+    rh_etherpad_1_url: "https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/{{ rh_meeting_1_name }}"
+    rh_etherpad_2_name: "{{ rh_meeting_2_name }} Agenda and Notes"
+    rh_etherpad_2_url: "https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/{{ rh_meeting_2_name }}"
+    rh_etherpad_3_name: "{{ rh_meeting_3_name }} Agenda and Notes"
+    rh_etherpad_3_url: "https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/{{ rh_meeting_3_name }}"
+    rh_etherdraw_1_name: "{{ rh_meeting_1_name }} Whiteboard"
+    rh_etherdraw_1_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ rh_meeting_1_name }}"
+    rh_etherdraw_2_name: "{{ rh_meeting_2_name }} Whiteboard"
+    rh_etherdraw_2_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ rh_meeting_2_name }}"
+    rh_etherdraw_3_name: "{{ rh_meeting_3_name }} Whiteboard"
+    rh_etherdraw_3_url: "https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/{{ rh_meeting_3_name }}"
 
 - name: Deploy Mozaik ConfigMap
   k8s:
@@ -146,6 +191,108 @@
                               type: 'embed.markup',
                               title: '{{ chat_title }}',
                               content: '<center><a href="{{ chat_url }}" target="_blank" rel="noreferrer noopener"><img src="{{ chat_image_url }}" alt="{{ chat_name }}" width="300" height="200"></a></center>',
+                              columns: 1, rows: 1,
+                              x: 0, y: 2
+                          }
+                      ]
+                  },
+
+              ]
+          };
+
+          module.exports = config;
+        redhat-conf: |
+          // Load environment variables from .env file if available
+          require('dotenv').load();
+
+          var config = {
+              env:  'prod',
+
+              host: '0.0.0.0',
+              port: process.env.PORT || 8080,
+
+              // Available themes:
+              // + bordeau
+              // + harlequin
+              // + light-grey
+              // + light-yellow
+              // + night-blue
+              // + snow
+              // + yellow
+              theme: 'harlequin',
+
+              // clients configs
+              api: {
+                  github: {
+                      baseUrl: 'https://api.github.com',
+                      token: ''
+                  }
+              },
+
+              // define the interval used by Mozaïk Bus to call registered APIs
+              apisPollInterval: 15000,
+              dashboards: [
+
+                  {
+                      // 4 x 3 dashboard
+                      columns: 4,
+                      rows:    3,
+                      widgets: [
+                          {
+                              type: 'embed.markup',
+                              title: 'Shared Storage',
+                              content: '<center><a href="https://drive.google.com" target="_blank" rel="noreferrer noopener"><img src="https://seeklogo.com/images/G/google-drive-logo-ED4F6E7476-seeklogo.com.png" alt="Google Drive" width="300" height="200"></a></center>',
+                              columns: 1, rows: 1,
+                              x: 0, y: 0
+                          },
+                          {
+                              type: 'github.repository_contributors_stats',
+                              repository: 'sa-mw-dach/podium',
+                              columns: 1, rows: 1,
+                              x: 2, y: 0
+                          },
+                          {
+                              type: 'mozaik.inspector',
+                              columns: 1, rows: 1,
+                              x: 1, y: 0
+                          },
+                          {
+                              type: 'embed.markup',
+                              title: '{{ rh_meeting_title }}',
+                              content: '<center><a href="{{ rh_meeting_1_url }}" target="_blank" rel="noreferrer noopener"><img src="{{ rh_meeting_1_image_url }}" alt="{{ rh_meeting_1_name }}" width="300" height="200"></a>  <a href="{{ rh_meeting_2_url }}" target="_blank" rel="noreferrer noopener"><img src="{{ rh_meeting_2_image_url }}" alt="{{ rh_meeting_2_name }}" width="300" height="200"></a>  <a href="{{ rh_meeting_3_url }}" target="_blank" rel="noreferrer noopener"><img src="{{ rh_meeting_3_image_url }}" alt="{{ rh_meeting_3_name }}" width="300" height="200"></a></center>',
+                              columns: 2, rows: 1,
+                              x: 1, y: 1
+                          },
+                          {
+                              type: 'time.clock',
+                              columns: 1, rows: 1,
+                              x: 3, y: 0
+                          },
+                          {
+                              type: 'embed.markup',
+                              title: '{{ rh_wiki_title }}',
+                              content: '<center><a href="{{ rh_wiki_url }}" target="_tab" rel="noreferrer noopener"><img src="{{ rh_wiki_image_url }}" alt="{{ rh_wiki_name }}" width="200" height="120"></a> <a href="https://openpracticelibrary.com/" target="_tab" rel="noreferrer noopener"><img src="https://d33wubrfki0l68.cloudfront.net/337d8258554af2343978fdbcd7e854298ab8062c/e7414/images/logo.svg" alt="Open Practice Library" width="200" height="120"></a></center>',
+                              columns: 1, rows: 1,
+                              x: 0, y: 1
+                          },
+                          {
+                              type: 'embed.markup',
+                              title: '{{ rh_collaboration_boards_title }}',
+                              content: '<a href="https://etherpad-{{ meta.namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener"><img src="https://raw.githubusercontent.com/sa-mw-dach/podium/master/docs/images/etherpad-300x600.png" alt="Etherpad" width="300" height="150"></a>  <ul> <li><a href="{{ rh_etherpad_1_url }}" target="_tab" rel="noreferrer noopener">{{ rh_etherpad_1_name }}</a></li> <li><a href="{{ rh_etherpad_2_url }}" target="_tab" rel="noreferrer noopener">{{ rh_etherpad_2_name }}</a></li> <li><a href="{{ rh_etherpad_3_url }}" target="_tab" rel="noreferrer noopener">{{ rh_etherpad_3_name }}</a></li> <li><a href="https://etherpad-{{ meta.namespace }}.{{ application_domain }}/p/ToDo" target="_tab" rel="noreferrer noopener">ToDo Pad</a></li></ul><p><a href="https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/" target="_tab" rel="noreferrer noopener"><img src="https://raw.githubusercontent.com/sa-mw-dach/podium/master/docs/images/etherdraw-300x600.png" alt="Etherdraw" width="300" height="150"></a>  <ul> <li><a href="{{ rh_etherdraw_1_url }}" target="_tab" rel="noreferrer noopener">{{ rh_etherdraw_1_name }}</a></li> <li><a href="{{ rh_etherdraw_2_url }}" target="_tab" rel="noreferrer noopener">{{ rh_etherdraw_2_name }}</a></li> <li><a href="{{ rh_etherdraw_3_url }}" target="_tab" rel="noreferrer noopener">{{ rh_etherdraw_3_name }}</a></li> <li><a href="https://etherdraw-{{ meta.namespace }}.{{ application_domain }}/d/Draft" target="_tab" rel="noreferrer noopener">Draft Whiteboard</a></li></ul>',
+                              columns: 1, rows: 2,
+                              x: 3, y: 1
+                          },
+                          {
+                              type: 'embed.markup',
+                              title: '{{ rh_productivity_tools_title }}',
+                              content: '<center><a href="{{ rh_draw_url }}" target="_tab" rel="noreferrer noopener"><img src="{{ rh_draw_image_url }}" alt="{{ rh_draw_name }}" width="300" height="200"></a><a href="{{ rh_kanban_url }}" target="_tab" rel="noreferrer noopener"><img src="{{ rh_kanban_image_url }}" alt="{{ rh_kanban_name }}" width="300" height="200"></a><a href="{{ rh_mindmaps_url }}" target="_tab" rel="noreferrer noopener"><img src="{{ rh_mindmaps_image_url }}" alt="{{ rh_mindmaps_name }}" width="300" height="200"></center>',
+                              columns: 2, rows: 1,
+                              x: 1, y: 2
+                          },
+                          {
+                              type: 'embed.markup',
+                              title: '{{ rh_chat_title }}',
+                              content: '<center><a href="{{ rh_chat_url }}" target="_blank" rel="noreferrer noopener"><img src="{{ rh_chat_image_url }}" alt="{{ rh_chat_name }}" width="300" height="200"></a></center>',
                               columns: 1, rows: 1,
                               x: 0, y: 2
                           }
