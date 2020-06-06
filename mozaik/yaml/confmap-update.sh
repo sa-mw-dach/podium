@@ -33,7 +33,7 @@ namespace=${namespace:-podium}
 application_domain=${application_domain:-apps.cloud.example.com}
 
 # First we delete the existing ConfigMap
-oc delete configmap/$configmap
+oc delete configmap/$configmap -n $namespace
 
 # We immediately create the new ConfigMap object. If the Podium has been deployed by the Podium Operator,
 # the absence of this ConfigMap object may trigger a re-creation of the original object by the Operator.
@@ -42,12 +42,12 @@ oc delete configmap/$configmap
 # In case you have trouble with the Operator, you may want to set the Operator objects spec.mozaik.enable to false.
 # oc patch Podium mypodium -p '{"spec":{"mozaik":{"enable": false }}}' --type merge -n $namespace
 
-oc process -f $yaml_file -p NAMESPACE=$namespace -p APPLICATION_DOMAIN=$application_domain | oc create -f -
+oc process -f $yaml_file -p NAMESPACE=$namespace -p APPLICATION_DOMAIN=$application_domain | oc create -n $namespace -f -
 
 # Unfortunately, there is no trigger avalable that automatically restarts the Mozaik Pod after the
 # ConfigMap Object has changed. In order to activate the new ConfigMap, we trigger a re-deployment
 # instead. To achieve this, we add the sha256sum of our new ConfigMap as annotation to the Mozaik
 # deployment. Whenever this annotation changes, the re-deployment is triggered automatically.
-configHash=$(oc get cm/mozaik-config -oyaml | sha256sum | cut -d' ' -f1)
+configHash=$(oc get cm/mozaik-config -oyaml -n $namespace | sha256sum | cut -d' ' -f1)
 patch="{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"configHash\":\"$configHash\"}}}}}"
 oc patch deployment mozaik -p $patch -n $namespace
