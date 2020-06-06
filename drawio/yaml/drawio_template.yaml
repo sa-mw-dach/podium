@@ -2,7 +2,7 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   annotations:
-    description: "Mozaik ConfigMap for Podium App"
+    description: "Application template for drawio"
   creationTimestamp: null
   name: mozaik-config
 objects:
