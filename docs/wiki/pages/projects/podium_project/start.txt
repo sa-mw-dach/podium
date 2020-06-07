@@ -5,7 +5,10 @@ Your Podium consists of Best of Breed Open Source applications:
   * [[https://jitsi.org/|Jitsi]] is the central video conferencing application. The Podium Conference Center comes with three predefined conference rooms: the Plenum, the Roundtable and the Lobby. You find these rooms in the center widget of the dashboard.
   * [[http://mozaik.rules|Mozaik]] is the Podium Dashboard that glues all applications together. Some of the widgets of this dashboard simply provide links to these other applications, some widgets have more sophisticated features.
   * [[http://etherpad.org|Etherpad]] is a versatile scratch pad for colaborative writing. You find a list of predefined documents in the Scratch Pad widget on your Poduim Dashboard. The New Pad link allows the creation of arbitrary new documents.
+  * [[https://github.com/JohnMcLear/draw|Etherdraw]] is a multiuser whiteboard application. Alongside with the Etherpad documents, you will find a number of predefined Whiteboards in the Collaboration Space Widget.
   * [[http://www.dokuwiki.org|DokuWiki]] is the backbone of the Podium Knowledge Base, the application you are currently looking at. The DokuWiki initialized from a Git repository. You can find details regarding the use and configuration of this feature in the [[projects:podium_project::DokuWiki-HowTo|Podium DokuWiki HowTo]]
   * [[https://github.com/mattermost/mattermost-server|MatterMost]] is the professional chat application.
   * [[https://github.com/jgraph/drawio|Draw.io]] is the professional diagram editor.
+  * [[https://wekan.github.io/|Wekan]] is an collaborative kanban board.
+  * [[https://github.com/drichard/mindmaps|Mindmaps]] is a simple, web based mind mapping application.
    
