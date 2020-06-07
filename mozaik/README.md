@@ -59,26 +59,25 @@ When you deploy the Podium with the Operator, you can still replace the default 
 
 The other way to customize your Mozaik Dashboard is to provide your custom parameters right away with the operator deployment.
 
-As you can 
-Here is the list of parameters you can use to custimize 
+Here is the list of parameters you can use to custimize:
 
 Parameter Name | Parameter Description
 --------------------------|--------------------------------------------------------------------------
 meeting_title | The title displayed in the central video conference widget, replacing "Conference Center"
 meeting_1_name | The alternative name for the first of the three conference room entries in the central video conference widget; also used as name and id for the first EtherPad and EtherDraw documents
 meeting_1_url | The URL to the first of the three conference room entries in the central video conference widget. You may replace the Jitsi conference room here and use a link to your corporate video conferencing systems if you want to facilitate conferences with huge audiences that may exceed the limits of our Jitsi application.
-meeting_1_image_url | The URL used in the <img src/> HTML tag for the first of the three conference room entries in the central video conference widget. You may want to use the application logo for your corporate video conferencing system if you choose to replace the first Jists conference room with the option above.
+meeting_1_image_url | The URL used in the `<img src/>` HTML tag for the first of the three conference room entries in the central video conference widget. You may want to use the application logo for your corporate video conferencing system if you choose to replace the first Jists conference room with the option above.
 meeting_2_name | The alternative name for the second of the three conference room entries in the central video conference widget; also used as name and id for the second EtherPad and EtherDraw documents
 meeting_2_url | The URL to the second of the three conference room entries in the central video conference widget. You may omit this entry and let the Podium Operator generate this for you, even if you are using a custom name for that room.
-meeting_2_image_url | The URL used in the <img src/> HTML tag for the second of the three conference room entries in the central video conference widget. You may use any public source of images, such as [pixabay](https://pixabay.com). The image will automatically be scaled down to 300x200 pixels. When you choose a picture for your personal home office room, you can use this same image as background in your OBS scene setup.
+meeting_2_image_url | The URL used in the `<img src/>` HTML tag for the second of the three conference room entries in the central video conference widget. You may use any public source of images, such as [pixabay](https://pixabay.com). The image will automatically be scaled down to 300x200 pixels. When you choose a picture for your personal home office room, you can use this same image as background in your OBS scene setup.
 meeting_3_name | Same as above, just for the third of the three conference rooms.
 meeting_3_url | Same as above, just for the third of the three conference rooms.
 meeting_3_image_url | Same as above, just for the third of the three conference rooms.
 wiki_title  | The title displayed in the middle left column widget, replacing "Knowledge Base"
 wiki_name | The alternative name for the middle left column link, replacing "DokuWiki"
 wiki_url | The URL to your custom wiki application, replacing the internal Podium DokuWiki. If you replace DokuWiki in here, you may want to omit the deployment of the internal application by setting `enable: false` in the `dokuwiki:` section of the Podium parmeters set.
-wiki_image_url | The URL used in the <img src/> HTML tag for the middle left column link.
-productivity_tools_title | The title displayed in the bottom middle column widget, replacing \"Productivity Tools\"
+wiki_image_url | The URL used in the `<img src/>` HTML tag for the middle left column link.
+productivity_tools_title | The title displayed in the bottom middle column widget, replacing "Productivity Tools"
 draw_name |
 draw_url |
 draw_image_url |
