@@ -13,5 +13,5 @@ To update existing nodes to use EIPs you simply need to allocate and associate a
 
 ### Update Subnet Route Table
 ![](images/aws_subnet_1.PNG)
-![](images/aws_subnet_1.PNG)
+![](images/aws_subnet_2.PNG)
 
