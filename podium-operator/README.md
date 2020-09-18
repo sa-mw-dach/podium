@@ -11,6 +11,8 @@ The podium operator will mange the deployment of podium environments accross the
 * Ports 5347 TCP, 5222 TCP and 5280 TCP ingress must be open on all nodes running jitsi pods jvb, jicofo, prosody and web.
 * TLS certificate solution like Let's Encrypt.
 
+[How to configure AWS to use floating ips](../docs/AWS.md)
+
 ## Label node where you want the Jitsi Video Bridge to run
 The video bridge is required for video conferencing. Video and audio from clients are sent to the jitsi video bridge (jvb) via a UDP connection. The node running the jvb must have an internet or routable IP than can be reached from participants. Currently this is done by exposing a node port. The jvb service uses a STUN server to discover the routable IP so this is all dynamic. The deployment sets a nodeSelector so that the jvb pod will only run on nodes with a routable IP. You can label multiple nodes as well, as long as they have a routable IP.
 

@@ -31,6 +31,8 @@ If you would like to see a feature or addition please open a issue and feel welc
 * Ports 5347 TCP, 5222 TCP and 5280 TCP ingress must be open on all nodes running jitsi pods jvb, jicofo, prosody and web.
 * TLS certificate solution like Let's Encrypt.
 
+[How to configure AWS to use floating ips](docs/AWS.md)
+
 ## Lets Encrypt Certificate
 Podium requires proper TLS certificates. For lets encrypt solution, TLS should be terminated on the edge of the OpenShift route or kubermetes ingres. Podium will automatically deploy OpenShift routes with edge termination and dynamically configure certificates using lets encrypt. You can of course configure your own routes or ingres.
 
