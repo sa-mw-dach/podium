@@ -107,7 +107,8 @@
 
           var config = {
               env:  'prod',
-
+              // Required, otherwise Chrome et al. complain about mixed content warnings when Mozaik is exposed via secured route.
+              useWssConnection: true,
               host: '0.0.0.0',
               port: process.env.PORT || 8080,
 
@@ -205,7 +206,8 @@
         redhat-conf: |
           // Load environment variables from .env file if available
           require('dotenv').load();
-
+          // Required, otherwise Chrome et al. complain about mixed content warnings when Mozaik is exposed via secured route.
+          useWssConnection: true,
           var config = {
               env:  'prod',
 
@@ -403,4 +405,7 @@
           weight: 100
         port:
           targetPort: 8080
+        tls:
+          insecureEdgeTerminationPolicy: Redirect
+          termination: edge
         wildcardPolicy: None
