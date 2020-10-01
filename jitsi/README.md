@@ -42,7 +42,7 @@ The template will create a default https route (edge termination). Assuming you 
 
 The upstream project https://github.com/jitsi/docker-jitsi-meet for Jitsi Meet on Docker does not meet the requirements for containers running on OpenShift. In particular, the containers provided by the upstream project are running with root permissions.
 
-Paul Tiedke has submitted a pull request to the upstream project that changes the containers to run without priviledges. This pull request has not been merged yet.
+Paul Tiedke has submitted a [pull request](https://github.com/jitsi/docker-jitsi-meet/pull/192) to the upstream project that changes the containers to run without priviledges. This pull request has not been merged yet.
 
 In order to build your own Jitsi containers for OpenShift with the most recent upstream versions of https://github.com/jitsi/docker-jitsi-meet, we provide the Paul Tiedke changes in one unified patch that is easy to apply to the upstream sources.
 
