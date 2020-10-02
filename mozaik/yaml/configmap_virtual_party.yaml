@@ -11,182 +11,182 @@ objects:
   metadata:
     name: mozaik-config
   data:
-   podium-conf: |
-       // Load environment variables from .env file if available
-       require('dotenv').load();
-   
-       var config = {
-           env:  'prod',
-           // ckoep: required, otherwise Chrome et al. complain about mixed content warnings.
-           useWssConnection: true,
-           host: '0.0.0.0',
-           port: process.env.PORT || 8080,
-   
-           // clients configs
-           api: {
-               github: {
-                   baseUrl: 'https://api.github.com',
-                   token: ''
-               }
-           },
-   
-           // define the interval used by Mozaïk Bus to call registered APIs
-           apisPollInterval: 1500,
-   
-           appTitle: "Qend Umtrunk",
-   
-           // Available themes:
-           // + bordeau
-           // + harlequin
-           // + light-grey
-           // + light-yellow
-           // + night-blue
-           // + snow
-           // + yellow
-   
-           // changed by ckoep
-           theme: 'night-blue',
-   
-   
-           dashboards: [
-   
-               {
-                   // 4 x 4 dashboard
-                   columns: 5,
-                   rows:    4,
-                   widgets: [
-                       {
-                           // Oben 1
-                           type: 'embed.markup',
-                           title: 'Pizza',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Pizza" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/R2ggq01.png" alt="Pizza" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 0, y: 0
-                       },
-                       {
-                           // Oben 2
-                           type: 'embed.markup',
-                           title: 'Burger',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Burger" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/ojkCw1J.png" alt="Burger" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 1, y: 0
-                       },
-                       {
-                           // Oben 3
-                           type: 'embed.markup',
-                           title: 'Spaghetti',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Spaghetti" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/LIQc3ea.png" alt="Spaghetti" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 2, y: 0
-                       },
-                       {
-                           // Oben 4
-                           type: 'embed.markup',
-                           title: 'Schnitzel',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Schnitzel" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/0Elt30o.jpeg" alt="Schnitzel" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 3, y: 0
-                       },
-                       {
-                           // Oben 5
-                           type: 'embed.markup',
-                           title: 'OpenDJ',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; color: black !important; font-weight: bold;} div.widget__header { color: #ee2435; font-size: 20px; } a { font-style: italic; } h3 { color: black; font-weight: bold; } ul { color: black; font-weight: normal; font-size: large ; line-height: 1.1 ;} li { color: black; font-weight: bold; font-size: large ; line-height: 1.5 ;}  </style> <ul>Dance floor is in the main hall, "Arena"!<p><li><a href="https://www.opendj.io/rhq3">OpenDJ Playlist Link</a></li><li><a href="http://stream.pktransfer.de/redhat/">Music Only OpenDJ Radio</a></li></ul><a href="https://meet.google.com/dbb-dfof-xwo" target="_blank" rel="noreferrer noopener"><img src="https://people.redhat.com/jschrode/OpenHouse/Dancefloor.jpeg" alt="Dancefloor" class="responsive"></a>',
-                           columns: 1, rows: 2,
-                           x: 4, y: 0
-                       },
-                       {
-                           // Rechts
-                           type: 'embed.markup',
-                           title: 'Facts & Figures',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://redhat.my.salesforce.com/01Z60000000byEb">Germany Current Quarter</a><p><a href="https://app.smartsheet.com/dashboards/w5c339FcHcmH5pVM5Wpf66QHhmwxWVCG2h5hCXm1">Pipeline PY20</a><p><a href="https://redhat.my.salesforce.com/01Z3a00000057rm">Germany Funnel</a><p>',
-                           columns: 1, rows: 1,
-                           x: 4, y: 2
-                       },
-                       {
-                           // Unten rechts
-                           type: 'embed.markup',
-                           title: 'Kudos',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; color: black; line-height: 1.1; } div.widget__header { color: #ee2435; font-size: 20px; } a { font-style: italic; } h3 { color: black; font-weight: bold; } ul { color: black ; } li { color: black; }  </style> Dominic Schmitt, Jos, Sebastian Hetze, Keith Tenzer, Christian Koep, Sebastian Faulhaber, Jonas Janz, Daniel Fröhlich and Peter Körner<p>Based on <a href="https://github.com/sa-mw-dach/podium">Podium</a>, <a href="https://github.com/RedHat-EMEA-SSA-Team/hetzner-ocp4">OpenShift</a> and <a href="https://github.com/opendj/opendj">OpenDJ</a>',
-                           columns: 1, rows: 1,
-                           x: 4, y: 3
-                       },
-                       {
-                           // Mitte 1
-                           type: 'embed.markup',
-                           title: 'Döner',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Doener" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/6eVzrHf.jpg" alt="Döner" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 0, y: 1
-                       },
-                       {
-                           // Mitte 2+3
-                           type: 'embed.markup',
-                           title: 'Arena',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet.google.com/dbb-dfof-xwo" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/Dfa2uZZ.png" alt="Arena" class="responsive"></a>',
-                           columns: 2, rows: 2,
-                           x: 1, y: 1
-                       },
-                       {
-                           // Mitte 4
-                           type: 'embed.markup',
-                           title: 'Pita',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Pita" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/U5YleM5.png" alt="Pita" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 3, y: 1
-                       },
-                       {
-                           // Vorunten 1
-                           type: 'embed.markup',
-                           title: 'Burrito',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Burrito" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/rNVh6GU.jpg" alt="Burrito" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 0, y: 2
-                       },
-                       {
-                           // Vorunten 2
-                           type: 'embed.markup',
-                           title: 'Steak',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Steak" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/2l77QHc.png" alt="Steak" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 3, y: 2
-                       },
-                       {
-                           // Unten 1
-                           type: 'embed.markup',
-                           title: 'Sushi',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Sushi" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/b0yzb0Q.jpg" alt="Sushi" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 0, y: 3
-                       },
-                       {
-                           // Unten 2
-                           type: 'embed.markup',
-                           title: 'Veggie Bowl',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Bowl" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/WoFLAlH.png" alt="Bowl" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 1, y: 3
-                       },
-                       {
-                           // Unten 3
-                           type: 'embed.markup',
-                           title: 'Tapas',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Tapas" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/9RvpVcg.jpg" alt="Tapas" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 2, y: 3
-                       },
-                       {
-                           // Unten 4
-                           type: 'embed.markup',
-                           title: 'Nudeln',
-                           content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Noodles" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/cOcWzdY.jpg" alt="Nudeln" class="responsive"></a>',
-                           columns: 1, rows: 1,
-                           x: 3, y: 3
-                       }
-                   ]
-               },
-   
-           ]
+    podium-conf: |
+      // Load environment variables from .env file if available
+      require('dotenv').load();
+  
+      var config = {
+          env:  'prod',
+          // ckoep: required, otherwise Chrome et al. complain about mixed content warnings.
+          useWssConnection: true,
+          host: '0.0.0.0',
+          port: process.env.PORT || 8080,
+  
+          // clients configs
+          api: {
+              github: {
+                  baseUrl: 'https://api.github.com',
+                  token: ''
+              }
+          },
+  
+          // define the interval used by Mozaïk Bus to call registered APIs
+          apisPollInterval: 1500,
+  
+          appTitle: "Qend Umtrunk",
+  
+          // Available themes:
+          // + bordeau
+          // + harlequin
+          // + light-grey
+          // + light-yellow
+          // + night-blue
+          // + snow
+          // + yellow
+  
+          // changed by ckoep
+          theme: 'night-blue',
+  
+  
+          dashboards: [
+  
+              {
+                  // 4 x 4 dashboard
+                  columns: 5,
+                  rows:    4,
+                  widgets: [
+                      {
+                          // Oben 1
+                          type: 'embed.markup',
+                          title: 'Pizza',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Pizza" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/R2ggq01.png" alt="Pizza" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 0, y: 0
+                      },
+                      {
+                          // Oben 2
+                          type: 'embed.markup',
+                          title: 'Burger',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Burger" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/ojkCw1J.png" alt="Burger" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 1, y: 0
+                      },
+                      {
+                          // Oben 3
+                          type: 'embed.markup',
+                          title: 'Spaghetti',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Spaghetti" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/LIQc3ea.png" alt="Spaghetti" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 2, y: 0
+                      },
+                      {
+                          // Oben 4
+                          type: 'embed.markup',
+                          title: 'Schnitzel',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Schnitzel" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/0Elt30o.jpeg" alt="Schnitzel" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 3, y: 0
+                      },
+                      {
+                          // Oben 5
+                          type: 'embed.markup',
+                          title: 'OpenDJ',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; color: black !important; font-weight: bold;} div.widget__header { color: #ee2435; font-size: 20px; } a { font-style: italic; } h3 { color: black; font-weight: bold; } ul { color: black; font-weight: normal; font-size: large ; line-height: 1.1 ;} li { color: black; font-weight: bold; font-size: large ; line-height: 1.5 ;}  </style> <ul>Dance floor is in the main hall, "Arena"!<p><li><a href="https://www.opendj.io/rhq3">OpenDJ Playlist Link</a></li><li><a href="http://stream.pktransfer.de/redhat/">Music Only OpenDJ Radio</a></li></ul><a href="https://meet.google.com/dbb-dfof-xwo" target="_blank" rel="noreferrer noopener"><img src="https://people.redhat.com/jschrode/OpenHouse/Dancefloor.jpeg" alt="Dancefloor" class="responsive"></a>',
+                          columns: 1, rows: 2,
+                          x: 4, y: 0
+                      },
+                      {
+                          // Rechts
+                          type: 'embed.markup',
+                          title: 'Facts & Figures',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://redhat.my.salesforce.com/01Z60000000byEb">Germany Current Quarter</a><p><a href="https://app.smartsheet.com/dashboards/w5c339FcHcmH5pVM5Wpf66QHhmwxWVCG2h5hCXm1">Pipeline PY20</a><p><a href="https://redhat.my.salesforce.com/01Z3a00000057rm">Germany Funnel</a><p>',
+                          columns: 1, rows: 1,
+                          x: 4, y: 2
+                      },
+                      {
+                          // Unten rechts
+                          type: 'embed.markup',
+                          title: 'Kudos',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; color: black; line-height: 1.1; } div.widget__header { color: #ee2435; font-size: 20px; } a { font-style: italic; } h3 { color: black; font-weight: bold; } ul { color: black ; } li { color: black; }  </style> Dominic Schmitt, Jos, Sebastian Hetze, Keith Tenzer, Christian Koep, Sebastian Faulhaber, Jonas Janz, Daniel Fröhlich and Peter Körner<p>Based on <a href="https://github.com/sa-mw-dach/podium">Podium</a>, <a href="https://github.com/RedHat-EMEA-SSA-Team/hetzner-ocp4">OpenShift</a> and <a href="https://github.com/opendj/opendj">OpenDJ</a>',
+                          columns: 1, rows: 1,
+                          x: 4, y: 3
+                      },
+                      {
+                          // Mitte 1
+                          type: 'embed.markup',
+                          title: 'Döner',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Doener" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/6eVzrHf.jpg" alt="Döner" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 0, y: 1
+                      },
+                      {
+                          // Mitte 2+3
+                          type: 'embed.markup',
+                          title: 'Arena',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet.google.com/dbb-dfof-xwo" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/Dfa2uZZ.png" alt="Arena" class="responsive"></a>',
+                          columns: 2, rows: 2,
+                          x: 1, y: 1
+                      },
+                      {
+                          // Mitte 4
+                          type: 'embed.markup',
+                          title: 'Pita',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Pita" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/U5YleM5.png" alt="Pita" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 3, y: 1
+                      },
+                      {
+                          // Vorunten 1
+                          type: 'embed.markup',
+                          title: 'Burrito',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Burrito" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/rNVh6GU.jpg" alt="Burrito" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 0, y: 2
+                      },
+                      {
+                          // Vorunten 2
+                          type: 'embed.markup',
+                          title: 'Steak',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Steak" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/2l77QHc.png" alt="Steak" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 3, y: 2
+                      },
+                      {
+                          // Unten 1
+                          type: 'embed.markup',
+                          title: 'Sushi',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Sushi" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/b0yzb0Q.jpg" alt="Sushi" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 0, y: 3
+                      },
+                      {
+                          // Unten 2
+                          type: 'embed.markup',
+                          title: 'Veggie Bowl',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Bowl" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/WoFLAlH.png" alt="Bowl" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 1, y: 3
+                      },
+                      {
+                          // Unten 3
+                          type: 'embed.markup',
+                          title: 'Tapas',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Tapas" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/9RvpVcg.jpg" alt="Tapas" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 2, y: 3
+                      },
+                      {
+                          // Unten 4
+                          type: 'embed.markup',
+                          title: 'Noodles',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Noodles" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/cOcWzdY.jpg" alt="Noodles" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 3, y: 3
+                      }
+                  ]
+              },
+  
+          ]
       };
   
       module.exports = config;
