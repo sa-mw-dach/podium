@@ -18,7 +18,7 @@ objects:
       var config = {
           env:  'prod',
           // ckoep: required, otherwise Chrome et al. complain about mixed content warnings.
-          useWssConnection: true,
+          //useWssConnection: true,
           host: '0.0.0.0',
           port: process.env.PORT || 8080,
   
@@ -33,7 +33,7 @@ objects:
           // define the interval used by Mozaïk Bus to call registered APIs
           apisPollInterval: 1500,
   
-          appTitle: "Qend Umtrunk",
+          appTitle: "Podium Virtual Event",
   
           // Available themes:
           // + bordeau
@@ -91,15 +91,22 @@ objects:
                           // Oben 5
                           type: 'embed.markup',
                           title: 'OpenDJ',
-                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; color: black !important; font-weight: bold;} div.widget__header { color: #ee2435; font-size: 20px; } a { font-style: italic; } h3 { color: black; font-weight: bold; } ul { color: black; font-weight: normal; font-size: large ; line-height: 1.1 ;} li { color: black; font-weight: bold; font-size: large ; line-height: 1.5 ;}  </style> <ul>Dance floor is in the main hall, "Arena"!<p><li><a href="https://www.opendj.io/rhq3">OpenDJ Playlist Link</a></li><li><a href="http://stream.pktransfer.de/redhat/">Music Only OpenDJ Radio</a></li></ul><a href="https://meet.google.com/dbb-dfof-xwo" target="_blank" rel="noreferrer noopener"><img src="https://people.redhat.com/jschrode/OpenHouse/Dancefloor.jpeg" alt="Dancefloor" class="responsive"></a>',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; color: black !important; font-weight: bold;} div.widget__header { color: #ee2435; font-size: 20px; } a { font-style: italic; } h3 { color: black; font-weight: bold; } ul { color: black; font-weight: normal; font-size: large ; line-height: 1.1 ;} li { color: black; font-weight: bold; font-size: large ; line-height: 1.5 ;}  </style> <ul>Dance floor is in the main hall, "Arena"!<p><li><a href="https://www.opendj.io/virtualparty">OpenDJ Playlist Link</a></li></ul><a href="https://meet.google.com/dbb-dfof-xwo" target="_blank" rel="noreferrer noopener"><img src="https://people.redhat.com/jschrode/OpenHouse/Dancefloor.jpeg" alt="Dancefloor" class="responsive"></a>',
                           columns: 1, rows: 2,
                           x: 4, y: 0
                       },
+                     // {
+                     //     // Rechts
+                     //     type: 'embed.markup',
+                     //     title: 'Facts & Figures',
+                     //     content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://redhat.my.salesforce.com/01Z60000000byEb">Germany Current Quarter</a><p><a href="https://app.smartsheet.com/dashboards/w5c339FcHcmH5pVM5Wpf66QHhmwxWVCG2h5hCXm1">Pipeline PY20</a><p><a href="https://redhat.my.salesforce.com/01Z3a00000057rm">Germany Funnel</a><p>',
+                     //     columns: 1, rows: 1,
+                     //     x: 4, y: 2
+                     // },
                       {
-                          // Rechts
-                          type: 'embed.markup',
-                          title: 'Facts & Figures',
-                          content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://redhat.my.salesforce.com/01Z60000000byEb">Germany Current Quarter</a><p><a href="https://app.smartsheet.com/dashboards/w5c339FcHcmH5pVM5Wpf66QHhmwxWVCG2h5hCXm1">Pipeline PY20</a><p><a href="https://redhat.my.salesforce.com/01Z3a00000057rm">Germany Funnel</a><p>',
+                          type: 'github.repository_contributors_stats',
+                          title: 'Podium Contributors',
+                          repository: 'sa-mw-dach/podium',
                           columns: 1, rows: 1,
                           x: 4, y: 2
                       },
@@ -123,7 +130,7 @@ objects:
                           // Mitte 2+3
                           type: 'embed.markup',
                           title: 'Arena',
-                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet.google.com/dbb-dfof-xwo" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/Dfa2uZZ.png" alt="Arena" class="responsive"></a>',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Arena" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/Dfa2uZZ.png" alt="Arena" class="responsive"></a>',
                           columns: 2, rows: 2,
                           x: 1, y: 1
                       },
