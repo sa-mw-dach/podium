@@ -1,0 +1,145 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: "Mozaik ConfigMap for Podium App"
+  creationTimestamp: null
+  name: mozaik-config
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: mozaik-config
+  data:
+    podium-conf: |
+      // Load environment variables from .env file if available
+      require('dotenv').load();
+  
+      var config = {
+          env:  'prod',
+          // ckoep: required, otherwise Chrome et al. complain about mixed content warnings.
+          //useWssConnection: true,
+          host: '0.0.0.0',
+          port: process.env.PORT || 8080,
+  
+          // clients configs
+          api: {
+              github: {
+                  baseUrl: 'https://api.github.com',
+                  token: ''
+              }
+          },
+  
+          // define the interval used by Mozaïk Bus to call registered APIs
+          apisPollInterval: 1500,
+  
+          appTitle: "Podium Virtual Event",
+  
+          // Available themes:
+          // + bordeau
+          // + harlequin
+          // + light-grey
+          // + light-yellow
+          // + night-blue
+          // + snow
+          // + yellow
+  
+          // changed by ckoep
+          theme: 'night-blue',
+  
+  
+          dashboards: [
+  
+              {
+                  // 4 x 4 dashboard
+                  columns: 5,
+                  rows:    3,
+                  widgets: [
+                      {
+                          // Oben 1
+                          type: 'embed.markup',
+                          title: 'Podium Virtual Event',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://github.com/sa-mw-dach/podium" target="_blank" rel="noreferrer noopener"><img src="https://raw.githubusercontent.com/sa-mw-dach/podium/master/docs/images/podium_logo.png" alt="Podium" class="responsive"></a>',
+                          columns: 4, rows: 1,
+                          x: 0, y: 0
+                      },
+                      {
+                          type: 'time.clock',
+                          columns: 1, rows: 1,
+                          x: 4, y: 0
+                      },
+                      {
+                          // Oben 5
+                          type: 'embed.markup',
+                          title: 'OpenDJ',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; color: black !important; font-weight: bold;} div.widget__header { color: #ee2435; font-size: 20px; } a { font-style: italic; } h3 { color: black; font-weight: bold; } ul { color: black; font-weight: normal; font-size: large ; line-height: 1.1 ;} li { color: black; font-weight: bold; font-size: large ; line-height: 1.5 ;}  </style> <a href="https://www.opendj.io/virtualparty" target="_blank" rel="noreferrer noopener"><img src="https://people.redhat.com/jschrode/OpenHouse/Dancefloor.jpeg" alt="Dancefloor" class="responsive"></a>',
+                          columns: 1, rows: 1,
+                          x: 4, y: 1
+                      },
+                      {
+                          type: 'github.repository_contributors_stats',
+                          title: '                 Contributors',
+                          repository: 'sa-mw-dach/podium',
+                          columns: 1, rows: 1,
+                          x: 4, y: 2
+                      },
+                      {
+                          // Mitte 1
+                          type: 'embed.markup',
+                          title: 'Cars',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Cars" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/08vLDwC.jpeg" alt="Cars" class="responsive"></a>',
+                          columns: 1, rows: 2,
+                          x: 0, y: 1
+                      },
+                      {
+                          // Mitte 2+3
+                          type: 'embed.markup',
+                          title: 'Arena',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Arena" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/Dfa2uZZ.png" alt="Arena" class="responsive"></a>',
+                          columns: 2, rows: 2,
+                          x: 1, y: 1
+                      },
+                      {
+                          // Mitte 1
+                          type: 'embed.markup',
+                          title: 'Games',
+                          content: '<style> .responsive { max-width: 100%; height: auto; } body { margin: auto; font-family: RedHatDisplay, "Red Hat Display", Overpass, Overpass, "Helvetica Neue", Arial, sans-serif !important; background: #353535; } div.widget { padding: 20px; background: #f7f7f7 !important; } div.widget__header { color: #ee2435; font-size: 20px; } </style> <a href="https://meet-${NAMESPACE}${GUID}.${APPLICATION_DOMAIN}/Games" target="_blank" rel="noreferrer noopener"><img src="https://i.imgur.com/Lpt5Bvz.jpg" alt="Games" class="responsive"></a>',
+                          columns: 1, rows: 2,
+                          x: 3, y: 1
+                      },
+                  ]
+              },
+  
+          ]
+      };
+  
+      module.exports = config;
+parameters:
+  - name: NAMESPACE
+    displayName: Application Name
+    description: the name and label for all components
+    value: podium
+    required: true 
+  - name: GUID
+    displayName: Application GUID
+    description: the GUID name component for the individual instance in a series of application deployments, typically a dash followed by a 4 character string like -f3ax
+    required: false
+  - name: APPLICATION_DOMAIN
+    displayName: Application Domain
+    description: Application domain name used in route to service
+    value: apps.cloud.example.com
+    required: true
+  - name: GIT_URL
+    displayName: Git URL
+    description: Git repository with DokuWiki content
+    value: https://github.com/sa-mw-dach/podium.git
+    required: true
+  - name: GIT_API
+    displayName: Git API
+    description: API endpoint for Git interaction
+    value: https://api.github.com
+    required: false
+  - name: GIT_TOKEN
+    displayName: Git Token
+    description: Token for authenticated Git interaction
+    required: false

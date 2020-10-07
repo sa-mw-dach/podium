@@ -105,7 +105,7 @@ objects:
                      // },
                       {
                           type: 'github.repository_contributors_stats',
-                          title: 'Podium Contributors',
+                          title: '                 Contributors',
                           repository: 'sa-mw-dach/podium',
                           columns: 1, rows: 1,
                           x: 4, y: 2

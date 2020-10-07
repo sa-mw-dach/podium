@@ -226,6 +226,51 @@ An entire list of all the parameters can be found below:
     collaboration_boards_title:
 ```
 
+### Install Podium Operator Manually (without OLM)
+
+
+### Create Custom Resource Definition
+
+```
+$ oc create -f crd.yaml
+```
+
+### Create New Project
+
+```
+$ oc new-project podium
+```
+
+### Service Account
+
+```
+$ oc create -f sa.yaml
+```
+
+### Create Cluster Role
+
+```
+$ oc create -f clusterrole.yaml
+```
+
+### Create Cluster Role Binding
+
+```
+$ oc create -f clusterrolebinding.yaml
+```
+
+### Create Deployment
+
+```
+$ oc create -f deployment.yaml
+```
+
+### Create Custom Resource
+
+```
+$ oc create -f cr.yaml
+```
+
 ### Delete Podium Operator
 
 ```
