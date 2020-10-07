@@ -30,11 +30,11 @@ spec:
     jvb_auth_user: jvb
     jvb_brewery_muc: jvbbrewery
     jvb_enable_apis: rest
-    jvb_node_selector: jvb3
+    jvb_node_selector: jvb
     jvb_stun_servers: meet-jit-si-turnrelay.jitsi.net:443
     jvb_tcp_harvester_disabled: "true"
     timezone: Europe/Berlin
-  jvb_node_port: 30007
+  jvb_node_port: 30000
   lets_encrypt: true
   mattermost:
     application_name: mattermost-team-edition
