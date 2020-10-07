@@ -254,6 +254,7 @@ $ oc create -f clusterrole.yaml
 ```
 
 ### Create Cluster Role Binding
+Note: If you are installing the operator in any project other than podium update the namespace under subjects.
 
 ```
 $ oc create -f clusterrolebinding.yaml
