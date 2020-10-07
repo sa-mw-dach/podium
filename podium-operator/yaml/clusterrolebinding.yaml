@@ -9,4 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: podium-operator
-  namespace: test1
+  namespace: podium
